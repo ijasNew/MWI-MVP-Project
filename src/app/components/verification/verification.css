@@ -1,0 +1,64 @@
+.trust {
+  padding: 90px 0;
+  background: #faf7ff;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  margin-top: 50px;
+}
+
+.trust-card {
+  background: #fff;
+  border-radius: 18px;
+  text-align: center;
+  padding: 40px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .05);
+}
+
+.trust-card .icon {
+  width: 70px;
+  height: 70px;
+  background: #f3ecff;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trust-card .icon i {
+  color: #7c3aed;
+  font-size: 28px;
+}
+
+.trust-card h3 {
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.trust-card p {
+  color: #666;
+  line-height: 28px;
+}
+
+/* Mobile */
+
+@media (max-width: 991px) {
+
+  .trust-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .trust-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

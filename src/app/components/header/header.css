@@ -1,0 +1,222 @@
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  width: 100%;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  border-bottom: 1px solid #ececec;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.logo-main {
+  font-size: 18px;
+  font-weight: 800;
+  color: #222;
+  letter-spacing: 0.3px;
+}
+
+.logo-sub {
+  font-size: 18px;
+  font-weight: 800;
+  color: #7c3aed;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.nav-menu {
+  display: flex;
+  gap: 35px;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: #444;
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.nav-menu a:hover {
+  color: #7c3aed;
+}
+
+/* =========================
+   RIGHT BUTTONS
+========================= */
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.login-btn {
+  text-decoration: none;
+  color: #444;
+  font-weight: 600;
+}
+
+.register-btn {
+  text-decoration: none;
+  background: #7c3aed;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.register-btn:hover {
+  background: #6927d3;
+}
+
+/* =========================
+   MOBILE BUTTON
+========================= */
+
+.menu-btn {
+  display: none;
+  border: none;
+  background: none;
+  font-size: 24px;
+  color: #7c3aed;
+  cursor: pointer;
+}
+
+.menu-btn i {
+  transition: transform 0.25s ease;
+}
+
+.menu-btn.active i {
+  font-size: 0;
+}
+
+.menu-btn.active i::before {
+  content: "\f00d";
+  font-size: 24px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .navbar {
+    position: relative;
+    height: 70px;
+  }
+
+  .menu-btn {
+    display: block;
+    position: relative;
+    z-index: 1002;
+  }
+
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+
+    background: #ffffff;
+
+    flex-direction: column;
+    gap: 0;
+
+    padding: 10px 0;
+
+    border-top: 1px solid #eee;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+    z-index: 1000;
+  }
+
+  .nav-menu.active {
+    display: flex;
+  }
+
+  .nav-menu a {
+    width: 100%;
+    padding: 14px 25px;
+
+    color: #444;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    border-bottom: 1px solid #f3f3f3;
+  }
+
+  .nav-menu a:last-child {
+    border-bottom: none;
+  }
+
+  .nav-menu a:hover {
+    background: #faf7ff;
+    color: #7c3aed;
+  }
+
+  /* Login + Register */
+
+  .nav-right {
+    display: none;
+  }
+
+  .nav-right.active {
+    display: flex;
+
+    position: absolute;
+
+    top: calc(70px + 305px);
+    left: 0;
+
+    width: 100%;
+
+    background: #ffffff;
+
+    padding: 15px 25px 20px;
+
+    flex-direction: column;
+    gap: 10px;
+
+    border-top: 1px solid #eee;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+    z-index: 1001;
+  }
+
+  .nav-right.active .login-btn,
+  .nav-right.active .register-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+}
