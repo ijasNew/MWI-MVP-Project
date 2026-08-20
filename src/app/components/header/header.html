@@ -17,46 +17,36 @@
                     Home
                 </a>
 
-                <a
-  href="#why-us"
-  (click)="$event.preventDefault(); goToSection('why-us')">
-  Why Us
-</a>
+                <a href="#why-us" (click)="$event.preventDefault(); goToSection('why-us')">
+                    Why Us
+                </a>
 
-                <a
-  href="#process"
-  (click)="$event.preventDefault(); goToSection('process')">
-  How It Works
-</a>
+                <a href="#process" (click)="$event.preventDefault(); goToSection('process')">
+                    How It Works
+                </a>
 
-                <a
-  href="#verification"
-  (click)="$event.preventDefault(); goToSection('verification')">
-  Home Verification
-</a>
+                <a href="#verification" (click)="$event.preventDefault(); goToSection('verification')">
+                    Home Verification
+                </a>
 
-                <a
-  href="#faq"
-  (click)="$event.preventDefault(); goToSection('faq')">
-  FAQ
-</a>
+                <a href="#faq" (click)="$event.preventDefault(); goToSection('faq')">
+                    FAQ
+                </a>
 
-                <a
-  href="#contact"
-  (click)="$event.preventDefault(); goToSection('contact')">
-  Contact
-</a>
+                <a href="#contact" (click)="$event.preventDefault(); goToSection('contact')">
+                    Contact
+                </a>
 
             </nav>
 
             <!-- Login / Register -->
             <div class="nav-right" [class.active]="menuOpen">
 
-                <a href="#" class="login-btn" (click)="closeMenu()">
+                <a routerLink="/login" class="login-btn" (click)="closeMenu()">
                     Login
                 </a>
 
-                <a href="#" class="register-btn" (click)="closeMenu()">
+                <a routerLink="/register" class="register-btn" (click)="closeMenu()">
                     Register Free
                 </a>
 

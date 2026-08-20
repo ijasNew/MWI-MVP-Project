@@ -1,0 +1,323 @@
+<div class="family-page">
+
+    <header class="form-header">
+
+        <button type="button" class="back-btn" (click)="goBack()">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back
+        </button>
+
+        <span class="page-label">
+            PROFILE COMPLETION
+        </span>
+
+        <h1>Family Details</h1>
+
+        <p>
+            Add family information to help us understand
+            your family background better.
+        </p>
+
+    </header>
+
+
+    <section class="form-card">
+
+        <!-- FATHER -->
+
+        <div class="section-heading">
+            <h2>Father's Details</h2>
+            <span>Optional</span>
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Father's Name</label>
+
+                <input type="text" [(ngModel)]="fatherName" placeholder="Enter father's name">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Occupation</label>
+
+                <input type="text" [(ngModel)]="fatherOccupation" placeholder="Enter occupation">
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Father's Status</label>
+
+            <div class="option-grid">
+
+                <label class="option-card">
+
+                    <input type="radio" name="fatherStatus" value="living" [(ngModel)]="fatherStatus">
+
+                    <span>Living</span>
+
+                </label>
+
+
+                <label class="option-card">
+
+                    <input type="radio" name="fatherStatus" value="passed_away" [(ngModel)]="fatherStatus">
+
+                    <span>Passed Away</span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-divider"></div>
+
+
+        <!-- MOTHER -->
+
+        <div class="section-heading">
+            <h2>Mother's Details</h2>
+            <span>Optional</span>
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Mother's Name</label>
+
+                <input type="text" [(ngModel)]="motherName" placeholder="Enter mother's name">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Occupation</label>
+
+                <input type="text" [(ngModel)]="motherOccupation" placeholder="Enter occupation">
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Mother's Status</label>
+
+            <div class="option-grid">
+
+                <label class="option-card">
+
+                    <input type="radio" name="motherStatus" value="living" [(ngModel)]="motherStatus">
+
+                    <span>Living</span>
+
+                </label>
+
+
+                <label class="option-card">
+
+                    <input type="radio" name="motherStatus" value="passed_away" [(ngModel)]="motherStatus">
+
+                    <span>Passed Away</span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-divider"></div>
+
+
+        <!-- SIBLINGS -->
+
+         <div class="section-heading">
+  <h2>Siblings</h2>
+  <span>Optional</span>
+</div>
+
+<div class="form-grid">
+
+  <!-- BROTHERS -->
+
+  <div class="form-group">
+
+    <label>
+      Number of Brothers
+    </label>
+
+    <input
+      type="number"
+      [(ngModel)]="brothers"
+      min="0"
+      max="20"
+      placeholder="0"
+    >
+
+  </div>
+
+
+  <!-- SISTERS -->
+
+  <div class="form-group">
+
+    <label>
+      Number of Sisters
+    </label>
+
+    <input
+      type="number"
+      [(ngModel)]="sisters"
+      min="0"
+      max="20"
+      placeholder="0"
+    >
+
+  </div>
+
+
+  <!-- MARRIED BROTHERS -->
+
+  <div class="form-group">
+
+    <label>
+      Married Brothers
+    </label>
+
+    <input
+      type="number"
+      [(ngModel)]="marriedBrothers"
+      min="0"
+      max="20"
+      placeholder="0"
+    >
+
+  </div>
+
+
+  <!-- MARRIED SISTERS -->
+
+  <div class="form-group">
+
+    <label>
+      Married Sisters
+    </label>
+
+    <input
+      type="number"
+      [(ngModel)]="marriedSisters"
+      min="0"
+      max="20"
+      placeholder="0"
+    >
+
+  </div>
+
+</div>
+
+
+        <div class="form-divider"></div>
+
+
+        <!-- FAMILY STATUS -->
+
+        <div class="section-heading">
+            <h2>Family Background</h2>
+            <span>Optional</span>
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Family Status</label>
+
+            <select [(ngModel)]="familyStatus">
+
+                <option value="">
+                    Select family status
+                </option>
+
+                <option value="Lower Middle Class">
+                    Lower Middle Class
+                </option>
+
+                <option value="Middle Class">
+                    Middle Class
+                </option>
+
+                <option value="Upper Middle Class">
+                    Upper Middle Class
+                </option>
+
+                <option value="Affluent">
+                    Affluent
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Home Type</label>
+
+            <select [(ngModel)]="homeType">
+
+                <option value="">
+                    Select home type
+                </option>
+
+                <option value="Own House">
+                    Own House
+                </option>
+
+                <option value="Rented House">
+                    Rented House
+                </option>
+
+                <option value="Family House">
+                    Family House
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="form-actions">
+
+            <button type="button" class="secondary-btn" (click)="goBack()">
+                Cancel
+            </button>
+
+            <button type="button" class="primary-btn" (click)="saveDetails()">
+                Save & Continue
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+    </section>
+
+</div>

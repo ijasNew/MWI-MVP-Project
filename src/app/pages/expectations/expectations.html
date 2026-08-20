@@ -1,0 +1,84 @@
+<div class="expectations-page">
+
+  <header class="form-header">
+
+    <button
+      type="button"
+      class="back-btn"
+      (click)="goBack()"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+      Back
+    </button>
+
+    <span class="page-label">
+      PROFILE COMPLETION
+    </span>
+
+    <h1>Your Expectations</h1>
+
+    <p>
+      Tell us what you are looking for in your
+      preferred match.
+    </p>
+
+  </header>
+
+
+  <section class="form-card">
+
+    <div class="form-group">
+
+      <label>
+        Your Expectations
+      </label>
+
+      <textarea
+        [(ngModel)]="expectations"
+        maxlength="1000"
+        placeholder="Write about the qualities, values or expectations you are looking for in your partner..."
+      ></textarea>
+
+      <div class="character-count">
+        {{ expectations.length }} / 1000
+      </div>
+
+    </div>
+
+
+    <div class="info-box">
+
+      <i class="fa-solid fa-circle-info"></i>
+
+      <p>
+        Please avoid sharing phone numbers, email addresses
+        or other private contact information here.
+      </p>
+
+    </div>
+
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="secondary-btn"
+        (click)="goBack()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="primary-btn"
+        (click)="saveDetails()"
+      >
+        Save & Continue
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+    </div>
+
+  </section>
+
+</div>

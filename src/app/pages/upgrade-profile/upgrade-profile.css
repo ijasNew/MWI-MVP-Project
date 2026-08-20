@@ -1,0 +1,465 @@
+.upgrade-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.upgrade-header {
+  max-width: 760px;
+  margin-bottom: 30px;
+}
+
+.page-label {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.upgrade-header h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.upgrade-header p {
+  margin: 0;
+  line-height: 1.65;
+  opacity: 0.7;
+}
+
+
+/* =========================
+   VERIFICATION CARD
+========================= */
+
+.verification-card {
+  max-width: 650px;
+  margin: 0 auto 55px;
+  padding: 32px;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+}
+
+.verification-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.verification-card h2 {
+  margin: 0 0 8px;
+  font-size: 25px;
+}
+
+.card-description {
+  max-width: 500px;
+  margin: 0 auto 25px;
+  line-height: 1.6;
+  opacity: 0.7;
+}
+
+
+/* =========================
+   BENEFITS
+========================= */
+
+.benefits-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f8f9fa;
+  font-size: 14px;
+}
+
+.benefit-item i {
+  font-size: 13px;
+}
+
+
+/* =========================
+   PRICING
+========================= */
+
+.pricing-box {
+  margin-bottom: 22px;
+  padding: 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  text-align: left;
+}
+
+.regular-price,
+.current-plan {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.regular-price strong {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.current-plan strong {
+  font-size: 18px;
+}
+
+.verification-charge {
+  padding-top: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.verification-charge span,
+.verification-charge strong,
+.verification-charge small {
+  display: block;
+}
+
+.verification-charge span {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.verification-charge strong {
+  margin-top: 4px;
+  font-size: 28px;
+}
+
+.verification-charge small {
+  margin-top: 3px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+
+/* =========================
+   CTA
+========================= */
+
+.primary-action {
+  width: 100%;
+  min-height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  border: 0;
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.payment-note {
+  margin: 10px 0 0;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section-heading {
+  margin-bottom: 22px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+
+/* =========================
+   REASONS
+========================= */
+
+.reason-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 55px;
+}
+
+.reason-card {
+  padding: 22px;
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+  background: #ffffff;
+}
+
+.reason-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 14px;
+
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+.reason-card h3 {
+  margin: 0 0 7px;
+  font-size: 16px;
+}
+
+.reason-card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: 0.7;
+}
+
+
+/* =========================
+   JOURNEY
+========================= */
+
+.journey-section {
+  margin-bottom: 45px;
+}
+
+.journey-list {
+  display: grid;
+  gap: 12px;
+}
+
+.journey-step {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+  background: #ffffff;
+}
+
+.step-number {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  background: #f3f4f6;
+}
+
+.step-content h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.step-status {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.step-content p {
+  margin: 7px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
+
+/* =========================
+   SUPPORT
+========================= */
+
+.support-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 20px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+
+  background: #ffffff;
+}
+
+.support-icon {
+  width: 45px;
+  height: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+  background: #f3f4f6;
+
+  font-size: 21px;
+}
+
+.support-content {
+  flex: 1;
+}
+
+.support-content h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.support-content p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
+.support-button {
+  min-height: 44px;
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border: 0;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   SECURITY NOTE
+========================= */
+
+.security-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-top: 16px;
+  padding: 14px 16px;
+
+  border-radius: 12px;
+
+  background: #f8f9fa;
+}
+
+.security-note i {
+  margin-top: 3px;
+}
+
+.security-note p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0.65;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .upgrade-page {
+    padding: 22px 14px 40px;
+  }
+
+  .upgrade-header h1 {
+    font-size: 26px;
+  }
+
+  .upgrade-header p {
+    font-size: 14px;
+  }
+
+  .verification-card {
+    padding: 22px 16px;
+    border-radius: 16px;
+  }
+
+  .verification-card h2 {
+    font-size: 22px;
+  }
+
+  .benefits-list {
+    grid-template-columns: 1fr;
+  }
+
+  .reason-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .support-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .support-content {
+    min-width: 0;
+  }
+
+  .support-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+}
+
+.dashboard-main {
+  margin-left: 250px;
+
+  min-height: 100vh;
+
+  padding: 38px 45px 70px;
+}
+
+@media (max-width: 760px) {
+
+  .dashboard-main {
+    margin-left: 0;
+  }
+
+}

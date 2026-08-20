@@ -5,6 +5,7 @@ import {
 } from '@angular/router';
 
 import { routes } from './app.routes';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
 
@@ -17,8 +18,8 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'top'
       })
 
-    )
-
+    ),
+provideHttpClient()
   ]
 
 };

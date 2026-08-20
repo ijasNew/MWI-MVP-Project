@@ -1,0 +1,831 @@
+<div class="matching-page">
+
+
+  <!-- =========================
+       USER MENU
+  ========================== -->
+
+  <app-user-menu></app-user-menu>
+
+
+  <!-- =========================
+       MAIN
+  ========================== -->
+
+  <main class="dashboard-main">
+
+
+    <!-- PAGE HEADER -->
+
+    <header class="page-header">
+
+      <span class="page-label">
+        MATCHMAKING
+      </span>
+
+      <h1>
+        Matching Profiles
+      </h1>
+
+      <p>
+        Find profiles that match your preferences.
+      </p>
+
+    </header>
+
+
+    <!-- =========================
+         PROFILE GRID
+    ========================== -->
+
+    <section class="matching-grid">
+
+
+      <!-- =========================
+           PROFILE 1
+      ========================== -->
+
+      <article class="match-card" (click)="openProfile('F1024')">
+
+        <div class="profile-photo">
+
+          <div class="photo-placeholder">
+
+            <i class="fa-solid fa-user"></i>
+
+          </div>
+
+          <span class="verified-badge">
+
+            <i class="fa-solid fa-check"></i>
+
+            Verified
+
+          </span>
+
+        </div>
+
+
+        <div class="match-content">
+
+
+          <div class="profile-heading">
+
+            <div>
+
+              <h3>
+                Ayesha
+              </h3>
+
+              <span>
+                Profile ID: F1024
+              </span>
+
+            </div>
+
+
+            <button type="button" class="shortlist-btn" title="Shortlist" (click)="
+                toggleShortlist(
+                  $event,
+                  'F1024'
+                )
+              ">
+
+              <i class="fa-regular fa-star"></i>
+
+            </button>
+
+          </div>
+
+
+          <div class="profile-details">
+
+            <span>
+
+              <i class="fa-solid fa-graduation-cap"></i>
+
+              Master's Degree
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ring"></i>
+
+              Never Married
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ruler-vertical"></i>
+
+              5'4"
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-location-dot"></i>
+
+              Malappuram
+
+            </span>
+
+          </div>
+
+
+          <button type="button" class="interest-btn" (click)="
+              sendInterest(
+                $event,
+                'F1024'
+              )
+            ">
+
+            <i class="fa-solid fa-heart"></i>
+
+            Send Interest
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- =========================
+           PROFILE 2
+      ========================== -->
+
+      <article class="match-card" (click)="openProfile('F1098')">
+
+        <div class="profile-photo">
+
+          <div class="photo-placeholder">
+
+            <i class="fa-solid fa-user"></i>
+
+          </div>
+
+          <span class="verified-badge">
+
+            <i class="fa-solid fa-check"></i>
+
+            Verified
+
+          </span>
+
+        </div>
+
+
+        <div class="match-content">
+
+
+          <div class="profile-heading">
+
+            <div>
+
+              <h3>
+                Fathima
+              </h3>
+
+              <span>
+                Profile ID: F1098
+              </span>
+
+            </div>
+
+
+            <button type="button" class="shortlist-btn" title="Shortlist" (click)="
+                toggleShortlist(
+                  $event,
+                  'F1098'
+                )
+              ">
+
+              <i class="fa-regular fa-star"></i>
+
+            </button>
+
+          </div>
+
+
+          <div class="profile-details">
+
+            <span>
+
+              <i class="fa-solid fa-graduation-cap"></i>
+
+              General Degree
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ring"></i>
+
+              Never Married
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ruler-vertical"></i>
+
+              5'3"
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-location-dot"></i>
+
+              Kozhikode
+
+            </span>
+
+          </div>
+
+
+          <button type="button" class="interest-btn" (click)="
+              sendInterest(
+                $event,
+                'F1098'
+              )
+            ">
+
+            <i class="fa-solid fa-heart"></i>
+
+            Send Interest
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- =========================
+           PROFILE 3
+      ========================== -->
+
+      <article class="match-card" (click)="openProfile('F1156')">
+
+        <div class="profile-photo">
+
+          <div class="photo-placeholder">
+
+            <i class="fa-solid fa-user"></i>
+
+          </div>
+
+          <span class="verified-badge">
+
+            <i class="fa-solid fa-check"></i>
+
+            Verified
+
+          </span>
+
+        </div>
+
+
+        <div class="match-content">
+
+
+          <div class="profile-heading">
+
+            <div>
+
+              <h3>
+                Safa
+              </h3>
+
+              <span>
+                Profile ID: F1156
+              </span>
+
+            </div>
+
+
+            <button type="button" class="shortlist-btn" title="Shortlist" (click)="
+                toggleShortlist(
+                  $event,
+                  'F1156'
+                )
+              ">
+
+              <i class="fa-regular fa-star"></i>
+
+            </button>
+
+          </div>
+
+
+          <div class="profile-details">
+
+            <span>
+
+              <i class="fa-solid fa-graduation-cap"></i>
+
+              Professional Degree
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ring"></i>
+
+              Divorced
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ruler-vertical"></i>
+
+              5'5"
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-location-dot"></i>
+
+              Palakkad
+
+            </span>
+
+          </div>
+
+
+          <button type="button" class="interest-btn" (click)="
+              sendInterest(
+                $event,
+                'F1156'
+              )
+            ">
+
+            <i class="fa-solid fa-heart"></i>
+
+            Send Interest
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+      <article class="match-card" (click)="openProfile('F1024')">
+
+        <div class="profile-photo">
+
+          <div class="photo-placeholder">
+
+            <i class="fa-solid fa-user"></i>
+
+          </div>
+
+          <span class="verified-badge">
+
+            <i class="fa-solid fa-check"></i>
+
+            Verified
+
+          </span>
+
+        </div>
+
+
+        <div class="match-content">
+
+
+          <div class="profile-heading">
+
+            <div>
+
+              <h3>
+                Ayesha
+              </h3>
+
+              <span>
+                Profile ID: F1024
+              </span>
+
+            </div>
+
+
+            <button type="button" class="shortlist-btn" title="Shortlist" (click)="
+                toggleShortlist(
+                  $event,
+                  'F1024'
+                )
+              ">
+
+              <i class="fa-regular fa-star"></i>
+
+            </button>
+
+          </div>
+
+
+          <div class="profile-details">
+
+            <span>
+
+              <i class="fa-solid fa-graduation-cap"></i>
+
+              Master's Degree
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ring"></i>
+
+              Never Married
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ruler-vertical"></i>
+
+              5'4"
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-location-dot"></i>
+
+              Malappuram
+
+            </span>
+
+          </div>
+
+
+          <button type="button" class="interest-btn" (click)="
+              sendInterest(
+                $event,
+                'F1024'
+              )
+            ">
+
+            <i class="fa-solid fa-heart"></i>
+
+            Send Interest
+
+          </button>
+
+        </div>
+
+      </article>
+      <article class="match-card" (click)="openProfile('F1024')">
+
+        <div class="profile-photo">
+
+          <div class="photo-placeholder">
+
+            <i class="fa-solid fa-user"></i>
+
+          </div>
+
+          <span class="verified-badge">
+
+            <i class="fa-solid fa-check"></i>
+
+            Verified
+
+          </span>
+
+        </div>
+
+
+        <div class="match-content">
+
+
+          <div class="profile-heading">
+
+            <div>
+
+              <h3>
+                Ayesha
+              </h3>
+
+              <span>
+                Profile ID: F1024
+              </span>
+
+            </div>
+
+
+            <button type="button" class="shortlist-btn" title="Shortlist" (click)="
+                toggleShortlist(
+                  $event,
+                  'F1024'
+                )
+              ">
+
+              <i class="fa-regular fa-star"></i>
+
+            </button>
+
+          </div>
+
+
+          <div class="profile-details">
+
+            <span>
+
+              <i class="fa-solid fa-graduation-cap"></i>
+
+              Master's Degree
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ring"></i>
+
+              Never Married
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ruler-vertical"></i>
+
+              5'4"
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-location-dot"></i>
+
+              Malappuram
+
+            </span>
+
+          </div>
+
+
+          <button type="button" class="interest-btn" (click)="
+              sendInterest(
+                $event,
+                'F1024'
+              )
+            ">
+
+            <i class="fa-solid fa-heart"></i>
+
+            Send Interest
+
+          </button>
+
+        </div>
+
+      </article>
+      <article class="match-card" (click)="openProfile('F1024')">
+
+        <div class="profile-photo">
+
+          <div class="photo-placeholder">
+
+            <i class="fa-solid fa-user"></i>
+
+          </div>
+
+          <span class="verified-badge">
+
+            <i class="fa-solid fa-check"></i>
+
+            Verified
+
+          </span>
+
+        </div>
+
+
+        <div class="match-content">
+
+
+          <div class="profile-heading">
+
+            <div>
+
+              <h3>
+                Ayesha
+              </h3>
+
+              <span>
+                Profile ID: F1024
+              </span>
+
+            </div>
+
+
+            <button type="button" class="shortlist-btn" title="Shortlist" (click)="
+                toggleShortlist(
+                  $event,
+                  'F1024'
+                )
+              ">
+
+              <i class="fa-regular fa-star"></i>
+
+            </button>
+
+          </div>
+
+
+          <div class="profile-details">
+
+            <span>
+
+              <i class="fa-solid fa-graduation-cap"></i>
+
+              Master's Degree
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ring"></i>
+
+              Never Married
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ruler-vertical"></i>
+
+              5'4"
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-location-dot"></i>
+
+              Malappuram
+
+            </span>
+
+          </div>
+
+
+          <button type="button" class="interest-btn" (click)="
+              sendInterest(
+                $event,
+                'F1024'
+              )
+            ">
+
+            <i class="fa-solid fa-heart"></i>
+
+            Send Interest
+
+          </button>
+
+        </div>
+
+      </article>
+      <article class="match-card" (click)="openProfile('F1024')">
+
+        <div class="profile-photo">
+
+          <div class="photo-placeholder">
+
+            <i class="fa-solid fa-user"></i>
+
+          </div>
+
+          <span class="verified-badge">
+
+            <i class="fa-solid fa-check"></i>
+
+            Verified
+
+          </span>
+
+        </div>
+
+
+        <div class="match-content">
+
+
+          <div class="profile-heading">
+
+            <div>
+
+              <h3>
+                Ayesha
+              </h3>
+
+              <span>
+                Profile ID: F1024
+              </span>
+
+            </div>
+
+
+            <button type="button" class="shortlist-btn" title="Shortlist" (click)="
+                toggleShortlist(
+                  $event,
+                  'F1024'
+                )
+              ">
+
+              <i class="fa-regular fa-star"></i>
+
+            </button>
+
+          </div>
+
+
+          <div class="profile-details">
+
+            <span>
+
+              <i class="fa-solid fa-graduation-cap"></i>
+
+              Master's Degree
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ring"></i>
+
+              Never Married
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-ruler-vertical"></i>
+
+              5'4"
+
+            </span>
+
+
+            <span>
+
+              <i class="fa-solid fa-location-dot"></i>
+
+              Malappuram
+
+            </span>
+
+          </div>
+
+
+          <button type="button" class="interest-btn" (click)="
+              sendInterest(
+                $event,
+                'F1024'
+              )
+            ">
+
+            <i class="fa-solid fa-heart"></i>
+
+            Send Interest
+
+          </button>
+
+        </div>
+
+      </article>
+    </section>
+
+  </main>
+
+</div>

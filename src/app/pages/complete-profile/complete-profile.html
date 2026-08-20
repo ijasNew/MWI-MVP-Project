@@ -1,0 +1,612 @@
+<div class="complete-profile-layout">
+
+    <app-user-menu></app-user-menu>
+
+    <main class="dashboard-main">
+
+        <div class="complete-profile-page">
+
+            <!-- HEADER -->
+
+            <header class="profile-header">
+
+                <div>
+
+                    <span class="page-label">
+                        PROFILE COMPLETION
+                    </span>
+
+                    <h1>
+                        Complete Your Profile
+                    </h1>
+
+                    <p>
+                        Add more information to improve your profile
+                        and get better matches.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <!-- PROGRESS CARD -->
+
+            <section class="progress-card">
+
+                <div class="progress-top">
+
+                    <div>
+
+                        <span>
+                            Profile Completion
+                        </span>
+
+                        <strong>
+                            {{ completionPercentage }}%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-status">
+                        Getting Started
+                    </div>
+
+                </div>
+
+
+                <div class="progress-bar">
+
+                    <div class="progress-fill" [style.width.%]="completionPercentage"></div>
+
+                </div>
+
+
+                <p>
+                    Complete your profile to help us find
+                    more suitable matches for you.
+                </p>
+
+            </section>
+
+
+            <!-- PROFILE SECTIONS -->
+
+            <div class="completion-list">
+                <!-- BASIC DETAILS -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Basic Details
+                        </h2>
+
+                        <p>
+                            Your name, gender, age, marital status
+                            and basic profile information.
+                        </p>
+
+                        <span class="completion-meta">
+
+                            @if (basicCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+
+                        </span>
+
+                    </div>
+
+                    <button type="button" (click)="openMyDetails()">
+
+                        @if (basicCompleted) {
+                        View Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+                </article>
+
+                <!-- LOCATION -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Location
+                        </h2>
+
+                        <p>
+                            Your house name, place, district
+                            and pincode.
+                        </p>
+
+                        <span class="completion-meta">
+
+                            @if (locationCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+
+                        </span>
+
+                    </div>
+
+                    <button type="button" (click)="openMyDetails()">
+
+                        @if (locationCompleted) {
+                        View Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </article>
+
+                <!-- RELIGION & COMMUNITY -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-hands-praying"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Religion & Community
+                        </h2>
+
+                        <p>
+                            Your religion, community and
+                            related profile details.
+                        </p>
+
+                        <span class="completion-meta">
+
+                            @if (religionCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+
+                        </span>
+
+                    </div>
+
+                    <button type="button" (click)="openMyDetails()">
+
+                        @if (religionCompleted) {
+                        View Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </article>
+
+                <!-- EDUCATION & CAREER -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Education & Career
+                        </h2>
+
+                        <p>
+                            Your education, specialization,
+                            job sector and current occupation.
+                        </p>
+
+                        <span class="completion-meta">
+
+                            @if (educationCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+
+                        </span>
+
+                    </div>
+
+                    <button type="button" (click)="openMyDetails()">
+
+                        @if (educationCompleted) {
+                        View Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </article>
+
+                <!-- PARTNER PREFERENCE -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-heart-circle-check"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Partner Preference
+                        </h2>
+
+                        <p>
+                            Your preferred age, height, marital status,
+                            religion and location.
+                        </p>
+
+                        <span class="completion-meta">
+
+                            @if (preferenceCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+
+                        </span>
+
+                    </div>
+
+                    <button type="button" (click)="openMyDetails()">
+
+                        @if (preferenceCompleted) {
+                        View Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </article>
+
+                <!-- PHYSICAL -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-person"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Physical Details
+                        </h2>
+
+                        <p>
+                            Add weight, body type, complexion
+                            and physical status.
+                        </p>
+
+                        <span class="completion-meta">
+
+                            @if (physicalCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+
+                        </span>
+                    </div>
+
+                    <button type="button" (click)="openPhysicalDetails()">
+                        @if (physicalCompleted) {
+                        Edit Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                </article>
+
+
+                <!-- CONTACT -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-address-card"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Contact Information
+                        </h2>
+
+                        <p>
+                            Add your secondary mobile number,
+                            WhatsApp number and email.
+                        </p>
+
+                        <span class="completion-meta">
+                            @if (contactCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+                        </span>
+
+                    </div>
+
+
+                    <button type="button" (click)="openContactDetails()">
+                        @if (contactCompleted) {
+                        Edit Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+
+
+
+
+                </article>
+
+
+                <!-- WORK -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Work & Education Details
+                        </h2>
+
+                        <p>
+                            Add college, company, work location
+                            and annual income.
+                        </p>
+
+                        <span class="completion-meta">
+                            @if (workCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+                        </span>
+                    </div>
+
+
+
+                    <button type="button" (click)="openWorkDetails()">
+                        @if (workCompleted) {
+                        Edit Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                </article>
+
+
+                <!-- FAMILY -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-people-roof"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Family Details
+                        </h2>
+
+                        <p>
+                            Add parent, sibling and family
+                            information.
+                        </p>
+
+                        <span class="completion-meta">
+                            @if (familyCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+                        </span>
+
+                    </div>
+
+                    <button type="button" (click)="openFamilyDetails()">
+                        @if (familyCompleted) {
+                        Edit Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                </article>
+
+
+                <!-- PREFERENCE -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Additional Preferences
+                        </h2>
+
+                        <p>
+                            Add family status, income, complexion,
+                            physical status and location radius.
+                        </p>
+
+                        <span class="completion-meta">
+                            @if (additionalPreferencesCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+                        </span>
+                    </div>
+
+                    <button type="button" (click)="openAdditionalPreferences()">
+                        @if (additionalPreferencesCompleted) {
+                        Edit Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                </article>
+
+
+                <!-- EXPECTATIONS -->
+
+                <article class="completion-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-comment"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Your Expectations
+                        </h2>
+
+                        <p>
+                            Tell us what you are looking for
+                            in your preferred match.
+                        </p>
+
+                        <span class="completion-meta">
+                            @if (expectationsCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+                        </span>
+
+                    </div>
+
+                    <button type="button" (click)="openExpectations()">
+                        @if (expectationsCompleted) {
+                        Edit Details
+                        } @else {
+                        Add Details
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                </article>
+
+
+                <!-- PHOTOS -->
+
+                <article class="completion-card photo-card">
+
+                    <div class="completion-icon">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+
+                    <div class="completion-content">
+
+                        <h2>
+                            Profile Photos
+                        </h2>
+
+                        <p>
+                            Add up to 4 photos to make your
+                            profile more complete.
+                        </p>
+
+                        <!-- <span class="completion-meta">
+                    0 of 4 photos added
+                </span> -->
+
+
+                        <span class="completion-meta">
+                            @if (photosCompleted) {
+                            Completed
+                            } @else {
+                            Not completed
+                            }
+                        </span>
+
+                    </div>
+
+                    <button type="button" (click)="openProfilePhotos()">
+
+                        @if (photosCompleted) {
+                        Edit Photos
+                        } @else {
+                        Add Photos
+                        }
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>

@@ -1,0 +1,355 @@
+
+
+
+<app-user-menu></app-user-menu>
+
+<main class="dashboard-main">
+
+<div class="shortlisted-page">
+
+  <!-- PAGE HEADER -->
+
+  <header class="page-header">
+
+    <div>
+
+      <span class="page-label">
+        YOUR SAVED PROFILES
+      </span>
+
+      <h1>
+        Shortlisted Profiles
+      </h1>
+
+      <p>
+        Profiles you've saved to review later.
+      </p>
+
+    </div>
+
+    <div class="profile-count">
+      3 Profiles
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       SHORTLISTED LIST
+  ========================== -->
+
+  <section class="shortlist-list">
+
+
+    <!-- PROFILE 1 -->
+
+    <article class="shortlist-card">
+
+      <div class="profile-photo">
+
+        <div class="photo-placeholder">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <span class="verified-badge">
+          <i class="fa-solid fa-check"></i>
+          Verified
+        </span>
+
+      </div>
+
+
+      <div class="profile-content">
+
+        <div class="profile-top">
+
+          <div>
+
+            <h2>
+              Ayesha
+            </h2>
+
+            <span class="profile-id">
+              Profile ID: F1024
+            </span>
+
+          </div>
+
+          <span class="saved-badge">
+            <i class="fa-solid fa-star"></i>
+            Saved
+          </span>
+
+        </div>
+
+
+        <div class="profile-details">
+
+          <span>
+            <i class="fa-solid fa-graduation-cap"></i>
+            Master's Degree
+          </span>
+
+          <span>
+            <i class="fa-solid fa-ring"></i>
+            Never Married
+          </span>
+
+          <span>
+            <i class="fa-solid fa-ruler-vertical"></i>
+            5'4"
+          </span>
+
+          <span>
+            <i class="fa-solid fa-location-dot"></i>
+            Malappuram
+          </span>
+
+        </div>
+
+
+        <div class="profile-actions">
+
+          <button
+            type="button"
+            class="view-btn"
+          >
+            <i class="fa-solid fa-user"></i>
+            View Profile
+          </button>
+
+          <button
+            type="button"
+            class="remove-btn"
+            (click)="removeShortlist('Ayesha')"
+          >
+            <i class="fa-regular fa-star"></i>
+            Remove
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- PROFILE 2 -->
+
+    <article class="shortlist-card">
+
+      <div class="profile-photo">
+
+        <div class="photo-placeholder">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <span class="verified-badge">
+          <i class="fa-solid fa-check"></i>
+          Verified
+        </span>
+
+      </div>
+
+
+      <div class="profile-content">
+
+        <div class="profile-top">
+
+          <div>
+
+            <h2>
+              Fathima
+            </h2>
+
+            <span class="profile-id">
+              Profile ID: F1098
+            </span>
+
+          </div>
+
+          <span class="saved-badge">
+            <i class="fa-solid fa-star"></i>
+            Saved
+          </span>
+
+        </div>
+
+
+        <div class="profile-details">
+
+          <span>
+            <i class="fa-solid fa-graduation-cap"></i>
+            General Degree
+          </span>
+
+          <span>
+            <i class="fa-solid fa-ring"></i>
+            Never Married
+          </span>
+
+          <span>
+            <i class="fa-solid fa-ruler-vertical"></i>
+            5'3"
+          </span>
+
+          <span>
+            <i class="fa-solid fa-location-dot"></i>
+            Kozhikode
+          </span>
+
+        </div>
+
+
+        <div class="profile-actions">
+
+          <button
+            type="button"
+            class="view-btn"
+          >
+            <i class="fa-solid fa-user"></i>
+            View Profile
+          </button>
+
+          <button
+            type="button"
+            class="remove-btn"
+            (click)="removeShortlist('Fathima')"
+          >
+            <i class="fa-regular fa-star"></i>
+            Remove
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <!-- PROFILE 3 -->
+
+    <article class="shortlist-card">
+
+      <div class="profile-photo">
+
+        <div class="photo-placeholder">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <span class="verified-badge">
+          <i class="fa-solid fa-check"></i>
+          Verified
+        </span>
+
+      </div>
+
+
+      <div class="profile-content">
+
+        <div class="profile-top">
+
+          <div>
+
+            <h2>
+              Safa
+            </h2>
+
+            <span class="profile-id">
+              Profile ID: F1156
+            </span>
+
+          </div>
+
+          <span class="saved-badge">
+            <i class="fa-solid fa-star"></i>
+            Saved
+          </span>
+
+        </div>
+
+
+        <div class="profile-details">
+
+          <span>
+            <i class="fa-solid fa-graduation-cap"></i>
+            Professional Degree
+          </span>
+
+          <span>
+            <i class="fa-solid fa-ring"></i>
+            Divorced
+          </span>
+
+          <span>
+            <i class="fa-solid fa-ruler-vertical"></i>
+            5'5"
+          </span>
+
+          <span>
+            <i class="fa-solid fa-location-dot"></i>
+            Palakkad
+          </span>
+
+        </div>
+
+
+        <div class="profile-actions">
+
+          <button
+            type="button"
+            class="view-btn"
+          >
+            <i class="fa-solid fa-user"></i>
+            View Profile
+          </button>
+
+          <button
+            type="button"
+            class="remove-btn"
+            (click)="removeShortlist('Safa')"
+          >
+            <i class="fa-regular fa-star"></i>
+            Remove
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  </section>
+
+
+  <!-- =========================
+       EMPTY STATE
+  ========================== -->
+
+  <section class="empty-state">
+
+    <div class="empty-icon">
+      <i class="fa-regular fa-star"></i>
+    </div>
+
+    <h2>
+      No shortlisted profiles yet
+    </h2>
+
+    <p>
+      Save profiles you're interested in
+      and find them here later.
+    </p>
+
+    <button
+      type="button"
+      class="explore-btn"
+    >
+      Explore Matches
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+
+  </section>
+
+</div>
+</main>

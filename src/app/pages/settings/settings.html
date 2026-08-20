@@ -1,0 +1,282 @@
+<div class="settings-layout">
+
+  <app-user-menu></app-user-menu>
+
+
+  <main class="dashboard-main">
+
+    <div class="settings-page">
+
+      <div class="page-header">
+
+        <span class="page-label">
+          ACCOUNT
+        </span>
+
+        <h1>
+          Settings
+        </h1>
+
+        <p>
+          Manage your account and security.
+        </p>
+
+      </div>
+
+
+      <!-- ACCOUNT -->
+
+      <section class="settings-card">
+
+        <div class="card-header">
+
+          <div class="card-icon">
+            <i class="fa-solid fa-user"></i>
+          </div>
+
+          <div>
+
+            <h2>
+              Account
+            </h2>
+
+            <p>
+              Your account information
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="account-row">
+
+          <span>
+            Profile ID
+          </span>
+
+          <strong>
+             {{ user?.memberId || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div class="account-row">
+
+          <span>
+            Account Status
+          </span>
+
+          <strong class="status">
+            Active
+          </strong>
+
+        </div>
+
+      </section>
+
+
+      <!-- SECURITY -->
+
+      <section class="settings-card">
+
+        <div class="card-header">
+
+          <div class="card-icon">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+
+          <div>
+
+            <h2>
+              Change Password
+            </h2>
+
+            <p>
+              Keep your account secure with a strong password.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        @if (errorMessage) {
+
+          <div class="message error">
+            {{ errorMessage }}
+          </div>
+
+        }
+
+
+        @if (message) {
+
+          <div class="message success">
+            {{ message }}
+          </div>
+
+        }
+
+
+        <!-- CURRENT PASSWORD -->
+
+        <div class="form-group">
+
+          <label>
+            Current Password
+          </label>
+
+          <div class="password-input">
+
+            <input
+              [type]="
+                showCurrentPassword
+                  ? 'text'
+                  : 'password'
+              "
+              [(ngModel)]="currentPassword"
+              placeholder="Enter current password"
+            />
+
+            <button
+              type="button"
+              (click)="toggleCurrentPassword()"
+            >
+
+              <i
+                class="fa-solid"
+                [class.fa-eye]="
+                  !showCurrentPassword
+                "
+                [class.fa-eye-slash]="
+                  showCurrentPassword
+                "
+              ></i>
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- NEW PASSWORD -->
+
+        <div class="form-group">
+
+          <label>
+            New Password
+          </label>
+
+          <div class="password-input">
+
+            <input
+              [type]="
+                showNewPassword
+                  ? 'text'
+                  : 'password'
+              "
+              [(ngModel)]="newPassword"
+              placeholder="Enter new password"
+            />
+
+            <button
+              type="button"
+              (click)="toggleNewPassword()"
+            >
+
+              <i
+                class="fa-solid"
+                [class.fa-eye]="
+                  !showNewPassword
+                "
+                [class.fa-eye-slash]="
+                  showNewPassword
+                "
+              ></i>
+
+            </button>
+
+          </div>
+
+          <small>
+            Minimum 8 characters.
+          </small>
+
+        </div>
+
+
+        <!-- CONFIRM PASSWORD -->
+
+        <div class="form-group">
+
+          <label>
+            Confirm New Password
+          </label>
+
+          <div class="password-input">
+
+            <input
+              [type]="
+                showConfirmPassword
+                  ? 'text'
+                  : 'password'
+              "
+              [(ngModel)]="confirmPassword"
+              placeholder="Confirm new password"
+            />
+
+            <button
+              type="button"
+              (click)="toggleConfirmPassword()"
+            >
+
+              <i
+                class="fa-solid"
+                [class.fa-eye]="
+                  !showConfirmPassword
+                "
+                [class.fa-eye-slash]="
+                  showConfirmPassword
+                "
+              ></i>
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="security-note">
+
+          <i class="fa-solid fa-shield-halved"></i>
+
+          <span>
+            Never share your password with anyone.
+          </span>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="save-btn"
+          (click)="changePassword()"
+        >
+
+          <i class="fa-solid fa-lock"></i>
+
+          Change Password
+
+        </button>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>

@@ -1,0 +1,189 @@
+<div class="work-page">
+
+  <header class="form-header">
+
+    <button
+      type="button"
+      class="back-btn"
+      (click)="goBack()"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+      Back
+    </button>
+
+    <span class="page-label">
+      PROFILE COMPLETION
+    </span>
+
+    <h1>Work & Education Details</h1>
+
+    <p>
+      Add additional academic and professional
+      information to complete your profile.
+    </p>
+
+  </header>
+
+
+  <section class="form-card">
+
+    <!-- EXISTING EDUCATION -->
+
+    <div class="existing-info">
+
+      <div>
+        <span>Highest Education</span>
+        <strong>
+          {{ getSavedValue('highestEducation') }}
+        </strong>
+      </div>
+
+      <div>
+        <span>Specialization</span>
+        <strong>
+          {{ getSavedValue('specialization') }}
+        </strong>
+      </div>
+
+      <div>
+        <span>Job Title / Role</span>
+        <strong>
+          {{ getSavedValue('jobTitle') }}
+        </strong>
+      </div>
+
+      <div>
+        <span>Job Sector</span>
+        <strong>
+          {{ getSavedValue('jobSector') }}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="form-divider"></div>
+
+
+    <!-- COLLEGE -->
+
+    <div class="form-group">
+
+      <label>
+        College / University
+        <span class="optional">Optional</span>
+      </label>
+
+      <input
+        type="text"
+        [(ngModel)]="collegeUniversity"
+        placeholder="Enter college or university name"
+      >
+
+    </div>
+
+
+    <!-- COMPANY -->
+
+    <div class="form-group">
+
+      <label>
+        Company / Organization
+        <span class="optional">Optional</span>
+      </label>
+
+      <input
+        type="text"
+        [(ngModel)]="companyName"
+        placeholder="Enter company or organization"
+      >
+
+    </div>
+
+
+    <!-- WORK LOCATION -->
+
+    <div class="form-group">
+
+      <label>
+        Work Location
+        <span class="optional">Optional</span>
+      </label>
+
+      <input
+        type="text"
+        [(ngModel)]="workLocation"
+        placeholder="Enter work location"
+      >
+
+    </div>
+
+
+    <!-- ANNUAL INCOME -->
+
+    <div class="form-group">
+
+      <label>
+        Annual Income
+        <span class="optional">Optional</span>
+      </label>
+
+      <select [(ngModel)]="annualIncome">
+
+        <option value="">
+          Prefer not to say
+        </option>
+
+        <option value="Below ₹2 Lakh">
+          Below ₹2 Lakh
+        </option>
+
+        <option value="₹2 - ₹5 Lakh">
+          ₹2 - ₹5 Lakh
+        </option>
+
+        <option value="₹5 - ₹10 Lakh">
+          ₹5 - ₹10 Lakh
+        </option>
+
+        <option value="₹10 - ₹15 Lakh">
+          ₹10 - ₹15 Lakh
+        </option>
+
+        <option value="₹15 - ₹25 Lakh">
+          ₹15 - ₹25 Lakh
+        </option>
+
+        <option value="Above ₹25 Lakh">
+          Above ₹25 Lakh
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="secondary-btn"
+        (click)="goBack()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="primary-btn"
+        (click)="saveDetails()"
+      >
+        Save & Continue
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+    </div>
+
+  </section>
+
+</div>

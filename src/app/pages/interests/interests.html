@@ -1,0 +1,563 @@
+<div class="dashboard">
+
+   <app-user-menu></app-user-menu>
+
+   
+  <!-- MAIN -->
+
+  <main class="dashboard-main">
+
+    <div class="interests-page">
+      <div class="interests-page">
+
+        <!-- PAGE HEADER -->
+
+        <header class="page-header">
+
+          <div>
+            <span class="page-label">
+              MATCHMAKING
+            </span>
+
+            <h1>
+              Interests
+            </h1>
+
+            <p>
+              Manage the profiles you're interested in
+              and the interests you've received.
+            </p>
+          </div>
+
+        </header>
+
+
+        <!-- TABS -->
+
+        <div class="interest-tabs">
+
+          <button type="button" [class.active]="activeTab === 'received'" (click)="selectTab('received')">
+            <i class="fa-solid fa-inbox"></i>
+
+            Received
+
+            <span class="tab-count">
+              3
+            </span>
+
+          </button>
+
+
+          <button type="button" [class.active]="activeTab === 'sent'" (click)="selectTab('sent')">
+            <i class="fa-solid fa-paper-plane"></i>
+
+            Sent
+
+            <span class="tab-count">
+              2
+            </span>
+
+          </button>
+
+        </div>
+
+
+        <!-- =========================
+       RECEIVED
+  ========================== -->
+
+        @if (activeTab === 'received') {
+
+        <section class="interest-section">
+
+          <div class="section-heading">
+
+            <div>
+
+              <h2>
+                Received Interests
+              </h2>
+
+              <p>
+                People who have shown interest in your profile.
+              </p>
+
+            </div>
+
+            <span class="result-count">
+              3 Interests
+            </span>
+
+          </div>
+
+
+          <!-- INTEREST CARD -->
+
+          <article class="interest-card">
+
+            <div class="profile-photo">
+
+              <div class="photo-placeholder">
+                <i class="fa-solid fa-user"></i>
+              </div>
+
+              <span class="verified-badge">
+                <i class="fa-solid fa-check"></i>
+                Verified
+              </span>
+
+            </div>
+
+
+            <div class="interest-content">
+
+              <div class="profile-main">
+
+                <div>
+
+                  <h3>
+                    Ahmed
+                  </h3>
+
+                  <span>
+                    Profile ID: M1024
+                  </span>
+
+                </div>
+
+                <span class="status-badge pending">
+                  Pending
+                </span>
+
+              </div>
+
+
+              <div class="profile-info">
+
+                <span>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  Master's Degree
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ring"></i>
+                  Never Married
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ruler-vertical"></i>
+                  5'7"
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-location-dot"></i>
+                  Malappuram
+                </span>
+
+              </div>
+
+
+              <div class="interest-actions">
+
+                <button type="button" class="view-btn">
+                  View Profile
+                </button>
+
+                <button type="button" class="decline-btn">
+                  Decline
+                </button>
+
+                <button type="button" class="accept-btn">
+                  Accept Interest
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+
+          <!-- CARD 2 -->
+
+          <article class="interest-card">
+
+            <div class="profile-photo">
+
+              <div class="photo-placeholder">
+                <i class="fa-solid fa-user"></i>
+              </div>
+
+              <span class="verified-badge">
+                <i class="fa-solid fa-check"></i>
+                Verified
+              </span>
+
+            </div>
+
+
+            <div class="interest-content">
+
+              <div class="profile-main">
+
+                <div>
+
+                  <h3>
+                    Salman
+                  </h3>
+
+                  <span>
+                    Profile ID: M1088
+                  </span>
+
+                </div>
+
+                <span class="status-badge pending">
+                  Pending
+                </span>
+
+              </div>
+
+
+              <div class="profile-info">
+
+                <span>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  General Degree
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ring"></i>
+                  Divorced
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ruler-vertical"></i>
+                  5'8"
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-location-dot"></i>
+                  Kozhikode
+                </span>
+
+              </div>
+
+
+              <div class="interest-actions">
+
+                <button type="button" class="view-btn">
+                  View Profile
+                </button>
+
+                <button type="button" class="decline-btn">
+                  Decline
+                </button>
+
+                <button type="button" class="accept-btn">
+                  Accept Interest
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+
+          <!-- CARD 3 -->
+
+          <article class="interest-card">
+
+            <div class="profile-photo">
+
+              <div class="photo-placeholder">
+                <i class="fa-solid fa-user"></i>
+              </div>
+
+              <span class="verified-badge">
+                <i class="fa-solid fa-check"></i>
+                Verified
+              </span>
+
+            </div>
+
+
+            <div class="interest-content">
+
+              <div class="profile-main">
+
+                <div>
+
+                  <h3>
+                    Niyas
+                  </h3>
+
+                  <span>
+                    Profile ID: M1142
+                  </span>
+
+                </div>
+
+                <span class="status-badge pending">
+                  Pending
+                </span>
+
+              </div>
+
+
+              <div class="profile-info">
+
+                <span>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  Professional Degree
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ring"></i>
+                  Never Married
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ruler-vertical"></i>
+                  5'6"
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-location-dot"></i>
+                  Palakkad
+                </span>
+
+              </div>
+
+
+              <div class="interest-actions">
+
+                <button type="button" class="view-btn">
+                  View Profile
+                </button>
+
+                <button type="button" class="decline-btn">
+                  Decline
+                </button>
+
+                <button type="button" class="accept-btn">
+                  Accept Interest
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </section>
+
+        }
+
+
+        <!-- =========================
+       SENT
+  ========================== -->
+
+        @if (activeTab === 'sent') {
+
+        <section class="interest-section">
+
+          <div class="section-heading">
+
+            <div>
+
+              <h2>
+                Sent Interests
+              </h2>
+
+              <p>
+                Track the interests you've sent.
+              </p>
+
+            </div>
+
+            <span class="result-count">
+              2 Interests
+            </span>
+
+          </div>
+
+
+          <!-- SENT CARD -->
+
+          <article class="interest-card">
+
+            <div class="profile-photo">
+
+              <div class="photo-placeholder">
+                <i class="fa-solid fa-user"></i>
+              </div>
+
+              <span class="verified-badge">
+                <i class="fa-solid fa-check"></i>
+                Verified
+              </span>
+
+            </div>
+
+
+            <div class="interest-content">
+
+              <div class="profile-main">
+
+                <div>
+
+                  <h3>
+                    Ayesha
+                  </h3>
+
+                  <span>
+                    Profile ID: F1024
+                  </span>
+
+                </div>
+
+                <span class="status-badge pending">
+                  Pending
+                </span>
+
+              </div>
+
+
+              <div class="profile-info">
+
+                <span>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  Master's Degree
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ring"></i>
+                  Never Married
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ruler-vertical"></i>
+                  5'4"
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-location-dot"></i>
+                  Malappuram
+                </span>
+
+              </div>
+
+
+              <div class="interest-actions">
+
+                <button type="button" class="view-btn">
+                  View Profile
+                </button>
+
+                <button type="button" class="cancel-btn">
+                  Cancel Interest
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+
+          <!-- SENT CARD 2 -->
+
+          <article class="interest-card">
+
+            <div class="profile-photo">
+
+              <div class="photo-placeholder">
+                <i class="fa-solid fa-user"></i>
+              </div>
+
+              <span class="verified-badge">
+                <i class="fa-solid fa-check"></i>
+                Verified
+              </span>
+
+            </div>
+
+
+            <div class="interest-content">
+
+              <div class="profile-main">
+
+                <div>
+
+                  <h3>
+                    Fathima
+                  </h3>
+
+                  <span>
+                    Profile ID: F1098
+                  </span>
+
+                </div>
+
+                <span class="status-badge accepted">
+                  Accepted
+                </span>
+
+              </div>
+
+
+              <div class="profile-info">
+
+                <span>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  General Degree
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ring"></i>
+                  Never Married
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ruler-vertical"></i>
+                  5'3"
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-location-dot"></i>
+                  Kozhikode
+                </span>
+
+              </div>
+
+
+              <div class="interest-actions">
+
+                <button type="button" class="view-btn">
+                  View Profile
+                </button>
+
+                <span class="accepted-message">
+                  <i class="fa-solid fa-check-circle"></i>
+                  Interest Accepted
+                </span>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </section>
+
+        }
+
+      </div>
+    </div>
+
+  </main>
+
+</div>
