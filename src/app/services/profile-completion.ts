@@ -111,11 +111,34 @@ export class ProfileCompletionService {
     // 08 WORK & EDUCATION
     // =========================
 
+    const hasWorkLocation =
+      !!(
+        profile.workLocation ||
+        (
+          profile.workLocationType &&
+          (
+            (
+              (
+                profile.workLocationType === 'india_same_state' ||
+                profile.workLocationType === 'india_other_state'
+              ) &&
+              profile.workState &&
+              profile.workDistrict
+            ) ||
+            (
+              profile.workLocationType === 'outside_india' &&
+              profile.workCountry &&
+              profile.workCity
+            )
+          )
+        )
+      );
+
     const workCompleted =
       !!(
         profile.collegeUniversity ||
         profile.companyName ||
-        profile.workLocation ||
+        hasWorkLocation ||
         profile.annualIncome != null
       );
 

@@ -22,7 +22,11 @@ export class MatchingProfiles {
     this.router.navigate([
       '/profile-view',
       memberId
-    ]);
+    ], {
+      state: {
+        returnUrl: '/matching-profiles'
+      }
+    });
 
   }
 

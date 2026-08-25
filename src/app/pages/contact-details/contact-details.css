@@ -193,5 +193,62 @@
     width: 100%;
     justify-content: center;
   }
+  
+
+}
+
+.required {
+  color: #dc2626;
+  margin-left: 3px;
+  font-weight: 600;
+}
+
+.field-error {
+  display: block;
+  margin-top: 6px;
+  color: #dc2626;
+  font-size: 12px;
+}
+
+.whatsapp-input {
+  display: flex;
+  gap: 8px;
+}
+
+.whatsapp-input select {
+  width: 150px;
+  flex-shrink: 0;
+}
+
+.whatsapp-input input {
+  flex: 1;
+  min-width: 0;
+}
+
+.whatsapp-input select,
+.whatsapp-input input {
+  height: 46px;
+  padding: 0 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.required {
+  color: #dc2626;
+}
+
+.field-error {
+  display: block;
+  margin-top: 6px;
+  color: #dc2626;
+  font-size: 12px;
+}
+
+@media (max-width: 576px) {
+
+  .whatsapp-input select {
+    width: 125px;
+  }
 
 }

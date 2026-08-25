@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import {
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Component,
+  OnInit
 } from '@angular/core';
+
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-profile-photos',
@@ -18,6 +21,20 @@ export class ProfilePhotos implements OnInit {
 
   isLoadingPhoto = false;
 
+  photoError = '';
+
+  readonly maxPhotos = 4;
+
+  readonly maxFileSize =
+    5 * 1024 * 1024; // 5 MB
+
+
+  readonly allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  ];
+
 
   constructor(
     private router: Router,
@@ -25,12 +42,17 @@ export class ProfilePhotos implements OnInit {
   ) {}
 
 
+  // =========================
+  // INIT
+  // =========================
+
   ngOnInit(): void {
 
     const fromMyDetails =
       sessionStorage.getItem(
         'mwi_edit_source'
       );
+
 
     if (
       fromMyDetails === 'my-details'
@@ -47,6 +69,7 @@ export class ProfilePhotos implements OnInit {
         'mwi_registration'
       );
 
+
     if (!saved) {
       return;
     }
@@ -57,14 +80,29 @@ export class ProfilePhotos implements OnInit {
       const profile =
         JSON.parse(saved);
 
+
       if (
-        Array.isArray(profile.photos)
+        Array.isArray(
+          profile.photos
+        )
       ) {
 
         this.photos =
-          [...profile.photos];
+          profile.photos
+            .filter(
+              (photo: unknown) =>
+                typeof photo === 'string' &&
+                photo.startsWith(
+                  'data:image/'
+                )
+            )
+            .slice(
+              0,
+              this.maxPhotos
+            );
 
       }
+
 
     } catch (error) {
 
@@ -78,146 +116,387 @@ export class ProfilePhotos implements OnInit {
   }
 
 
- async onPhotosSelected(event: Event): Promise<void> {
+  // =========================
+  // FILE SELECTION
+  // =========================
 
-  const input =
-    event.target as HTMLInputElement;
+  async onPhotosSelected(
+    event: Event
+  ): Promise<void> {
 
-  if (
-    !input.files ||
-    input.files.length === 0
-  ) {
-    return;
-  }
+    this.photoError = '';
 
-  const remaining =
-    4 - this.photos.length;
+    
 
-  if (remaining <= 0) {
-    input.value = '';
-    return;
-  }
+    const input =
+      event.target as HTMLInputElement;
 
-  const files =
-    Array.from(input.files)
-      .filter(file =>
-        file.type.startsWith('image/')
-      )
-      .slice(0, remaining);
 
-  if (files.length === 0) {
-    input.value = '';
-    return;
-  }
+    if (
+      !input.files ||
+      input.files.length === 0
+    ) {
 
-  this.isLoadingPhoto = true;
+      return;
 
-  try {
+    }
 
-    const loadedPhotos =
-      await Promise.all(
-        files.map(file =>
-          this.readPhoto(file)
-        )
+
+    const remaining =
+      this.maxPhotos -
+      this.photos.length;
+
+
+    if (
+      remaining <= 0
+    ) {
+
+      this.photoError =
+        'You can upload a maximum of 4 photos.';
+
+      input.value = '';
+
+      return;
+
+    }
+
+
+    const selectedFiles =
+      Array.from(
+        input.files
+      ).slice(
+        0,
+        remaining
       );
 
-    this.photos.push(
-      ...loadedPhotos
-    );
 
-  } catch (error) {
-
-    console.error(
-      'Unable to load selected photo',
-      error
-    );
-
-  } finally {
-
-    this.isLoadingPhoto = false;
-  this.cdr.detectChanges();
-    /*
-     * Only add detectChanges if Angular
-     * actually fails to refresh the view.
-     */
-  }
-
-  // Allow selecting the same file again
-  input.value = '';
-
-}
+    const validFiles: File[] = [];
 
 
-private readPhoto(
-  file: File
-): Promise<string> {
+    for (
+      const file of selectedFiles
+    ) {
 
-  return new Promise(
-    (resolve, reject) => {
+      // =========================
+      // FILE TYPE
+      // =========================
 
-      const reader =
-        new FileReader();
+      if (
+        !this.allowedTypes.includes(
+          file.type
+        )
+      ) {
 
-      reader.onload = () => {
+        this.photoError =
+          'Only JPG, PNG and WebP images are allowed.';
+
+        continue;
+
+      }
+
+
+      // =========================
+      // FILE SIZE
+      // =========================
+
+      if (
+        file.size >
+        this.maxFileSize
+      ) {
+
+        this.photoError =
+          'Each photo must be 5 MB or smaller.';
+
+        continue;
+
+      }
+
+
+      // =========================
+      // EMPTY FILE
+      // =========================
+
+      if (
+        file.size === 0
+      ) {
+
+        this.photoError =
+          'The selected photo is empty or invalid.';
+
+        continue;
+
+      }
+
+
+      validFiles.push(file);
+
+    }
+
+
+    if (
+      validFiles.length === 0
+    ) {
+
+      input.value = '';
+
+      return;
+
+    }
+
+
+    this.isLoadingPhoto = true;
+
+
+    try {
+
+      const loadedPhotos =
+        await Promise.all(
+          validFiles.map(
+            file =>
+              this.readPhoto(file)
+          )
+        );
+
+
+      for (
+        const photo of loadedPhotos
+      ) {
 
         if (
-          typeof reader.result === 'string'
+          this.photos.length >=
+          this.maxPhotos
         ) {
 
-          resolve(
-            reader.result
-          );
+          break;
 
-        } else {
+        }
 
-          reject(
-            new Error(
-              'Unable to read image'
-            )
+
+        // Prevent exact duplicate
+        if (
+          !this.photos.includes(
+            photo
+          )
+        ) {
+
+          this.photos.push(
+            photo
           );
 
         }
 
-      };
+      }
 
-      reader.onerror = () => {
 
-        reject(
-          new Error(
-            'FileReader failed'
-          )
-        );
+    } catch (error) {
 
-      };
+      console.error(
+        'Unable to load selected photo',
+        error
+      );
 
-      reader.readAsDataURL(file);
+
+      this.photoError =
+        'Unable to load one or more photos. Please try again.';
+
+    } finally {
+
+      this.isLoadingPhoto =
+        false;
+
+
+      this.cdr.detectChanges();
 
     }
-  );
 
-}
 
+    // Allow selecting same file again
+
+    input.value = '';
+
+  }
+
+
+  // =========================
+  // READ IMAGE
+  // =========================
+
+  private readPhoto(
+    file: File
+  ): Promise<string> {
+
+    return new Promise(
+      (
+        resolve,
+        reject
+      ) => {
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload = () => {
+
+          if (
+            typeof reader.result !==
+            'string'
+          ) {
+
+            reject(
+              new Error(
+                'Unable to read image'
+              )
+            );
+
+            return;
+
+          }
+
+
+          // Verify actual image
+          const image =
+            new Image();
+
+
+          image.onload = () => {
+
+            if (
+              image.naturalWidth <= 0 ||
+              image.naturalHeight <= 0
+            ) {
+
+              reject(
+                new Error(
+                  'Invalid image dimensions'
+                )
+              );
+
+              return;
+
+            }
+
+
+            resolve(
+              reader.result as string
+            );
+
+          };
+
+
+          image.onerror = () => {
+
+            reject(
+              new Error(
+                'Invalid or corrupted image'
+              )
+            );
+
+          };
+
+
+          image.src =
+            reader.result;
+
+        };
+
+
+        reader.onerror = () => {
+
+          reject(
+            new Error(
+              'FileReader failed'
+            )
+          );
+
+        };
+
+
+        reader.readAsDataURL(
+          file
+        );
+
+      }
+    );
+
+  }
+
+
+  // =========================
+  // REMOVE PHOTO
+  // =========================
 
   removePhoto(
     index: number
   ): void {
+
+    if (
+      index < 0 ||
+      index >= this.photos.length
+    ) {
+
+      return;
+
+    }
+
 
     this.photos.splice(
       index,
       1
     );
 
+
+    this.photoError = '';
+
   }
 
 
+  // =========================
+  // SAVE
+  // =========================
+
   savePhotos(): void {
 
-    /*
-     * Do not save while the selected
-     * photos are still loading.
-     */
+    this.photoError = '';
 
-    if (this.isLoadingPhoto) {
+
+    // Cannot save while loading
+
+    if (
+      this.isLoadingPhoto
+    ) {
+
+      return;
+
+    }
+
+
+    // =========================
+    // MINIMUM PHOTO
+    // =========================
+
+    if (
+      this.photos.length === 0
+    ) {
+
+      this.photoError =
+        'Please add at least one profile photo.';
+
+      return;
+
+    }
+
+
+    // =========================
+    // MAXIMUM PHOTO
+    // =========================
+
+    if (
+      this.photos.length >
+      this.maxPhotos
+    ) {
+
+      this.photoError =
+        'You can upload a maximum of 4 photos.';
 
       return;
 
@@ -229,11 +508,11 @@ private readPhoto(
         'mwi_registration'
       );
 
+
     if (!saved) {
 
-      console.error(
-        'Registration data not found'
-      );
+      this.photoError =
+        'Registration data not found.';
 
       return;
 
@@ -254,9 +533,15 @@ private readPhoto(
         [...this.photos];
 
 
+      profile.profilePhotosCompleted =
+        this.photos.length > 0;
+
+
       sessionStorage.setItem(
         'mwi_registration',
-        JSON.stringify(profile)
+        JSON.stringify(
+          profile
+        )
       );
 
 
@@ -272,10 +557,18 @@ private readPhoto(
         error
       );
 
+
+      this.photoError =
+        'Unable to save photos. Please try again.';
+
     }
 
   }
 
+
+  // =========================
+  // BACK
+  // =========================
 
   goBack(): void {
 

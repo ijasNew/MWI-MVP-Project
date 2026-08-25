@@ -33,16 +33,15 @@
   </header>
 
 
-
   <section class="photos-card">
 
 
-    <!-- PHOTO GRID -->
+    <!-- =========================
+         PHOTO GRID
+         ========================= -->
 
     <div class="photo-grid">
 
-
-      <!-- EXISTING PHOTOS -->
 
       @for (
         photo of photos;
@@ -61,6 +60,7 @@
             type="button"
             class="remove-photo"
             (click)="removePhoto($index)"
+            aria-label="Remove photo"
           >
 
             <i
@@ -70,7 +70,9 @@
           </button>
 
 
-          @if ($index === 0) {
+          @if (
+            $index === 0
+          ) {
 
             <span class="main-photo">
               Main Photo
@@ -83,10 +85,13 @@
       }
 
 
+      <!-- =========================
+           ADD PHOTO
+           ========================= -->
 
-      <!-- ADD PHOTO -->
-
-      @if (photos.length < 4) {
+      @if (
+        photos.length < 4
+      ) {
 
         <label class="upload-box">
 
@@ -94,12 +99,17 @@
             type="file"
             accept="image/jpeg,image/png,image/webp"
             multiple
-            (change)="onPhotosSelected($event)"
+            (change)="
+              onPhotosSelected($event)
+            "
+            [disabled]="isLoadingPhoto"
             hidden
           >
 
 
-          <i class="fa-solid fa-camera"></i>
+          <i
+            class="fa-solid fa-camera"
+          ></i>
 
 
           <strong>
@@ -116,21 +126,54 @@
 
       }
 
-
     </div>
 
 
+    <!-- =========================
+         ERROR
+         ========================= -->
 
-    <!-- PHOTO LOADING POPUP -->
+    @if (
+      photoError
+    ) {
 
-    @if (isLoadingPhoto) {
+      <div
+        class="photo-error"
+        role="alert"
+      >
 
-      <div class="photo-loading-overlay">
+        <i
+          class="fa-solid fa-circle-exclamation"
+        ></i>
 
-        <div class="photo-loading-popup">
+        <span>
+          {{ photoError }}
+        </span>
+
+      </div>
+
+    }
 
 
-          <div class="loading-spinner">
+    <!-- =========================
+         LOADING
+         ========================= -->
+
+    @if (
+      isLoadingPhoto
+    ) {
+
+      <div
+        class="photo-loading-overlay"
+      >
+
+        <div
+          class="photo-loading-popup"
+        >
+
+          <div
+            class="loading-spinner"
+          >
 
             <i
               class="fa-solid fa-spinner fa-spin"
@@ -148,7 +191,6 @@
             Please wait
           </span>
 
-
         </div>
 
       </div>
@@ -156,10 +198,13 @@
     }
 
 
+    <!-- =========================
+         GUIDELINES
+         ========================= -->
 
-    <!-- GUIDELINES -->
-
-    <div class="photo-guidelines">
+    <div
+      class="photo-guidelines"
+    >
 
       <h3>
         Photo guidelines
@@ -173,7 +218,8 @@
         </li>
 
         <li>
-          Your main photo should clearly show you.
+          Your main photo should clearly
+          show you.
         </li>
 
         <li>
@@ -181,8 +227,16 @@
         </li>
 
         <li>
-          Avoid phone numbers, text or contact details
-          appearing in photos.
+          Avoid phone numbers, text or
+          contact details appearing in photos.
+        </li>
+
+        <li>
+          JPG, PNG and WebP images only.
+        </li>
+
+        <li>
+          Maximum 5 MB per photo.
         </li>
 
       </ul>
@@ -190,8 +244,9 @@
     </div>
 
 
-
-    <!-- ACTIONS -->
+    <!-- =========================
+         ACTIONS
+         ========================= -->
 
     <div class="form-actions">
 
@@ -199,6 +254,7 @@
       <button
         type="button"
         class="secondary-btn"
+        [disabled]="isLoadingPhoto"
         (click)="goBack()"
       >
 

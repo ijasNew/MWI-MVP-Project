@@ -38,6 +38,8 @@
        SHORTLISTED LIST
   ========================== -->
 
+  @if (hasShortlistedProfiles) {
+
   <section class="shortlist-list">
 
 
@@ -321,10 +323,14 @@
 
   </section>
 
+  }
+
 
   <!-- =========================
        EMPTY STATE
   ========================== -->
+
+  @if (!hasShortlistedProfiles) {
 
   <section class="empty-state">
 
@@ -350,6 +356,8 @@
     </button>
 
   </section>
+
+  }
 
 </div>
 </main>

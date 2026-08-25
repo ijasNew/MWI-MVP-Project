@@ -104,7 +104,11 @@ export class UserHome implements OnInit {
     this.router.navigate([
       '/profile-view',
       memberId
-    ]);
+    ], {
+      state: {
+        returnUrl: '/user-home'
+      }
+    });
 
   }
 

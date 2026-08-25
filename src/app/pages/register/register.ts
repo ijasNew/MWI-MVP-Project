@@ -1,6 +1,7 @@
 import {
   Component,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  AfterViewChecked
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -16,11 +17,15 @@ import * as L from 'leaflet';
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
-export class Register {
+export class Register implements AfterViewChecked {
 
   private buildProfile(): Profile {
 
     const profile: Profile = {
+
+
+
+
 
       // =========================
       // ACCOUNT
@@ -78,6 +83,7 @@ export class Register {
       // =========================
 
       religion: this.religion || '',
+
 
       // Muslim
       sect: this.muslimSect || undefined,
@@ -161,6 +167,8 @@ export class Register {
 
       preferredEducation:
         [...this.preferredEducation],
+      preferredEducationSpecific:
+        [...this.preferredEducationSpecific],
 
       preferredCareerSector:
         [...this.preferredCareerSectors],
@@ -187,7 +195,8 @@ export class Register {
   // =========================
   // REGISTRATION STEP
   // =========================
-
+  private mapInitializationPending = false;
+  private communityPreferenceDefaultsInitialized = false;
   step:
     | 'mobile'
     | 'otp'
@@ -725,7 +734,7 @@ export class Register {
   preferredLocationInput = '';
 
   preferredEducation: string[] = [];
-
+  preferredEducationSpecific: string[] = [];
   preferredCareerSectors: string[] = [];
 
   preferredEducationOptions = [
@@ -740,6 +749,27 @@ export class Register {
     'Others / Below 10th'
   ];
 
+
+  educationSpecificOptions: {
+    [key: string]: string[];
+  } = {
+
+      'Professional Degree': [
+        'MBBS',
+        'BDS',
+        'BAMS',
+        'BHMS',
+        'BUMS',
+        'BE / BTech',
+        'LLB',
+        'CA',
+        'CMA',
+        'CS',
+        'PharmD',
+        'Other Professional'
+      ]
+
+    };
   preferredCareerSectorOptions = [
     'Business / Self Employed',
     'Private',
@@ -840,6 +870,83 @@ export class Register {
   // MOBILE CHECK
   // =========================
 
+  // continueRegistration(): void {
+
+  //   this.errorMessage = '';
+  //   this.successMessage = '';
+
+  //   const phone = this.phone.trim();
+
+  //   if (!/^[0-9]{10}$/.test(phone)) {
+
+  //     this.errorMessage =
+  //       'Please enter a valid 10 digit mobile number.';
+
+  //     return;
+  //   }
+
+  //   this.loading = true;
+
+  //   this.apiService.checkPhone({
+  //     phone: phone
+  //   }).subscribe({
+
+  //     next: (response) => {
+
+  //       this.loading = false;
+
+  //       if (response.status === 'exists') {
+
+  //         this.errorMessage =
+  //           'You are already registered with us. Please login to continue.';
+
+  //         this.cdr.detectChanges();
+
+
+  //         return;
+  //       }
+
+  //       if (response.status === 'new') {
+
+  //         this.errorMessage = '';
+
+  //         this.successMessage =
+  //           'OTP sent successfully.';
+
+  //         this.step = 'otp';
+
+  //         this.cdr.detectChanges();
+
+  //         return;
+  //       }
+
+  //       this.errorMessage =
+  //         'Unexpected server response.';
+
+  //       this.cdr.detectChanges();
+  //     },
+
+  //     error: (error) => {
+
+  //       console.error('API Error:', error);
+
+  //       this.loading = false;
+
+  //       this.errorMessage =
+  //         'Unable to connect to the server. Please try again.';
+
+  //       this.cdr.detectChanges();
+  //     },
+
+  //     complete: () => {
+
+  //       this.loading = false;
+
+  //       this.cdr.detectChanges();
+  //     }
+
+  //   });
+  // }
   continueRegistration(): void {
 
     this.errorMessage = '';
@@ -855,80 +962,113 @@ export class Register {
       return;
     }
 
+    // TEMPORARY: Backend phone check disabled
     this.loading = true;
 
-    this.apiService.checkPhone({
-      phone: phone
-    }).subscribe({
+    setTimeout(() => {
 
-      next: (response) => {
+      this.loading = false;
 
-        this.loading = false;
+      this.successMessage =
+        'OTP sent successfully.';
 
-        if (response.status === 'exists') {
+      this.step = 'otp';
 
-          this.errorMessage =
-            'You are already registered with us. Please login to continue.';
+      this.cdr.detectChanges();
 
-          this.cdr.detectChanges();
-
-
-          return;
-        }
-
-        if (response.status === 'new') {
-
-          this.errorMessage = '';
-
-          this.successMessage =
-            'OTP sent successfully.';
-
-          this.step = 'otp';
-
-          this.cdr.detectChanges();
-
-          return;
-        }
-
-        this.errorMessage =
-          'Unexpected server response.';
-
-        this.cdr.detectChanges();
-      },
-
-      error: (error) => {
-
-        console.error('API Error:', error);
-
-        this.loading = false;
-
-        this.errorMessage =
-          'Unable to connect to the server. Please try again.';
-
-        this.cdr.detectChanges();
-      },
-
-      complete: () => {
-
-        this.loading = false;
-
-        this.cdr.detectChanges();
-      }
-
-    });
+    }, 500);
   }
-
 
   // =========================
   // OTP VERIFY
-  // =========================
+  // // =========================
+
+  // verifyOtp(): void {
+
+  //   this.errorMessage = '';
+  //   this.successMessage = '';
+
+  //   const phone = this.phone.trim();
+  //   const otp = this.otp.trim();
+
+  //   if (!/^[0-9]{6}$/.test(otp)) {
+
+  //     this.errorMessage =
+  //       'Please enter the 6 digit OTP.';
+
+  //     return;
+  //   }
+
+  //   this.loading = true;
+
+  //   this.apiService.verifyOtp({
+  //     phone: phone,
+  //     otp: otp
+  //   }).subscribe({
+
+  //     next: (response) => {
+
+  //       console.log(
+  //         'OTP PHP Response:',
+  //         response
+  //       );
+
+  //       this.loading = false;
+
+  //       if (response.success === true) {
+
+  //         this.memberId =
+  //           response.member_id;
+
+  //         this.errorMessage = '';
+
+  //         this.successMessage = '';
+
+  //         // Go to Basic Details
+  //         this.step = 'password';
+
+  //         this.cdr.detectChanges();
+
+  //         return;
+  //       }
+
+  //       this.errorMessage =
+  //         response.message ||
+  //         'OTP verification failed.';
+
+  //       this.cdr.detectChanges();
+  //     },
+
+  //     error: (error) => {
+
+  //       console.error(
+  //         'OTP API Error:',
+  //         error
+  //       );
+
+  //       this.loading = false;
+
+  //       this.errorMessage =
+  //         'Unable to connect to the server. Please try again.';
+
+  //       this.cdr.detectChanges();
+  //     },
+
+  //     complete: () => {
+
+  //       this.loading = false;
+
+  //       this.cdr.detectChanges();
+  //     }
+
+  //   });
+  // }
 
   verifyOtp(): void {
 
     this.errorMessage = '';
     this.successMessage = '';
 
-    const phone = this.phone.trim();
     const otp = this.otp.trim();
 
     if (!/^[0-9]{6}$/.test(otp)) {
@@ -939,71 +1079,36 @@ export class Register {
       return;
     }
 
+    // TEMPORARY: Backend OTP verification disabled
+    // Test OTP: 123456
+
+    if (otp !== '123456') {
+
+      this.errorMessage =
+        'Invalid OTP. Please enter 123456 for testing.';
+
+      return;
+    }
+
     this.loading = true;
 
-    this.apiService.verifyOtp({
-      phone: phone,
-      otp: otp
-    }).subscribe({
+    setTimeout(() => {
 
-      next: (response) => {
+      this.loading = false;
 
-        console.log(
-          'OTP PHP Response:',
-          response
-        );
+      // Temporary member ID for frontend testing
+      this.memberId =
+        'TEST-' + Date.now();
 
-        this.loading = false;
+      this.errorMessage = '';
+      this.successMessage = '';
 
-        if (response.success === true) {
+      this.step = 'password';
 
-          this.memberId =
-            response.member_id;
+      this.cdr.detectChanges();
 
-          this.errorMessage = '';
-
-          this.successMessage = '';
-
-          // Go to Basic Details
-          this.step = 'password';
-
-          this.cdr.detectChanges();
-
-          return;
-        }
-
-        this.errorMessage =
-          response.message ||
-          'OTP verification failed.';
-
-        this.cdr.detectChanges();
-      },
-
-      error: (error) => {
-
-        console.error(
-          'OTP API Error:',
-          error
-        );
-
-        this.loading = false;
-
-        this.errorMessage =
-          'Unable to connect to the server. Please try again.';
-
-        this.cdr.detectChanges();
-      },
-
-      complete: () => {
-
-        this.loading = false;
-
-        this.cdr.detectChanges();
-      }
-
-    });
+    }, 500);
   }
-
   validatePassword(): boolean {
 
     this.errorMessage = '';
@@ -1368,6 +1473,7 @@ export class Register {
     );
 
   }
+
   private reverseGeocode(
     latitude: number,
     longitude: number
@@ -1375,7 +1481,6 @@ export class Register {
 
     const url =
       'https://nominatim.openstreetmap.org/reverse';
-
 
     const params = {
       format: 'jsonv2',
@@ -1385,7 +1490,6 @@ export class Register {
       zoom: '18',
       'accept-language': 'en'
     };
-
 
     this.http.get<any>(
       url,
@@ -1399,15 +1503,13 @@ export class Register {
           response
         );
 
-
         const address =
           response?.address;
-
 
         if (!address) {
 
           this.handleLocationError(
-            'Unable to determine your address from the current location.'
+            'Unable to determine your address from the selected location.'
           );
 
           return;
@@ -1419,8 +1521,24 @@ export class Register {
         // =========================
 
         this.state =
-          address.state ||
-          'Kerala';
+          address.state || '';
+
+
+        // =========================
+        // KERALA VALIDATION
+        // =========================
+
+        if (
+          this.state.trim().toLowerCase() !==
+          'kerala'
+        ) {
+
+          this.handleLocationError(
+            'Please select a location within Kerala.'
+          );
+
+          return;
+        }
 
 
         // =========================
@@ -1438,7 +1556,6 @@ export class Register {
         const detectedDistrict =
           this.findDistrict(address);
 
-
         if (!detectedDistrict) {
 
           this.handleLocationError(
@@ -1447,7 +1564,6 @@ export class Register {
 
           return;
         }
-
 
         this.district =
           detectedDistrict;
@@ -1475,6 +1591,8 @@ export class Register {
         this.showLocationModal = false;
 
         this.showLocationDetails = true;
+
+        this.locationMethod = 'map';
 
         this.locationError = '';
 
@@ -1557,11 +1675,9 @@ export class Register {
 
     this.locationProcessing = false;
 
-    this.showLocationModal = false;
+    this.locationError = message;
 
     this.showLocationDetails = true;
-
-    this.locationError = message;
 
     this.cdr.detectChanges();
 
@@ -1676,15 +1792,56 @@ export class Register {
     this.selectedMapLatitude = null;
 
     this.selectedMapLongitude = null;
+    this.district = '';
+    this.pincode = '';
+    this.place = '';
+    this.houseName = '';
+    this.state = 'Kerala';
+
+    this.mapInitializationPending = true;
 
     this.cdr.detectChanges();
 
-    setTimeout(() => {
+  }
+  ngAfterViewChecked(): void {
+
+    if (
+      this.mapInitializationPending &&
+      this.showLocationModal &&
+      this.locationModalType === 'map'
+    ) {
+
+      const mapElement =
+        document.getElementById('register-map');
+
+      if (!mapElement) {
+        return;
+      }
+
+      this.mapInitializationPending = false;
+
       this.initializeMap();
-    }, 100);
+
+    }
 
   }
+
   private initializeMap(): void {
+
+    const mapElement =
+      document.getElementById('register-map');
+
+    if (!mapElement) {
+
+      console.error(
+        'Map container #register-map not found.'
+      );
+
+      return;
+    }
+
+
+    // Remove old map if exists
 
     if (this.map) {
 
@@ -1695,23 +1852,33 @@ export class Register {
     }
 
 
-    this.map = L.map('register-map', {
-      zoomControl: true
-    }).setView(
+    // Create map ONCE
+
+    this.map = L.map(
+      mapElement,
+      {
+        zoomControl: true
+      }
+    ).setView(
       [10.8505, 76.2711],
       8
     );
 
+
+    // OpenStreetMap tiles
 
     L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
         attribution:
           '&copy; OpenStreetMap contributors',
+
         maxZoom: 19
       }
     ).addTo(this.map);
 
+
+    // Map click = marker only
 
     this.map.on(
       'click',
@@ -1741,48 +1908,82 @@ export class Register {
   ): void {
 
     this.selectedMapLatitude = latitude;
-
     this.selectedMapLongitude = longitude;
 
-
     // Remove previous marker
-
     if (this.mapMarker) {
-
       this.mapMarker.remove();
-
+      this.mapMarker = null;
     }
 
+    // Create visible SVG marker
+    const markerIcon = L.divIcon({
+      className: '',
+      html: `
+      <div style="
+        width:40px;
+        height:48px;
+        position:relative;
+      ">
+        <svg
+          width="40"
+          height="48"
+          viewBox="0 0 40 48"
+          xmlns="http://www.w3.org/2000/svg"
+          style="
+            display:block;
+            width:40px;
+            height:48px;
+          "
+        >
 
-    // Add new marker
+          <!-- Pin -->
+          <path
+            d="
+              M20 1
+              C10 1 3 9 3 19
+              C3 31 20 47 20 47
+              C20 47 37 31 37 19
+              C37 9 30 1 20 1
+              Z
+            "
+            fill="#7c3aed"
+            stroke="#ffffff"
+            stroke-width="3"
+          />
 
-    this.mapMarker = L.marker([
-      latitude,
-      longitude
-    ]).addTo(this.map!);
+          <!-- Center -->
+          <circle
+            cx="20"
+            cy="19"
+            r="7"
+            fill="#ffffff"
+          />
 
+        </svg>
+      </div>
+    `,
 
-    this.mapMarker
-      .bindPopup(
-        'Selected Location'
-      )
-      .openPopup();
+      iconSize: [40, 48],
+      iconAnchor: [20, 48],
+      popupAnchor: [0, -48]
+    });
 
+    this.mapMarker = L.marker(
+      [latitude, longitude],
+      {
+        icon: markerIcon
+      }
+    ).addTo(this.map!);
 
     console.log(
-      'Selected map location:',
+      'Map marker moved:',
       latitude,
       longitude
     );
-
-
-    this.reverseGeocode(
-      latitude,
-      longitude
-    );
-
   }
   cancelMap(): void {
+    this.mapInitializationPending = false;
 
     if (this.map) {
 
@@ -1841,9 +2042,7 @@ export class Register {
         'Please select a location on the map first.';
 
       return;
-
     }
-
 
     this.latitude =
       this.selectedMapLatitude;
@@ -1851,17 +2050,24 @@ export class Register {
     this.longitude =
       this.selectedMapLongitude;
 
-
-    this.showLocationModal = false;
-
-    this.showLocationDetails = true;
-
     this.locationMethod = 'map';
 
     this.locationError = '';
 
+    this.locationProcessing = true;
+
+    // Close map ONLY after button click
+    this.showLocationModal = false;
+
+    this.showLocationDetails = true;
+
     this.cdr.detectChanges();
 
+    // Get address
+    this.reverseGeocode(
+      this.latitude,
+      this.longitude
+    );
   }
   get filteredDistricts(): string[] {
 
@@ -2220,6 +2426,7 @@ export class Register {
     this.specialization = '';
 
   }
+
   get currentSpecializations(): string[] {
 
     return this.specializations[
@@ -2325,7 +2532,17 @@ export class Register {
       this.setDefaultMaritalPreference();
 
     }
+    this.setDefaultCommunityPreferences();
 
+    if (
+      this.preferredLocations.length === 0 &&
+      this.district &&
+      this.districts.includes(this.district)
+    ) {
+
+      this.setDefaultLocationPreference();
+
+    }
 
     // Religion is always linked to registered religion
 
@@ -2387,6 +2604,64 @@ export class Register {
       this.preferredHeightMax = '87';
     }
   }
+  setDefaultLocationPreference(): void {
+
+    if (!this.district) {
+      return;
+    }
+
+    if (
+      !this.districts.includes(this.district)
+    ) {
+      return;
+    }
+
+    if (
+      !this.preferredLocations.includes(
+        this.district
+      )
+    ) {
+
+      this.preferredLocations = [
+        this.district
+      ];
+
+    }
+
+  }
+  getEducationSpecificOptions(): string[] {
+
+    const options: string[] = [];
+
+    this.preferredEducation.forEach(
+      (education) => {
+
+        const specific =
+          this.educationSpecificOptions[
+          education
+          ];
+
+        if (specific) {
+
+          specific.forEach(
+            (item) => {
+
+              if (!options.includes(item)) {
+                options.push(item);
+              }
+
+            }
+          );
+
+        }
+
+      }
+    );
+
+    return options;
+
+  }
+
   setDefaultMaritalPreference(): void {
 
     this.preferredMaritalStatuses = [
@@ -2850,7 +3125,6 @@ export class Register {
     education: string
   ): void {
 
-    // Only allow predefined education values
     if (
       !this.preferredEducationOptions.includes(
         education
@@ -2858,7 +3132,6 @@ export class Register {
     ) {
       return;
     }
-
 
     if (
       this.preferredEducation.includes(education)
@@ -2873,6 +3146,47 @@ export class Register {
 
       this.preferredEducation.push(
         education
+      );
+
+    }
+
+    // Keep only specific qualifications
+    // belonging to currently selected education groups
+
+    const validSpecificOptions =
+      this.getEducationSpecificOptions();
+
+    this.preferredEducationSpecific =
+      this.preferredEducationSpecific.filter(
+        item =>
+          validSpecificOptions.includes(item)
+      );
+
+  }
+  togglePreferredEducationSpecific(
+    option: string
+  ): void {
+
+    const validOptions =
+      this.getEducationSpecificOptions();
+
+    // Only allow currently available qualifications
+    if (!validOptions.includes(option)) {
+      return;
+    }
+
+    const index =
+      this.preferredEducationSpecific.indexOf(option);
+
+    if (index === -1) {
+
+      this.preferredEducationSpecific.push(option);
+
+    } else {
+
+      this.preferredEducationSpecific.splice(
+        index,
+        1
       );
 
     }
@@ -2912,6 +3226,7 @@ export class Register {
 
 
     // Remove Any when selecting specific sectors
+
 
     this.preferredCareerSectors =
       this.preferredCareerSectors.filter(
@@ -3382,7 +3697,24 @@ export class Register {
 
       return;
     }
+    const validSpecificEducationOptions =
+      this.getEducationSpecificOptions();
 
+    const invalidSpecificEducation =
+      this.preferredEducationSpecific.some(
+        qualification =>
+          !validSpecificEducationOptions.includes(
+            qualification
+          )
+      );
+
+    if (invalidSpecificEducation) {
+
+      this.errorMessage =
+        'Invalid specific education preference selected.';
+
+      return;
+    }
 
     // CAREER
 
@@ -3462,8 +3794,13 @@ export class Register {
         preferredEducation:
           this.preferredEducation,
 
+        preferredEducationSpecific:
+          this.preferredEducationSpecific,
+
         preferredCareerSectors:
           this.preferredCareerSectors,
+
+
       }
     );
 
@@ -3483,6 +3820,155 @@ export class Register {
     this.cdr.detectChanges();
 
 
+
+  }
+  setDefaultCommunityPreferences(): void {
+
+    // Run only once
+    if (this.communityPreferenceDefaultsInitialized) {
+      return;
+    }
+
+
+    // =========================
+    // MUSLIM
+    // =========================
+
+    if (this.religion === 'Muslim') {
+
+      // Registered sect → default preferred sect
+
+      if (
+        this.muslimSect &&
+        this.muslimSects.includes(this.muslimSect)
+      ) {
+
+        this.preferredSects = [
+          this.muslimSect
+        ];
+
+      }
+
+
+      // Registered Sunni group → default preference
+
+      if (
+        this.muslimSect === 'Sunni' &&
+        this.sunniGroup &&
+        this.sunniGroups.includes(this.sunniGroup)
+      ) {
+
+        this.preferredSunniGroups = [
+          this.sunniGroup
+        ];
+
+      }
+
+
+      // Registered Salafi group → default preference
+
+      if (
+        this.muslimSect === 'Salafi' &&
+        this.salafiGroup &&
+        this.salafiGroups.includes(this.salafiGroup)
+      ) {
+
+        this.preferredSalafiGroups = [
+          this.salafiGroup
+        ];
+
+      }
+
+    }
+
+
+    // =========================
+    // HINDU
+    // =========================
+
+    if (this.religion === 'Hindu') {
+
+      // Registered caste → default preferred caste
+
+      if (
+        this.hinduCaste &&
+        this.hinduCastes.includes(this.hinduCaste)
+      ) {
+
+        this.preferredCastes = [
+          this.hinduCaste
+        ];
+
+      }
+
+
+      // Registered sub-caste → default preference
+
+      if (
+        this.hinduSubCaste &&
+        this.getHinduSubCastesForCaste(
+          this.hinduCaste
+        ).includes(this.hinduSubCaste)
+      ) {
+
+        this.preferredSubCastes = [
+          this.hinduSubCaste
+        ];
+
+      }
+
+    }
+
+
+    // =========================
+    // CHRISTIAN
+    // =========================
+
+    if (this.religion === 'Christian') {
+
+      // Registered denomination → default preferred denomination
+
+      if (
+        this.christianDenomination &&
+        this.christianDenominations.includes(
+          this.christianDenomination
+        )
+      ) {
+
+        // Existing model uses preferredSects
+        // for Christian denomination preference
+
+        this.preferredSects = [
+          this.christianDenomination
+        ];
+
+      }
+
+
+      // Registered sub-denomination → default preference
+
+      if (
+        this.christianSubDenomination &&
+        this.christianOptions[
+          this.christianDenomination
+        ]?.includes(
+          this.christianSubDenomination
+        )
+      ) {
+
+        // Existing model uses preferredSubCastes
+        // for Christian sub-denomination preference
+
+        this.preferredSubCastes = [
+          this.christianSubDenomination
+        ];
+
+      }
+
+    }
+
+
+    this.communityPreferenceDefaultsInitialized = true;
 
   }
   goToHome(): void {

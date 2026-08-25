@@ -88,11 +88,6 @@ export class Login {
        *
        */
 
-      console.log('LOGIN TEST:', {
-        phone: this.phone,
-        password: this.password
-      });
-
       // Temporary:
       // this.router.navigate(['/user-home']);
 

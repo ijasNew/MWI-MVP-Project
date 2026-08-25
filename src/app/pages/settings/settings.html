@@ -7,6 +7,11 @@
 
     <div class="settings-page">
 
+
+      <!-- =========================
+           PAGE HEADER
+           ========================= -->
+
       <div class="page-header">
 
         <span class="page-label">
@@ -24,15 +29,20 @@
       </div>
 
 
-      <!-- ACCOUNT -->
+      <!-- =========================
+           ACCOUNT
+           ========================= -->
 
       <section class="settings-card">
 
         <div class="card-header">
 
           <div class="card-icon">
+
             <i class="fa-solid fa-user"></i>
+
           </div>
+
 
           <div>
 
@@ -49,6 +59,8 @@
         </div>
 
 
+        <!-- PROFILE ID -->
+
         <div class="account-row">
 
           <span>
@@ -56,11 +68,13 @@
           </span>
 
           <strong>
-             {{ user?.memberId || '-' }}
+            {{ user?.memberId || '-' }}
           </strong>
 
         </div>
 
+
+        <!-- ACCOUNT STATUS -->
 
         <div class="account-row">
 
@@ -77,15 +91,20 @@
       </section>
 
 
-      <!-- SECURITY -->
+      <!-- =========================
+           SECURITY
+           ========================= -->
 
       <section class="settings-card">
 
         <div class="card-header">
 
           <div class="card-icon">
+
             <i class="fa-solid fa-lock"></i>
+
           </div>
+
 
           <div>
 
@@ -102,31 +121,60 @@
         </div>
 
 
+        <!-- ERROR MESSAGE -->
+
         @if (errorMessage) {
 
-          <div class="message error">
-            {{ errorMessage }}
+          <div
+            class="message error"
+            role="alert"
+          >
+
+            <i
+              class="fa-solid fa-circle-exclamation"
+            ></i>
+
+            <span>
+              {{ errorMessage }}
+            </span>
+
           </div>
 
         }
 
+
+        <!-- SUCCESS MESSAGE -->
 
         @if (message) {
 
-          <div class="message success">
-            {{ message }}
+          <div
+            class="message success"
+            role="status"
+          >
+
+            <i
+              class="fa-solid fa-circle-check"
+            ></i>
+
+            <span>
+              {{ message }}
+            </span>
+
           </div>
 
         }
 
 
-        <!-- CURRENT PASSWORD -->
+        <!-- =========================
+             CURRENT PASSWORD
+             ========================= -->
 
         <div class="form-group">
 
           <label>
             Current Password
           </label>
+
 
           <div class="password-input">
 
@@ -138,10 +186,13 @@
               "
               [(ngModel)]="currentPassword"
               placeholder="Enter current password"
+              autocomplete="current-password"
             />
+
 
             <button
               type="button"
+              aria-label="Show or hide current password"
               (click)="toggleCurrentPassword()"
             >
 
@@ -162,13 +213,16 @@
         </div>
 
 
-        <!-- NEW PASSWORD -->
+        <!-- =========================
+             NEW PASSWORD
+             ========================= -->
 
         <div class="form-group">
 
           <label>
             New Password
           </label>
+
 
           <div class="password-input">
 
@@ -180,10 +234,13 @@
               "
               [(ngModel)]="newPassword"
               placeholder="Enter new password"
+              autocomplete="new-password"
             />
+
 
             <button
               type="button"
+              aria-label="Show or hide new password"
               (click)="toggleNewPassword()"
             >
 
@@ -201,6 +258,7 @@
 
           </div>
 
+
           <small>
             Minimum 8 characters.
           </small>
@@ -208,13 +266,16 @@
         </div>
 
 
-        <!-- CONFIRM PASSWORD -->
+        <!-- =========================
+             CONFIRM PASSWORD
+             ========================= -->
 
         <div class="form-group">
 
           <label>
             Confirm New Password
           </label>
+
 
           <div class="password-input">
 
@@ -226,10 +287,13 @@
               "
               [(ngModel)]="confirmPassword"
               placeholder="Confirm new password"
+              autocomplete="new-password"
             />
+
 
             <button
               type="button"
+              aria-label="Show or hide confirm password"
               (click)="toggleConfirmPassword()"
             >
 
@@ -250,9 +314,15 @@
         </div>
 
 
+        <!-- =========================
+             SECURITY NOTE
+             ========================= -->
+
         <div class="security-note">
 
-          <i class="fa-solid fa-shield-halved"></i>
+          <i
+            class="fa-solid fa-shield-halved"
+          ></i>
 
           <span>
             Never share your password with anyone.
@@ -261,19 +331,45 @@
         </div>
 
 
+        <!-- =========================
+             CHANGE PASSWORD
+             ========================= -->
+
         <button
           type="button"
           class="save-btn"
           (click)="changePassword()"
         >
 
-          <i class="fa-solid fa-lock"></i>
+          <i
+            class="fa-solid fa-lock"
+          ></i>
 
           Change Password
 
         </button>
 
+
+        <!-- =========================
+             FORGOT PASSWORD
+             ========================= -->
+
+        <button
+          type="button"
+          class="forgot-password-btn"
+          (click)="openForgotPassword()"
+        >
+
+          <i
+            class="fa-solid fa-key"
+          ></i>
+
+          Forgot Password?
+
+        </button>
+
       </section>
+
 
     </div>
 

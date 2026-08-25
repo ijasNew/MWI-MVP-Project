@@ -287,3 +287,26 @@
   }
 
 }
+
+.forgot-password-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+
+  border: none;
+  background: transparent;
+
+  color: var(--primary-color, #6d3df5);
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: opacity 0.2s ease;
+}
+
+.forgot-password-btn:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}

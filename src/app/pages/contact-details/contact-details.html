@@ -2,11 +2,7 @@
 
   <header class="form-header">
 
-    <button
-      type="button"
-      class="back-btn"
-      (click)="goBack()"
-    >
+    <button type="button" class="back-btn" (click)="goBack()">
       <i class="fa-solid fa-arrow-left"></i>
       Back
     </button>
@@ -37,11 +33,7 @@
 
       <div class="verified-input">
 
-        <input
-          type="text"
-          [value]="primaryMobile"
-          readonly
-        >
+        <input type="text" [value]="primaryMobile" readonly>
 
         <span>
           <i class="fa-solid fa-circle-check"></i>
@@ -57,6 +49,63 @@
     </div>
 
 
+
+
+    <!-- WHATSAPP -->
+    <div class="form-group">
+
+      <label>
+        WhatsApp Number
+        <span class="required">*</span>
+      </label>
+
+      <div class="whatsapp-input">
+
+        <select [(ngModel)]="whatsappCountryCode" aria-label="WhatsApp country code">
+
+          @for (
+          country of countryCodes;
+          track country.iso
+          ) {
+
+          <option [value]="country.code">
+            {{ country.name }} {{ country.code }}
+          </option>
+
+          }
+
+        </select>
+
+        <input type="tel" [(ngModel)]="whatsappNumber" inputmode="tel" autocomplete="tel"
+          placeholder="Enter WhatsApp number">
+
+      </div>
+
+      @if (
+      submitted &&
+      !whatsappNumber.trim()
+      ) {
+
+      <small class="field-error">
+        WhatsApp number is required.
+      </small>
+
+      }
+
+      @if (
+      submitted &&
+      whatsappNumber.trim() &&
+      !isWhatsAppValid()
+      ) {
+
+      <small class="field-error">
+        Please enter a valid WhatsApp number.
+      </small>
+
+      }
+
+    </div>
+
     <!-- SECONDARY MOBILE -->
 
     <div class="form-group">
@@ -66,31 +115,7 @@
         <span class="optional">Optional</span>
       </label>
 
-      <input
-        type="tel"
-        [(ngModel)]="secondaryMobile"
-        maxlength="15"
-        placeholder="Enter secondary mobile number"
-      >
-
-    </div>
-
-
-    <!-- WHATSAPP -->
-
-    <div class="form-group">
-
-      <label>
-        WhatsApp Number
-        <span class="optional">Optional</span>
-      </label>
-
-      <input
-        type="tel"
-        [(ngModel)]="whatsappNumber"
-        maxlength="15"
-        placeholder="Enter WhatsApp number"
-      >
+      <input type="tel" [(ngModel)]="secondaryMobile" maxlength="15" placeholder="Enter secondary mobile number">
 
     </div>
 
@@ -104,30 +129,18 @@
         <span class="optional">Optional</span>
       </label>
 
-      <input
-        type="email"
-        [(ngModel)]="email"
-        placeholder="Enter your email address"
-      >
+      <input type="email" [(ngModel)]="email" placeholder="Enter your email address">
 
     </div>
 
 
     <div class="form-actions">
 
-      <button
-        type="button"
-        class="secondary-btn"
-        (click)="goBack()"
-      >
+      <button type="button" class="secondary-btn" (click)="goBack()">
         Cancel
       </button>
 
-      <button
-        type="button"
-        class="primary-btn"
-        (click)="saveDetails()"
-      >
+      <button type="button" class="primary-btn" (click)="saveDetails()">
         Save & Continue
         <i class="fa-solid fa-arrow-right"></i>
       </button>

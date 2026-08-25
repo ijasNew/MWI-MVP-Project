@@ -105,6 +105,7 @@ export interface Profile {
   preferredSubCaste?: string[];
 
   preferredEducation: string[];
+  preferredEducationSpecific: string[];
 
   preferredCareerSector: string[];
 
@@ -116,6 +117,20 @@ export interface Profile {
   // =========================
 
   completionPercentage?: number;
+
+  physicalDetailsCompleted?: boolean;
+
+  contactDetailsCompleted?: boolean;
+
+  workDetailsCompleted?: boolean;
+
+  familyDetailsCompleted?: boolean;
+
+  additionalPreferencesCompleted?: boolean;
+
+  expectationsCompleted?: boolean;
+
+  profilePhotosCompleted?: boolean;
 
 
   // =========================
@@ -137,6 +152,8 @@ export interface Profile {
 
   secondaryMobile?: string;
 
+  whatsappCountryCode?: string;
+
   whatsappNumber?: string;
 
   email?: string;
@@ -151,6 +168,16 @@ export interface Profile {
   annualIncome?: string;
 
   workLocation?: string;
+
+  workLocationType?: string;
+
+  workState?: string;
+
+  workDistrict?: string;
+
+  workCountry?: string;
+
+  workCity?: string;
 
   companyName?: string;
 

@@ -225,3 +225,46 @@
   }
 
 }
+.required {
+  color: #dc2626;
+  margin-left: 3px;
+}
+
+.optional {
+  color: #888;
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 5px;
+}
+
+.field-error {
+  display: block;
+  margin-top: 6px;
+  color: #dc2626;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.nested-fields {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #fafafa;
+  border: 1px solid #e8e8e8;
+}
+
+.nested-fields .form-group {
+  margin-bottom: 12px;
+}
+
+.nested-fields .form-group:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 576px) {
+
+  .nested-fields {
+    padding: 12px;
+  }
+
+}

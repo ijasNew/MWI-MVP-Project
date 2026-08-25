@@ -1,596 +1,1024 @@
 <div class="preferences-page">
 
-    <header class="form-header">
+  <header class="form-header">
 
-        <button type="button" class="back-btn" (click)="goBack()">
-            <i class="fa-solid fa-arrow-left"></i>
-            Back
-        </button>
+    <button
+      type="button"
+      class="back-btn"
+      (click)="goBack()"
+    >
 
-        <span class="page-label">
-            PROFILE COMPLETION
+      <i class="fa-solid fa-arrow-left"></i>
+
+      Back
+
+    </button>
+
+
+    <span class="page-label">
+      PROFILE COMPLETION
+    </span>
+
+
+    <h1>
+      Additional Preferences
+    </h1>
+
+
+    <p>
+      Add more preferences to help us find
+      more suitable matches for you.
+    </p>
+
+  </header>
+
+
+  <section class="form-card">
+
+
+    <!-- =========================
+         FAMILY STATUS
+         REQUIRED
+         ========================= -->
+
+    <div class="form-group">
+
+      <label>
+
+        Preferred Family Status
+
+        <span class="required">
+          *
         </span>
 
-        <h1>Additional Preferences</h1>
-
-        <p>
-            Add more preferences to help us find
-            more suitable matches for you.
-        </p>
-
-    </header>
-
-
-    <section class="form-card">
-
-        <!-- FAMILY STATUS -->
-
-        <div class="form-group">
-
-            <label>
-                Preferred Family Status
-            </label>
-
-            <div class="multi-option-grid">
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredFamilyStatus.includes('any')" (change)="togglePreference(
-          preferredFamilyStatus,
-          'any'
-        )">
-
-                    <span>Any</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredFamilyStatus.includes('Lower Middle Class')" (change)="togglePreference(
-          preferredFamilyStatus,
-          'Lower Middle Class'
-        )">
-
-                    <span>Lower Middle Class</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredFamilyStatus.includes('Middle Class')" (change)="togglePreference(
-          preferredFamilyStatus,
-          'Middle Class'
-        )">
-
-                    <span>Middle Class</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredFamilyStatus.includes('Upper Middle Class')" (change)="togglePreference(
-          preferredFamilyStatus,
-          'Upper Middle Class'
-        )">
-
-                    <span>Upper Middle Class</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredFamilyStatus.includes('Affluent')" (change)="togglePreference(
-          preferredFamilyStatus,
-          'Affluent'
-        )">
-
-                    <span>Affluent</span>
-
-                </label>
-
-            </div>
-
-        </div>
-
-        <!-- PHYSICAL STATUS -->
-
-        <div class="form-group">
-
-            <label>
-                Preferred Physical Status
-            </label>
-
-            <div class="multi-option-grid">
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredPhysicalStatus.includes('any')" (change)="togglePreference(
-          preferredPhysicalStatus,
-          'any'
-        )">
-
-                    <span>Any</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredPhysicalStatus.includes('Normal')" (change)="togglePreference(
-          preferredPhysicalStatus,
-          'Normal'
-        )">
-
-                    <span>Normal</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredPhysicalStatus.includes('Physically Challenged')"
-                        (change)="togglePreference(
-          preferredPhysicalStatus,
-          'Physically Challenged'
-        )">
-
-                    <span>Physically Challenged</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredPhysicalStatus.includes('Other')" (change)="togglePreference(
-          preferredPhysicalStatus,
-          'Other'
-        )">
-
-                    <span>Other</span>
-
-                </label>
-
-            </div>
-
-        </div>
-
-
-        <!-- INCOME -->
-
-        <div class="form-group">
-
-            <label>
-                Preferred Annual Income
-            </label>
-
-            <div class="multi-option-grid">
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredIncome.includes('any')" (change)="togglePreference(
-          preferredIncome,
-          'any'
-        )">
-
-                    <span>Any</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredIncome.includes('Below ₹2 Lakh')" (change)="togglePreference(
-          preferredIncome,
-          'Below ₹2 Lakh'
-        )">
-
-                    <span>Below ₹2 Lakh</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredIncome.includes('₹2 - ₹5 Lakh')" (change)="togglePreference(
-          preferredIncome,
-          '₹2 - ₹5 Lakh'
-        )">
-
-                    <span>₹2 - ₹5 Lakh</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredIncome.includes('₹5 - ₹10 Lakh')" (change)="togglePreference(
-          preferredIncome,
-          '₹5 - ₹10 Lakh'
-        )">
-
-                    <span>₹5 - ₹10 Lakh</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredIncome.includes('₹10 - ₹15 Lakh')" (change)="togglePreference(
-          preferredIncome,
-          '₹10 - ₹15 Lakh'
-        )">
-
-                    <span>₹10 - ₹15 Lakh</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredIncome.includes('₹15 - ₹25 Lakh')" (change)="togglePreference(
-          preferredIncome,
-          '₹15 - ₹25 Lakh'
-        )">
-
-                    <span>₹15 - ₹25 Lakh</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredIncome.includes('Above ₹25 Lakh')" (change)="togglePreference(
-          preferredIncome,
-          'Above ₹25 Lakh'
-        )">
-
-                    <span>Above ₹25 Lakh</span>
-
-                </label>
-
-            </div>
-
-        </div>
-
-
-        <!-- LOCATION RADIUS -->
-
-        <div class="form-group">
-
-            <label>
-                Preferred Location Radius
-            </label>
-
-            <div class="multi-option-grid">
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredLocationRadius.includes('any')" (change)="togglePreference(
-          preferredLocationRadius,
-          'any'
-        )">
-
-                    <span>Any</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredLocationRadius.includes('Within 10 km')" (change)="togglePreference(
-          preferredLocationRadius,
-          'Within 10 km'
-        )">
-
-                    <span>Within 10 km</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredLocationRadius.includes('Within 25 km')" (change)="togglePreference(
-          preferredLocationRadius,
-          'Within 25 km'
-        )">
-
-                    <span>Within 25 km</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredLocationRadius.includes('Within 50 km')" (change)="togglePreference(
-          preferredLocationRadius,
-          'Within 50 km'
-        )">
-
-                    <span>Within 50 km</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredLocationRadius.includes('Within 100 km')" (change)="togglePreference(
-          preferredLocationRadius,
-          'Within 100 km'
-        )">
-
-                    <span>Within 100 km</span>
-
-                </label>
-
-
-                <label class="multi-option">
-
-                    <input type="checkbox" [checked]="preferredLocationRadius.includes('Anywhere in Kerala')" (change)="togglePreference(
-          preferredLocationRadius,
-          'Anywhere in Kerala'
-        )">
-
-                    <span>Anywhere in Kerala</span>
-
-                </label>
-
-            </div>
-
-        </div>
-
-
-        <!-- COMPLEXION -->
-
-       <div class="form-group">
-
-  <label>
-    Preferred Complexion
-  </label>
-
-  <div class="multi-option-grid">
-
-    <label class="multi-option">
-
-      <input
-        type="checkbox"
-        [checked]="preferredComplexion.includes('any')"
-        (change)="togglePreference(
-          preferredComplexion,
-          'any'
-        )"
-      >
-
-      <span>Any</span>
-
-    </label>
-
-
-    <label class="multi-option">
-
-      <input
-        type="checkbox"
-        [checked]="preferredComplexion.includes('Very Fair')"
-        (change)="togglePreference(
-          preferredComplexion,
-          'Very Fair'
-        )"
-      >
-
-      <span>Very Fair</span>
-
-    </label>
-
-
-    <label class="multi-option">
-
-      <input
-        type="checkbox"
-        [checked]="preferredComplexion.includes('Fair')"
-        (change)="togglePreference(
-          preferredComplexion,
-          'Fair'
-        )"
-      >
-
-      <span>Fair</span>
-
-    </label>
-
-
-    <label class="multi-option">
-
-      <input
-        type="checkbox"
-        [checked]="preferredComplexion.includes('Wheatish')"
-        (change)="togglePreference(
-          preferredComplexion,
-          'Wheatish'
-        )"
-      >
-
-      <span>Wheatish</span>
-
-    </label>
-
-
-    <label class="multi-option">
-
-      <input
-        type="checkbox"
-        [checked]="preferredComplexion.includes('Medium')"
-        (change)="togglePreference(
-          preferredComplexion,
-          'Medium'
-        )"
-      >
-
-      <span>Medium</span>
-
-    </label>
-
-
-    <label class="multi-option">
-
-      <input
-        type="checkbox"
-        [checked]="preferredComplexion.includes('Dusky')"
-        (change)="togglePreference(
-          preferredComplexion,
-          'Dusky'
-        )"
-      >
-
-      <span>Dusky</span>
-
-    </label>
-
-
-    <label class="multi-option">
-
-      <input
-        type="checkbox"
-        [checked]="preferredComplexion.includes('Dark')"
-        (change)="togglePreference(
-          preferredComplexion,
-          'Dark'
-        )"
-      >
-
-      <span>Dark</span>
-
-    </label>
-
-  </div>
-
-</div>
-
-
-        <!-- HINDU HOROSCOPE -->
-
-        @if (religion === 'Hindu') {
-
-        <div class="form-divider"></div>
-
-        <div class="section-heading">
-
-            <h2>Horoscope Preference</h2>
-
-            <span>Optional</span>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                Do you consider horoscope for matching?
-            </label>
-
-            <div class="option-grid">
-
-                <label class="option-card">
-
-                    <input type="radio" name="horoscopeRequired" value="yes" [(ngModel)]="horoscopeRequired">
-
-                    <span>Yes</span>
-
-                </label>
-
-
-                <label class="option-card">
-
-                    <input type="radio" name="horoscopeRequired" value="no" [(ngModel)]="horoscopeRequired">
-
-                    <span>No</span>
-
-                </label>
-
-            </div>
-
-        </div>
-
-
-         @if (horoscopeRequired === 'yes') {
-
-  <div class="form-group">
-
-    <label>
-      Preferred Star / Nakshatra
-    </label>
-
-    <div class="multi-option-grid">
-
-      <label class="multi-option">
-
-        <input
-          type="checkbox"
-          [checked]="preferredStar.includes('any')"
-          (change)="togglePreference(
-            preferredStar,
-            'any'
-          )"
-        >
-
-        <span>Any</span>
-
       </label>
 
-      <label class="multi-option">
-        <input
-          type="checkbox"
-          [checked]="preferredStar.includes('Ashwini')"
-          (change)="togglePreference(preferredStar, 'Ashwini')"
-        >
-        <span>Ashwini</span>
-      </label>
 
-      <label class="multi-option">
-        <input
-          type="checkbox"
-          [checked]="preferredStar.includes('Bharani')"
-          (change)="togglePreference(preferredStar, 'Bharani')"
-        >
-        <span>Bharani</span>
-      </label>
+      <div class="multi-option-grid">
 
-      <label class="multi-option">
-        <input
-          type="checkbox"
-          [checked]="preferredStar.includes('Krittika')"
-          (change)="togglePreference(preferredStar, 'Krittika')"
-        >
-        <span>Krittika</span>
-      </label>
 
-      <!-- continue remaining stars using same pattern -->
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredFamilyStatus.includes('any')
+            "
+            (change)="
+              togglePreference(
+                preferredFamilyStatus,
+                'any'
+              )
+            "
+          >
+
+          <span>
+            Any
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredFamilyStatus.includes(
+                'Lower Middle Class'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredFamilyStatus,
+                'Lower Middle Class'
+              )
+            "
+          >
+
+          <span>
+            Lower Middle Class
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredFamilyStatus.includes(
+                'Middle Class'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredFamilyStatus,
+                'Middle Class'
+              )
+            "
+          >
+
+          <span>
+            Middle Class
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredFamilyStatus.includes(
+                'Upper Middle Class'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredFamilyStatus,
+                'Upper Middle Class'
+              )
+            "
+          >
+
+          <span>
+            Upper Middle Class
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredFamilyStatus.includes(
+                'Affluent'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredFamilyStatus,
+                'Affluent'
+              )
+            "
+          >
+
+          <span>
+            Affluent
+          </span>
+
+        </label>
+
+      </div>
+
+
+      @if (
+        submitted &&
+        isFamilyStatusInvalid()
+      ) {
+
+        <small class="field-error">
+          Please select a preferred family status.
+        </small>
+
+      }
 
     </div>
 
-  </div>
 
-}
-        }
+    <!-- =========================
+         PHYSICAL STATUS
+         REQUIRED
+         ========================= -->
+
+    <div class="form-group">
+
+      <label>
+
+        Preferred Physical Status
+
+        <span class="required">
+          *
+        </span>
+
+      </label>
 
 
-        <!-- ACTIONS -->
+      <div class="multi-option-grid">
 
-        <div class="form-actions">
 
-            <button type="button" class="secondary-btn" (click)="goBack()">
-                Cancel
-            </button>
+        <label class="multi-option">
 
-            <button type="button" class="primary-btn" (click)="saveDetails()">
-                Save & Continue
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
+          <input
+            type="checkbox"
+            [checked]="
+              preferredPhysicalStatus.includes('any')
+            "
+            (change)="
+              togglePreference(
+                preferredPhysicalStatus,
+                'any'
+              )
+            "
+          >
+
+          <span>
+            Any
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredPhysicalStatus.includes(
+                'Normal'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredPhysicalStatus,
+                'Normal'
+              )
+            "
+          >
+
+          <span>
+            Normal
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredPhysicalStatus.includes(
+                'Physically Challenged'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredPhysicalStatus,
+                'Physically Challenged'
+              )
+            "
+          >
+
+          <span>
+            Physically Challenged
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredPhysicalStatus.includes(
+                'Other'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredPhysicalStatus,
+                'Other'
+              )
+            "
+          >
+
+          <span>
+            Other
+          </span>
+
+        </label>
+
+      </div>
+
+
+      @if (
+        submitted &&
+        isPhysicalStatusInvalid()
+      ) {
+
+        <small class="field-error">
+          Please select a preferred physical status.
+        </small>
+
+      }
+
+    </div>
+
+
+    <!-- =========================
+         INCOME
+         OPTIONAL
+         ========================= -->
+
+    <div class="form-group">
+
+      <label>
+
+        Preferred Annual Income
+
+        <span class="optional">
+          Optional
+        </span>
+
+      </label>
+
+
+      <div class="multi-option-grid">
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredIncome.includes('any')
+            "
+            (change)="
+              togglePreference(
+                preferredIncome,
+                'any'
+              )
+            "
+          >
+
+          <span>
+            Any
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredIncome.includes(
+                'Below ₹2 Lakh'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredIncome,
+                'Below ₹2 Lakh'
+              )
+            "
+          >
+
+          <span>
+            Below ₹2 Lakh
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredIncome.includes(
+                '₹2 - ₹5 Lakh'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredIncome,
+                '₹2 - ₹5 Lakh'
+              )
+            "
+          >
+
+          <span>
+            ₹2 - ₹5 Lakh
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredIncome.includes(
+                '₹5 - ₹10 Lakh'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredIncome,
+                '₹5 - ₹10 Lakh'
+              )
+            "
+          >
+
+          <span>
+            ₹5 - ₹10 Lakh
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredIncome.includes(
+                '₹10 - ₹15 Lakh'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredIncome,
+                '₹10 - ₹15 Lakh'
+              )
+            "
+          >
+
+          <span>
+            ₹10 - ₹15 Lakh
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredIncome.includes(
+                '₹15 - ₹25 Lakh'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredIncome,
+                '₹15 - ₹25 Lakh'
+              )
+            "
+          >
+
+          <span>
+            ₹15 - ₹25 Lakh
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredIncome.includes(
+                'Above ₹25 Lakh'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredIncome,
+                'Above ₹25 Lakh'
+              )
+            "
+          >
+
+          <span>
+            Above ₹25 Lakh
+          </span>
+
+        </label>
+
+      </div>
+
+
+      @if (
+        submitted &&
+        isIncomeInvalid()
+      ) {
+
+        <small class="field-error">
+          Please select valid income preferences.
+        </small>
+
+      }
+
+    </div>
+
+
+    <!-- =========================
+         LOCATION RADIUS
+         SINGLE SELECT
+         REQUIRED
+         ========================= -->
+
+    <div class="form-group">
+
+      <label>
+
+        Preferred Location Radius
+
+        <span class="required">
+          *
+        </span>
+
+      </label>
+
+
+      <select
+        [(ngModel)]="
+          preferredLocationRadius
+        "
+      >
+
+        <option value="">
+          Select preferred location radius
+        </option>
+
+        <option value="any">
+          Any
+        </option>
+
+        <option value="Within 10 km">
+          Within 10 km
+        </option>
+
+        <option value="Within 25 km">
+          Within 25 km
+        </option>
+
+        <option value="Within 50 km">
+          Within 50 km
+        </option>
+
+        <option value="Within 100 km">
+          Within 100 km
+        </option>
+
+        <option value="Anywhere in Kerala">
+          Anywhere in Kerala
+        </option>
+
+      </select>
+
+
+      @if (
+        submitted &&
+        isLocationRadiusInvalid()
+      ) {
+
+        <small class="field-error">
+          Please select a preferred location radius.
+        </small>
+
+      }
+
+    </div>
+
+
+    <!-- =========================
+         COMPLEXION
+         OPTIONAL
+         ========================= -->
+
+    <div class="form-group">
+
+      <label>
+
+        Preferred Complexion
+
+        <span class="optional">
+          Optional
+        </span>
+
+      </label>
+
+
+      <div class="multi-option-grid">
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredComplexion.includes('any')
+            "
+            (change)="
+              togglePreference(
+                preferredComplexion,
+                'any'
+              )
+            "
+          >
+
+          <span>
+            Any
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredComplexion.includes(
+                'Very Fair'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredComplexion,
+                'Very Fair'
+              )
+            "
+          >
+
+          <span>
+            Very Fair
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredComplexion.includes(
+                'Fair'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredComplexion,
+                'Fair'
+              )
+            "
+          >
+
+          <span>
+            Fair
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredComplexion.includes(
+                'Wheatish'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredComplexion,
+                'Wheatish'
+              )
+            "
+          >
+
+          <span>
+            Wheatish
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredComplexion.includes(
+                'Medium'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredComplexion,
+                'Medium'
+              )
+            "
+          >
+
+          <span>
+            Medium
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredComplexion.includes(
+                'Dusky'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredComplexion,
+                'Dusky'
+              )
+            "
+          >
+
+          <span>
+            Dusky
+          </span>
+
+        </label>
+
+
+        <label class="multi-option">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredComplexion.includes(
+                'Dark'
+              )
+            "
+            (change)="
+              togglePreference(
+                preferredComplexion,
+                'Dark'
+              )
+            "
+          >
+
+          <span>
+            Dark
+          </span>
+
+        </label>
+
+      </div>
+
+
+      @if (
+        submitted &&
+        isComplexionInvalid()
+      ) {
+
+        <small class="field-error">
+          Please select valid complexion preferences.
+        </small>
+
+      }
+
+    </div>
+
+
+    <!-- =========================
+         HINDU HOROSCOPE
+         ========================= -->
+
+    @if (
+      religion === 'Hindu'
+    ) {
+
+      <div class="form-divider"></div>
+
+
+      <div class="section-heading">
+
+        <h2>
+          Horoscope Preference
+        </h2>
+
+        <span>
+          Optional
+        </span>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Do you consider horoscope for matching?
+        </label>
+
+
+        <div class="option-grid">
+
+
+          <label class="option-card">
+
+            <input
+              type="radio"
+              name="horoscopeRequired"
+              value="yes"
+              [(ngModel)]="
+                horoscopeRequired
+              "
+            >
+
+            <span>
+              Yes
+            </span>
+
+          </label>
+
+
+          <label class="option-card">
+
+            <input
+              type="radio"
+              name="horoscopeRequired"
+              value="no"
+              [(ngModel)]="
+                horoscopeRequired
+              "
+            >
+
+            <span>
+              No
+            </span>
+
+          </label>
+
 
         </div>
 
-    </section>
+      </div>
+
+
+      @if (
+        horoscopeRequired === 'yes'
+      ) {
+
+        <div class="form-group">
+
+          <label>
+            Preferred Star / Nakshatra
+          </label>
+
+
+          <div class="multi-option-grid">
+
+
+            <label class="multi-option">
+
+              <input
+                type="checkbox"
+                [checked]="
+                  preferredStar.includes('any')
+                "
+                (change)="
+                  togglePreference(
+                    preferredStar,
+                    'any'
+                  )
+                "
+              >
+
+              <span>
+                Any
+              </span>
+
+            </label>
+
+
+            <label class="multi-option">
+
+              <input
+                type="checkbox"
+                [checked]="
+                  preferredStar.includes('Ashwini')
+                "
+                (change)="
+                  togglePreference(
+                    preferredStar,
+                    'Ashwini'
+                  )
+                "
+              >
+
+              <span>
+                Ashwini
+              </span>
+
+            </label>
+
+
+            <label class="multi-option">
+
+              <input
+                type="checkbox"
+                [checked]="
+                  preferredStar.includes('Bharani')
+                "
+                (change)="
+                  togglePreference(
+                    preferredStar,
+                    'Bharani'
+                  )
+                "
+              >
+
+              <span>
+                Bharani
+              </span>
+
+            </label>
+
+
+            <label class="multi-option">
+
+              <input
+                type="checkbox"
+                [checked]="
+                  preferredStar.includes('Krittika')
+                "
+                (change)="
+                  togglePreference(
+                    preferredStar,
+                    'Krittika'
+                  )
+                "
+              >
+
+              <span>
+                Krittika
+              </span>
+
+            </label>
+
+
+            <!-- Add remaining Nakshatras
+                 using the same pattern -->
+
+          </div>
+
+        </div>
+
+      }
+
+    }
+
+
+    <!-- =========================
+         ACTIONS
+         ========================= -->
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="secondary-btn"
+        (click)="goBack()"
+      >
+
+        Cancel
+
+      </button>
+
+
+      <button
+        type="button"
+        class="primary-btn"
+        (click)="saveDetails()"
+      >
+
+        Save & Continue
+
+        <i class="fa-solid fa-arrow-right"></i>
+
+      </button>
+
+    </div>
+
+
+  </section>
 
 </div>

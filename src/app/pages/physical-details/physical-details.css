@@ -186,3 +186,16 @@
   }
 
 }
+
+.required {
+  color: #dc2626;
+  margin-left: 3px;
+  font-weight: 600;
+}
+
+.field-error {
+  display: block;
+  margin-top: 6px;
+  color: #dc2626;
+  font-size: 12px;
+}

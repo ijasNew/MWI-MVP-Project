@@ -20,6 +20,8 @@ export class ProfileView implements OnInit {
 
   isPhotoViewerOpen = false;
 
+  private returnUrl = '/user-home';
+
   touchStartX = 0;
   touchEndX = 0;
 
@@ -31,6 +33,10 @@ export class ProfileView implements OnInit {
 
 
   ngOnInit(): void {
+
+    if (history.state?.returnUrl === '/matching-profiles') {
+      this.returnUrl = '/matching-profiles';
+    }
 
     const memberId =
       this.route.snapshot.paramMap.get('memberId');
@@ -170,6 +176,7 @@ export class ProfileView implements OnInit {
       "Bachelor's Degree",
       "Master's Degree"
     ],
+    preferredEducationSpecific: [],
 
     preferredCareerSector: [
       'IT',
@@ -322,7 +329,7 @@ export class ProfileView implements OnInit {
   goBack(): void {
 
     this.router.navigate([
-      '/user-home'
+      this.returnUrl
     ]);
 
   }

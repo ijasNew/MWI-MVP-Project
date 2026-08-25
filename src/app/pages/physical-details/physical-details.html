@@ -2,11 +2,7 @@
 
   <header class="form-header">
 
-    <button
-      type="button"
-      class="back-btn"
-      (click)="goBack()"
-    >
+    <button type="button" class="back-btn" (click)="goBack()">
       <i class="fa-solid fa-arrow-left"></i>
       Back
     </button>
@@ -37,16 +33,19 @@
 
       <div class="input-with-unit">
 
-        <input
-          type="number"
-          [(ngModel)]="weight"
-          min="20"
-          max="250"
-          placeholder="Enter weight"
-        >
+        <input type="number" [(ngModel)]="weight" min="20" max="250" step="0.1" placeholder="Enter weight">
 
         <span>kg</span>
+        @if (
+        submitted &&
+        isWeightInvalid()
+        ) {
 
+        <small class="field-error">
+          Weight must be between 20 kg and 250 kg.
+        </small>
+
+        }
       </div>
 
     </div>
@@ -83,6 +82,16 @@
         </option>
 
       </select>
+      @if (
+  submitted &&
+  isBodyTypeInvalid()
+) {
+
+  <small class="field-error">
+    Please select a valid body type.
+  </small>
+
+}
 
     </div>
 
@@ -126,6 +135,16 @@
         </option>
 
       </select>
+      @if (
+  submitted &&
+  isComplexionInvalid()
+) {
+
+  <small class="field-error">
+    Please select a valid complexion.
+  </small>
+
+}
 
     </div>
 
@@ -135,7 +154,7 @@
     <div class="form-group">
 
       <label>
-        Physical Status
+        Physical Status <span class="required">*</span>
       </label>
 
       <select [(ngModel)]="physicalStatus">
@@ -157,25 +176,26 @@
         </option>
 
       </select>
+      @if (
+      submitted &&
+      !physicalStatus
+      ) {
 
+      <small class="field-error">
+        Physical status is required.
+      </small>
+
+      }
     </div>
 
 
     <div class="form-actions">
 
-      <button
-        type="button"
-        class="secondary-btn"
-        (click)="goBack()"
-      >
+      <button type="button" class="secondary-btn" (click)="goBack()">
         Cancel
       </button>
 
-      <button
-        type="button"
-        class="primary-btn"
-        (click)="saveDetails()"
-      >
+      <button type="button" class="primary-btn" (click)="saveDetails()">
         Save & Continue
         <i class="fa-solid fa-arrow-right"></i>
       </button>

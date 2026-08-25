@@ -9,6 +9,8 @@ import { UserMenu } from '../../components/user-menu/user-menu';
 })
 export class Shortlisted {
 
+  readonly hasShortlistedProfiles = true;
+
   removeShortlist(name: string): void {
     console.log('Remove from shortlist:', name);
   }

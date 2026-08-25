@@ -5,7 +5,7 @@
         <!-- Brand -->
         <div class="footer-brand">
 
-            <a href="#home" class="footer-logo">
+            <a href="#home" class="footer-logo" (click)="$event.preventDefault(); goToSection('home')">
 
                 <span class="footer-logo-main">
                     MATCH WITH
@@ -62,15 +62,15 @@
 
             <h4>Quick Links</h4>
 
-            <a href="#home">Home</a>
+            <a href="#home" (click)="$event.preventDefault(); goToSection('home')">Home</a>
 
-            <a href="#why-us">Why Us</a>
+            <a href="#why-us" (click)="$event.preventDefault(); goToSection('why-us')">Why Us</a>
 
-            <a href="#process">How It Works</a>
+            <a href="#process" (click)="$event.preventDefault(); goToSection('process')">How It Works</a>
 
-            <a href="#verification">Home Verification</a>
+            <a href="#verification" (click)="$event.preventDefault(); goToSection('verification')">Home Verification</a>
 
-            <a href="#faq">FAQ</a>
+            <a href="#faq" (click)="$event.preventDefault(); goToSection('faq')">FAQ</a>
 
         </div>
 

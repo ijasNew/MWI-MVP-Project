@@ -165,14 +165,10 @@
                 Already registered?
                 <a routerLink="/login">Login</a>
             </p>
-            <button
-    type="button"
-    class="back-home-btn"
-    (click)="goToHome()"
->
-    <i class="fa-solid fa-arrow-left"></i>
-    Back to Home
-</button>
+            <button type="button" class="back-home-btn" (click)="goToHome()">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Home
+            </button>
 
         </div>
 
@@ -944,30 +940,19 @@
 
                     <div class="map-container">
 
-    <div class="map-placeholder">
+                        <div id="register-map" class="register-map"></div>
 
-        <i class="fa-solid fa-location-dot"></i>
-
-        <span>
-            Map
-        </span>
-
-        <small>
-            Select the location here
-        </small>
-
-    </div>
-
-</div>
+                    </div>
 
 
-                    <button type="button" class="continue-btn" (click)="confirmMapLocation()">
-
-                        Select Location
-
-                        <i class="fa-solid fa-check"></i>
-
-                    </button>
+                    <button
+    type="button"
+    class="continue-btn"
+    (click)="confirmMapLocation()"
+>
+    Select Location
+    <i class="fa-solid fa-check"></i>
+</button>
 
 
                     <button type="button" class="cancel-location-btn" (click)="cancelMap()">
@@ -980,7 +965,7 @@
 
             }
 
-             
+
 
 
             @if (locationError) {
@@ -2032,7 +2017,7 @@
             }
 
 
-            
+
             <!-- =========================
      PREFERRED EDUCATION
 ========================= -->
@@ -2061,6 +2046,48 @@
                 }
 
             </div>
+
+          <!-- Specific Qualification -->
+@if (preferredEducation.includes('Professional Degree')) {
+
+  <div class="preference-subsection">
+
+    <div class="preference-subsection-title">
+      <span>Specific Qualification</span>
+    </div>
+
+    <div class="checkbox-grid">
+
+      @for (
+        option of getEducationSpecificOptions();
+        track option
+      ) {
+
+        <label class="checkbox-item">
+
+          <input
+            type="checkbox"
+            [checked]="
+              preferredEducationSpecific.includes(option)
+            "
+            (change)="
+  togglePreferredEducationSpecific(option)
+"
+          >
+
+          <span>{{ option }}</span>
+
+        </label>
+
+      }
+
+    </div>
+
+    
+
+  </div>
+
+}
 
             <!-- =========================
      PREFERRED CAREER

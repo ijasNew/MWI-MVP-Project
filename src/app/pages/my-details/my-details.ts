@@ -275,6 +275,63 @@ openProfilePhotos(): void {
   ]);
 
 }
+formatWorkLocation(): string {
+
+  if (!this.user?.workLocationType) {
+    return '-';
+  }
+
+
+  if (
+    this.user.workLocationType ===
+    'india_same_state'
+  ) {
+
+    return [
+      'India',
+      this.user.workState,
+      this.user.workDistrict
+    ]
+      .filter(Boolean)
+      .join(' – ');
+
+  }
+
+
+  if (
+    this.user.workLocationType ===
+    'india_other_state'
+  ) {
+
+    return [
+      'India',
+      this.user.workState,
+      this.user.workDistrict
+    ]
+      .filter(Boolean)
+      .join(' – ');
+
+  }
+
+
+  if (
+    this.user.workLocationType ===
+    'outside_india'
+  ) {
+
+    return [
+      this.user.workCountry,
+      this.user.workCity
+    ]
+      .filter(Boolean)
+      .join(' – ');
+
+  }
+
+
+  return '-';
+
+}
 
 
 }

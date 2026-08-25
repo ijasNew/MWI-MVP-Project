@@ -2,11 +2,7 @@
 
   <header class="form-header">
 
-    <button
-      type="button"
-      class="back-btn"
-      (click)="goBack()"
-    >
+    <button type="button" class="back-btn" (click)="goBack()">
       <i class="fa-solid fa-arrow-left"></i>
       Back
     </button>
@@ -15,7 +11,9 @@
       PROFILE COMPLETION
     </span>
 
-    <h1>Work & Education Details</h1>
+    <h1>
+      Work & Education Details
+    </h1>
 
     <p>
       Add additional academic and professional
@@ -27,33 +25,43 @@
 
   <section class="form-card">
 
-    <!-- EXISTING EDUCATION -->
+
+    <!-- =========================
+         EXISTING EDUCATION
+         ========================= -->
 
     <div class="existing-info">
 
       <div>
         <span>Highest Education</span>
+
         <strong>
           {{ getSavedValue('highestEducation') }}
         </strong>
       </div>
 
+
       <div>
         <span>Specialization</span>
+
         <strong>
           {{ getSavedValue('specialization') }}
         </strong>
       </div>
 
+
       <div>
         <span>Job Title / Role</span>
+
         <strong>
           {{ getSavedValue('jobTitle') }}
         </strong>
       </div>
 
+
       <div>
         <span>Job Sector</span>
+
         <strong>
           {{ getSavedValue('jobSector') }}
         </strong>
@@ -65,67 +73,257 @@
     <div class="form-divider"></div>
 
 
-    <!-- COLLEGE -->
+    <!-- =========================
+         COLLEGE
+         ========================= -->
 
     <div class="form-group">
 
       <label>
         College / University
-        <span class="optional">Optional</span>
+        <span class="optional">
+          Optional
+        </span>
       </label>
 
-      <input
-        type="text"
-        [(ngModel)]="collegeUniversity"
-        placeholder="Enter college or university name"
-      >
+      <input type="text" [(ngModel)]="collegeUniversity" maxlength="100" placeholder="Enter college or university name">
+
+      @if (
+      submitted &&
+      isTextFieldInvalid(
+      collegeUniversity
+      )
+      ) {
+
+      <small class="field-error">
+        Please enter a valid college or university name.
+      </small>
+
+      }
 
     </div>
 
 
-    <!-- COMPANY -->
+    <!-- =========================
+         COMPANY
+         ========================= -->
 
     <div class="form-group">
 
       <label>
         Company / Organization
-        <span class="optional">Optional</span>
+        <span class="optional">
+          Optional
+        </span>
       </label>
 
-      <input
-        type="text"
-        [(ngModel)]="companyName"
-        placeholder="Enter company or organization"
-      >
+      <input type="text" [(ngModel)]="companyName" maxlength="100" placeholder="Enter company or organization">
+
+      @if (
+      submitted &&
+      isTextFieldInvalid(
+      companyName
+      )
+      ) {
+
+      <small class="field-error">
+        Please enter a valid company or organization name.
+      </small>
+
+      }
 
     </div>
 
 
-    <!-- WORK LOCATION -->
+    <!-- =========================
+         WORK LOCATION
+         ========================= -->
 
     <div class="form-group">
 
       <label>
         Work Location
-        <span class="optional">Optional</span>
+        <span class="optional">
+          Optional
+        </span>
       </label>
 
-      <input
-        type="text"
-        [(ngModel)]="workLocation"
-        placeholder="Enter work location"
-      >
+      <select [(ngModel)]="workLocationType" (ngModelChange)="
+          onWorkLocationTypeChange()
+        ">
+
+        <option value="">
+          Select work location
+        </option>
+
+        @for (
+        location of workLocationTypes;
+        track location.value
+        ) {
+
+        <option [value]="location.value">
+          {{ location.label }}
+        </option>
+
+        }
+
+      </select>
+
+
+      <!-- INDIA -->
+
+      @if (
+      workLocationType ===
+      'india_same_state' ||
+      workLocationType ===
+      'india_other_state'
+      ) {
+
+      <div class="nested-fields">
+
+
+        <!-- STATE -->
+
+        <div class="form-group">
+
+          <label>
+            State
+          </label>
+
+          <select [(ngModel)]="workState">
+
+            <option value="">
+              Select state
+            </option>
+
+            @if (
+            workLocationType ===
+            'india_same_state'
+            ) {
+
+            <option [value]="registeredState">
+              {{ registeredState }}
+            </option>
+
+            } @else {
+
+            @for (
+            state of indianStates;
+            track state
+            ) {
+
+            <option [value]="state">
+              {{ state }}
+            </option>
+
+            }
+
+            }
+
+          </select>
+
+        </div>
+
+
+        <!-- DISTRICT -->
+
+        <div class="form-group">
+
+          <label>
+            City / District
+          </label>
+
+          <input type="text" [(ngModel)]="workDistrict" maxlength="100" placeholder="Enter city or district">
+
+        </div>
+
+      </div>
+
+      }
+
+
+      <!-- OUTSIDE INDIA -->
+
+      @if (
+      workLocationType ===
+      'outside_india'
+      ) {
+
+      <div class="nested-fields">
+
+
+        <!-- COUNTRY -->
+
+        <div class="form-group">
+
+          <label>
+            Country
+          </label>
+
+          <select [(ngModel)]="workCountry">
+
+            <option value="">
+              Select country
+            </option>
+
+            @for (
+            country of countries;
+            track country
+            ) {
+
+            <option [value]="country">
+              {{ country }}
+            </option>
+
+            }
+
+          </select>
+
+        </div>
+
+
+        <!-- CITY -->
+
+        <div class="form-group">
+
+          <label>
+            City
+          </label>
+
+          <input type="text" [(ngModel)]="workCity" maxlength="100" placeholder="Enter city">
+
+        </div>
+
+      </div>
+
+      }
+
+
+      @if (
+      submitted &&
+      isWorkLocationInvalid()
+      ) {
+
+      <small class="field-error">
+        Please complete the work location correctly.
+      </small>
+
+      }
 
     </div>
 
 
-    <!-- ANNUAL INCOME -->
+    <!-- =========================
+         ANNUAL INCOME
+         ========================= -->
 
     <div class="form-group">
 
       <label>
         Annual Income
-        <span class="optional">Optional</span>
+        <span class="optional">
+          Optional
+        </span>
       </label>
 
       <select [(ngModel)]="annualIncome">
@@ -160,26 +358,37 @@
 
       </select>
 
+
+      @if (
+      submitted &&
+      isAnnualIncomeInvalid()
+      ) {
+
+      <small class="field-error">
+        Please select a valid annual income option.
+      </small>
+
+      }
+
     </div>
 
 
+    <!-- =========================
+         ACTIONS
+         ========================= -->
+
     <div class="form-actions">
 
-      <button
-        type="button"
-        class="secondary-btn"
-        (click)="goBack()"
-      >
+      <button type="button" class="secondary-btn" (click)="goBack()">
         Cancel
       </button>
 
-      <button
-        type="button"
-        class="primary-btn"
-        (click)="saveDetails()"
-      >
+
+      <button type="button" class="primary-btn" (click)="saveDetails()">
         Save & Continue
+
         <i class="fa-solid fa-arrow-right"></i>
+
       </button>
 
     </div>
