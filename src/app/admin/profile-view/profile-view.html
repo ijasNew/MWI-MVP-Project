@@ -1,0 +1,602 @@
+<div class="admin-profile-page">
+
+  @if (profile) {
+
+    <!-- HEADER -->
+
+    <header class="profile-header">
+
+      <div class="header-left">
+
+        <button
+          type="button"
+          class="back-button"
+          (click)="goBack()"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          Back to Profiles
+        </button>
+
+        <span class="page-label">
+          ADMIN / PROFILE
+        </span>
+
+        <h1>
+          {{ profile.name }}
+        </h1>
+
+        <div class="profile-meta">
+
+          <span>
+            ID: {{ profile.id }}
+          </span>
+
+          <span>•</span>
+
+          <span>
+            {{ profile.age }} years
+          </span>
+
+          <span>•</span>
+
+          <span>
+            {{ profile.place }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <div class="status-group">
+
+          <span
+            class="status-badge"
+            [class]="getStatusClass()"
+          >
+            {{ profile.verificationStatus }}
+          </span>
+
+          <span
+            class="plan-badge"
+            [class]="getPlanClass()"
+          >
+            {{ profile.plan }}
+          </span>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="edit-button"
+          (click)="editProfile()"
+        >
+          <i class="fa-regular fa-pen-to-square"></i>
+          Edit Profile
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- PROFILE SUMMARY -->
+
+    <section class="summary-card">
+
+      <div class="summary-item">
+
+        <span>
+          PROFILE ID
+        </span>
+
+        <strong>
+          {{ profile.id }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-item">
+
+        <span>
+          VERIFICATION
+        </span>
+
+        <strong>
+          {{ profile.verificationStatus }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-item">
+
+        <span>
+          PLAN
+        </span>
+
+        <strong>
+          {{ profile.plan }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-item">
+
+        <span>
+          LOCATION
+        </span>
+
+        <strong>
+          {{ profile.district }}, {{ profile.state }}
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROFILE CONTENT -->
+
+    <div class="profile-content">
+
+
+      <!-- BASIC DETAILS -->
+
+      <section class="profile-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            01
+          </span>
+
+          <div>
+            <h2>Basic Details</h2>
+            <p>Core profile information</p>
+          </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+          <div>
+            <span>Profile For</span>
+            <strong>{{ profile.gender }}</strong>
+          </div>
+
+          <div>
+            <span>Full Name</span>
+            <strong>{{ profile.name }}</strong>
+          </div>
+
+          <div>
+            <span>Gender</span>
+            <strong>{{ profile.gender }}</strong>
+          </div>
+
+          <div>
+            <span>Age</span>
+            <strong>{{ profile.age }} years</strong>
+          </div>
+
+          <div>
+            <span>Marital Status</span>
+            <strong>{{ profile.maritalStatus }}</strong>
+          </div>
+
+          <div>
+            <span>Height</span>
+            <strong>{{ profile.height }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- PHYSICAL -->
+
+      <section class="profile-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            02
+          </span>
+
+          <div>
+            <h2>Physical Details</h2>
+            <p>Physical profile information</p>
+          </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+          <div>
+            <span>Weight</span>
+            <strong>{{ profile.weight }}</strong>
+          </div>
+
+          <div>
+            <span>Body Type</span>
+            <strong>{{ profile.bodyType }}</strong>
+          </div>
+
+          <div>
+            <span>Complexion</span>
+            <strong>{{ profile.complexion }}</strong>
+          </div>
+
+          <div>
+            <span>Physical Status</span>
+            <strong>{{ profile.physicalStatus }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- EDUCATION & CAREER -->
+
+      <section class="profile-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            03
+          </span>
+
+          <div>
+            <h2>Education & Career</h2>
+            <p>Education and professional information</p>
+          </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+          <div>
+            <span>Education</span>
+            <strong>{{ profile.education }}</strong>
+          </div>
+
+          <div>
+            <span>Specialization</span>
+            <strong>{{ profile.specialization }}</strong>
+          </div>
+
+          <div>
+            <span>Job Title</span>
+            <strong>{{ profile.jobTitle }}</strong>
+          </div>
+
+          <div>
+            <span>Job Sector</span>
+            <strong>{{ profile.jobSector }}</strong>
+          </div>
+
+          <div>
+            <span>Company</span>
+            <strong>{{ profile.company }}</strong>
+          </div>
+
+          <div>
+            <span>Work Location</span>
+            <strong>{{ profile.workLocation }}</strong>
+          </div>
+
+          <div>
+            <span>Annual Income</span>
+            <strong>{{ profile.annualIncome }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- LOCATION -->
+
+      <section class="profile-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            04
+          </span>
+
+          <div>
+            <h2>Location</h2>
+            <p>Profile location information</p>
+          </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+          <div>
+            <span>Place</span>
+            <strong>{{ profile.place }}</strong>
+          </div>
+
+          <div>
+            <span>District</span>
+            <strong>{{ profile.district }}</strong>
+          </div>
+
+          <div>
+            <span>State</span>
+            <strong>{{ profile.state }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- RELIGION -->
+
+      <section class="profile-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            05
+          </span>
+
+          <div>
+            <h2>Religion & Community</h2>
+            <p>Religious and community information</p>
+          </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+          <div>
+            <span>Religion</span>
+            <strong>{{ profile.religion }}</strong>
+          </div>
+
+          <div>
+            <span>Community</span>
+            <strong>{{ profile.community }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- FAMILY -->
+
+      <section class="profile-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            06
+          </span>
+
+          <div>
+            <h2>Family Details</h2>
+            <p>Family background information</p>
+          </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+          <div>
+            <span>Father</span>
+            <strong>{{ profile.fatherName }}</strong>
+          </div>
+
+          <div>
+            <span>Mother</span>
+            <strong>{{ profile.motherName }}</strong>
+          </div>
+
+          <div>
+            <span>Brothers</span>
+            <strong>{{ profile.brothers }}</strong>
+          </div>
+
+          <div>
+            <span>Sisters</span>
+            <strong>{{ profile.sisters }}</strong>
+          </div>
+
+          <div>
+            <span>Family Status</span>
+            <strong>{{ profile.familyStatus }}</strong>
+          </div>
+
+          <div>
+            <span>Home Type</span>
+            <strong>{{ profile.homeType }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CONTACT -->
+
+      <section class="profile-section admin-only-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            07
+          </span>
+
+          <div>
+
+            <h2>Contact Information</h2>
+
+            <p>
+              Visible to authorized admin only
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="admin-contact-notice">
+
+          <i class="fa-solid fa-lock"></i>
+
+          <span>
+            Contact information is restricted to authorized
+            admin users.
+          </span>
+
+        </div>
+
+
+        <div class="details-grid">
+
+          <div>
+            <span>Phone</span>
+            <strong>{{ profile.phone }}</strong>
+          </div>
+
+          <div>
+            <span>WhatsApp</span>
+            <strong>{{ profile.whatsapp }}</strong>
+          </div>
+
+          <div>
+            <span>Email</span>
+            <strong>{{ profile.email }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- EXPECTATIONS -->
+
+      <section class="profile-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            08
+          </span>
+
+          <div>
+
+            <h2>Expectations</h2>
+
+            <p>
+              Member's expectations
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="expectations-box">
+
+          {{ profile.expectations }}
+
+        </div>
+
+      </section>
+
+
+      <!-- PHOTOS -->
+
+      <section class="profile-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            09
+          </span>
+
+          <div>
+
+            <h2>Profile Photos</h2>
+
+            <p>
+              Uploaded profile photos
+            </p>
+
+          </div>
+
+        </div>
+
+
+        @if (profile.photos.length > 0) {
+
+          <div class="photos-grid">
+
+            @for (photo of profile.photos; track $index) {
+
+              <div class="photo-box">
+
+                <img
+                  [src]="photo"
+                  alt="Profile photo"
+                />
+
+              </div>
+
+            }
+
+          </div>
+
+        } @else {
+
+          <div class="no-photos">
+
+            <i class="fa-regular fa-image"></i>
+
+            <span>
+              No profile photos uploaded.
+            </span>
+
+          </div>
+
+        }
+
+      </section>
+
+
+    </div>
+
+
+  } @else {
+
+    <div class="loading-state">
+
+      <span>
+        Loading profile...
+      </span>
+
+    </div>
+
+  }
+
+</div>

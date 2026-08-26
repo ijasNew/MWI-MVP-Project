@@ -1,0 +1,882 @@
+<div class="admin-edit-page">
+
+  <!-- HEADER -->
+
+  <header class="page-header">
+
+    <div>
+
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()"
+      >
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Profile
+      </button>
+
+      <span class="page-label">
+        ADMIN / PROFILE EDIT
+      </span>
+
+      <h1>
+        Edit Profile
+      </h1>
+
+      <p>
+        Update profile information for
+        <strong>{{ profile.id }}</strong>
+      </p>
+
+    </div>
+
+
+    <div class="header-status">
+
+      <span class="status-label">
+        STATUS
+      </span>
+
+      <strong>
+        {{ profile.verificationStatus }}
+      </strong>
+
+    </div>
+
+  </header>
+
+
+  <!-- SAVE MESSAGE -->
+
+  @if (saveMessage) {
+
+    <div class="success-message">
+
+      <i class="fa-solid fa-circle-check"></i>
+
+      {{ saveMessage }}
+
+    </div>
+
+  }
+
+
+  <!-- FORM -->
+
+  <form
+    class="edit-form"
+    (ngSubmit)="saveProfile()"
+  >
+
+
+    <!-- BASIC DETAILS -->
+
+    <section class="form-section">
+
+      <div class="section-header">
+
+        <span class="section-number">
+          01
+        </span>
+
+        <div>
+
+          <h2>Basic Details</h2>
+
+          <p>
+            Basic profile information
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group full">
+
+          <label>Profile ID</label>
+
+          <input
+            type="text"
+            [value]="profile.id"
+            disabled
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Full Name</label>
+
+          <input
+            type="text"
+            name="fullName"
+            [(ngModel)]="profile.fullName"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Gender</label>
+
+          <select
+            name="gender"
+            [(ngModel)]="profile.gender"
+          >
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Age</label>
+
+          <input
+            type="number"
+            name="age"
+            [(ngModel)]="profile.age"
+            min="18"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Height</label>
+
+          <input
+            type="text"
+            name="height"
+            [(ngModel)]="profile.height"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Marital Status</label>
+
+          <select
+            name="maritalStatus"
+            [(ngModel)]="profile.maritalStatus"
+          >
+
+            <option value="Never Married">
+              Never Married
+            </option>
+
+            <option value="Divorced">
+              Divorced
+            </option>
+
+            <option value="Widowed">
+              Widowed
+            </option>
+
+            <option value="Separated">
+              Separated
+            </option>
+
+            <option value="Awaiting Divorce">
+              Awaiting Divorce
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- LOCATION -->
+
+    <section class="form-section">
+
+      <div class="section-header">
+
+        <span class="section-number">
+          02
+        </span>
+
+        <div>
+
+          <h2>Location</h2>
+
+          <p>
+            Profile address and location
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Place</label>
+
+          <input
+            type="text"
+            name="place"
+            [(ngModel)]="profile.place"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>District</label>
+
+          <input
+            type="text"
+            name="district"
+            [(ngModel)]="profile.district"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>State</label>
+
+          <input
+            type="text"
+            name="state"
+            [(ngModel)]="profile.state"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Pincode</label>
+
+          <input
+            type="text"
+            name="pincode"
+            [(ngModel)]="profile.pincode"
+          />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- RELIGION -->
+
+    <section class="form-section">
+
+      <div class="section-header">
+
+        <span class="section-number">
+          03
+        </span>
+
+        <div>
+
+          <h2>Religion & Community</h2>
+
+          <p>
+            Religious and community information
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Religion</label>
+
+          <input
+            type="text"
+            name="religion"
+            [(ngModel)]="profile.religion"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Community</label>
+
+          <input
+            type="text"
+            name="community"
+            [(ngModel)]="profile.community"
+          />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- EDUCATION & CAREER -->
+
+    <section class="form-section">
+
+      <div class="section-header">
+
+        <span class="section-number">
+          04
+        </span>
+
+        <div>
+
+          <h2>Education & Career</h2>
+
+          <p>
+            Education and professional information
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Highest Education</label>
+
+          <input
+            type="text"
+            name="highestEducation"
+            [(ngModel)]="profile.highestEducation"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Specialization</label>
+
+          <input
+            type="text"
+            name="specialization"
+            [(ngModel)]="profile.specialization"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Job Title</label>
+
+          <input
+            type="text"
+            name="jobTitle"
+            [(ngModel)]="profile.jobTitle"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Job Sector</label>
+
+          <input
+            type="text"
+            name="jobSector"
+            [(ngModel)]="profile.jobSector"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Company</label>
+
+          <input
+            type="text"
+            name="companyName"
+            [(ngModel)]="profile.companyName"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Work Location</label>
+
+          <input
+            type="text"
+            name="workLocation"
+            [(ngModel)]="profile.workLocation"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Annual Income</label>
+
+          <input
+            type="text"
+            name="annualIncome"
+            [(ngModel)]="profile.annualIncome"
+          />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PHYSICAL -->
+
+    <section class="form-section">
+
+      <div class="section-header">
+
+        <span class="section-number">
+          05
+        </span>
+
+        <div>
+
+          <h2>Physical Details</h2>
+
+          <p>
+            Physical profile information
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Weight</label>
+
+          <input
+            type="text"
+            name="weight"
+            [(ngModel)]="profile.weight"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Body Type</label>
+
+          <input
+            type="text"
+            name="bodyType"
+            [(ngModel)]="profile.bodyType"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Complexion</label>
+
+          <input
+            type="text"
+            name="complexion"
+            [(ngModel)]="profile.complexion"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Physical Status</label>
+
+          <input
+            type="text"
+            name="physicalStatus"
+            [(ngModel)]="profile.physicalStatus"
+          />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- FAMILY -->
+
+    <section class="form-section">
+
+      <div class="section-header">
+
+        <span class="section-number">
+          06
+        </span>
+
+        <div>
+
+          <h2>Family Details</h2>
+
+          <p>
+            Family background information
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Father Name</label>
+
+          <input
+            type="text"
+            name="fatherName"
+            [(ngModel)]="profile.fatherName"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Mother Name</label>
+
+          <input
+            type="text"
+            name="motherName"
+            [(ngModel)]="profile.motherName"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Brothers</label>
+
+          <input
+            type="number"
+            name="brothers"
+            [(ngModel)]="profile.brothers"
+            min="0"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Sisters</label>
+
+          <input
+            type="number"
+            name="sisters"
+            [(ngModel)]="profile.sisters"
+            min="0"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Family Status</label>
+
+          <input
+            type="text"
+            name="familyStatus"
+            [(ngModel)]="profile.familyStatus"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Home Type</label>
+
+          <input
+            type="text"
+            name="homeType"
+            [(ngModel)]="profile.homeType"
+          />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CONTACT -->
+
+    <section class="form-section admin-contact">
+
+      <div class="section-header">
+
+        <span class="section-number">
+          07
+        </span>
+
+        <div>
+
+          <h2>Contact Information</h2>
+
+          <p>
+            Admin-only contact details
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="contact-warning">
+
+        <i class="fa-solid fa-lock"></i>
+
+        <span>
+          Contact information is sensitive. Only authorized
+          admin users should edit these fields.
+        </span>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Secondary Mobile</label>
+
+          <input
+            type="text"
+            name="secondaryMobile"
+            [(ngModel)]="profile.secondaryMobile"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>WhatsApp Number</label>
+
+          <input
+            type="text"
+            name="whatsappNumber"
+            [(ngModel)]="profile.whatsappNumber"
+          />
+
+        </div>
+
+
+        <div class="form-group full">
+
+          <label>Email</label>
+
+          <input
+            type="email"
+            name="email"
+            [(ngModel)]="profile.email"
+          />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- EXPECTATIONS -->
+
+    <section class="form-section">
+
+      <div class="section-header">
+
+        <span class="section-number">
+          08
+        </span>
+
+        <div>
+
+          <h2>Expectations</h2>
+
+          <p>
+            Member's expectations
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <textarea
+          name="expectations"
+          [(ngModel)]="profile.expectations"
+          rows="5"
+        ></textarea>
+
+      </div>
+
+    </section>
+
+
+    <!-- ACCOUNT SETTINGS -->
+
+    <section class="form-section">
+
+      <div class="section-header">
+
+        <span class="section-number">
+          09
+        </span>
+
+        <div>
+
+          <h2>Account Status</h2>
+
+          <p>
+            Admin-controlled profile status
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Plan</label>
+
+          <select
+            name="plan"
+            [(ngModel)]="profile.plan"
+          >
+
+            <option value="Free">
+              Free
+            </option>
+
+            <option value="Basic">
+              Basic
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Verification Status</label>
+
+          <select
+            name="verificationStatus"
+            [(ngModel)]="profile.verificationStatus"
+          >
+
+            <option value="Not Verified">
+              Not Verified
+            </option>
+
+            <option value="Pending">
+              Pending
+            </option>
+
+            <option value="Verified">
+              Verified
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ACTIONS -->
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="cancel-button"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+
+
+      <button
+        type="submit"
+        class="save-button"
+        [disabled]="isSaving"
+      >
+
+        @if (isSaving) {
+          Saving...
+        } @else {
+          <i class="fa-solid fa-check"></i>
+          Save Changes
+        }
+
+      </button>
+
+    </div>
+
+
+  </form>
+
+</div>

@@ -1,0 +1,405 @@
+<div class="admin-verification-page">
+
+  <!-- HEADER -->
+
+  <header class="page-header">
+
+    <div>
+
+      <span class="page-label">
+        ADMIN / VERIFICATION
+      </span>
+
+      <h1>
+        Home Verification
+      </h1>
+
+      <p>
+        Manage profiles that have requested home verification.
+      </p>
+
+    </div>
+
+
+    <div class="header-count">
+
+      <strong>
+        {{ pendingCount }}
+      </strong>
+
+      <span>
+        Pending
+      </span>
+
+    </div>
+
+  </header>
+
+
+  <!-- SUMMARY -->
+
+  <section class="summary-row">
+
+    <div class="summary-card">
+
+      <span>
+        PENDING
+      </span>
+
+      <strong>
+        {{ pendingCount }}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <span>
+        IN PROGRESS
+      </span>
+
+      <strong>
+        {{ inProgressCount }}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <span>
+        PAYMENT REQUIRED
+      </span>
+
+      <strong>
+        0
+      </strong>
+
+    </div>
+
+  </section>
+
+
+  <!-- FILTERS -->
+
+  <section class="filter-card">
+
+    <div class="search-box">
+
+      <i class="fa-solid fa-magnifying-glass"></i>
+
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Search by ID, name or phone"
+      />
+
+    </div>
+
+
+    <div class="filters">
+
+      <select
+        [(ngModel)]="selectedDistrict"
+      >
+
+        <option value="All">
+          All Districts
+        </option>
+
+        <option value="Malappuram">
+          Malappuram
+        </option>
+
+        <option value="Kozhikode">
+          Kozhikode
+        </option>
+
+        <option value="Kannur">
+          Kannur
+        </option>
+
+      </select>
+
+
+      <select
+        [(ngModel)]="selectedStatus"
+      >
+
+        <option value="All">
+          All Status
+        </option>
+
+        <option value="Pending">
+          Pending
+        </option>
+
+        <option value="In Progress">
+          In Progress
+        </option>
+
+        <option value="Verified">
+          Verified
+        </option>
+
+      </select>
+
+
+      <button
+        type="button"
+        class="clear-button"
+        (click)="clearFilters()"
+      >
+        Clear
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- TABLE -->
+
+  <section class="table-card">
+
+    <div class="table-header">
+
+      <div>
+
+        <h2>
+          Verification Requests
+        </h2>
+
+        <span>
+          {{ filteredRequests.length }}
+          requests found
+        </span>
+
+      </div>
+
+    </div>
+
+
+    @if (filteredRequests.length > 0) {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                PROFILE
+              </th>
+
+              <th>
+                LOCATION
+              </th>
+
+              <th>
+                PHONE
+              </th>
+
+              <th>
+                PAYMENT
+              </th>
+
+              <th>
+                REQUESTED
+              </th>
+
+              <th>
+                STATUS
+              </th>
+
+              <th>
+                ACTION
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              request of filteredRequests;
+              track request.id
+            ) {
+
+              <tr>
+
+                <!-- PROFILE -->
+
+                <td>
+
+                  <div class="profile-cell">
+
+                    <div class="avatar">
+                      {{ request.name.charAt(0) }}
+                    </div>
+
+                    <div>
+
+                      <strong>
+                        {{ request.name }}
+                      </strong>
+
+                      <span>
+                        {{ request.id }}
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+
+                <!-- LOCATION -->
+
+                <td>
+
+                  <div class="location-cell">
+
+                    <strong>
+                      {{ request.place }}
+                    </strong>
+
+                    <span>
+                      {{ request.district }}
+                    </span>
+
+                  </div>
+
+                </td>
+
+
+                <!-- PHONE -->
+
+                <td>
+                  {{ request.phone }}
+                </td>
+
+
+                <!-- PAYMENT -->
+
+                <td>
+
+                  <span class="payment-badge">
+                    <i class="fa-solid fa-check"></i>
+                    {{ request.paymentStatus }}
+                  </span>
+
+                </td>
+
+
+                <!-- DATE -->
+
+                <td>
+                  {{ request.requestedDate }}
+                </td>
+
+
+                <!-- STATUS -->
+
+                <td>
+
+                  <span
+                    class="status-badge"
+                    [class]="getStatusClass(request.status)"
+                  >
+                    {{ request.status }}
+                  </span>
+
+                </td>
+
+
+                <!-- ACTION -->
+
+                <td>
+
+                  <div class="actions">
+
+                    <button
+                      type="button"
+                      class="view-button"
+                      (click)="viewProfile(request)"
+                    >
+                      <i class="fa-regular fa-eye"></i>
+                      View
+                    </button>
+
+
+                    @if (request.status === 'Pending') {
+
+                      <button
+                        type="button"
+                        class="verify-button"
+                        (click)="startVerification(request)"
+                      >
+                        Start Verification
+                      </button>
+
+                    } @else if (
+                      request.status === 'In Progress'
+                    ) {
+
+                      <button
+                        type="button"
+                        class="continue-button"
+                        (click)="startVerification(request)"
+                      >
+                        Continue
+                      </button>
+
+                    }
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    } @else {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          <i class="fa-solid fa-house-circle-check"></i>
+        </div>
+
+        <h3>
+          No verification requests found
+        </h3>
+
+        <p>
+          There are no requests matching the selected filters.
+        </p>
+
+        <button
+          type="button"
+          (click)="clearFilters()"
+        >
+          Clear Filters
+        </button>
+
+      </div>
+
+    }
+
+  </section>
+
+</div>

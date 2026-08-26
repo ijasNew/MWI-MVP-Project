@@ -145,9 +145,40 @@ export const routes: Routes = [
     import('./pages/forgot-password/forgot-password')
       .then(m => m.ForgotPassword)
   },
+  
   {
+  path: 'admin/login',
+  loadComponent: () =>
+    import('./admin/admin-login/admin-login')
+      .then(m => m.AdminLogin)
+},
+{
+  path: 'admin/profiles',
+  loadComponent: () =>
+    import('./admin/profiles/profiles')
+      .then(m => m.Profiles)
+},
+{
+  path: 'admin/profile-view/:memberId',
+  loadComponent: () =>
+    import('./admin/profile-view/profile-view')
+      .then(m => m.ProfileView)
+},
+{
+  path: 'admin/profile-edit/:memberId',
+  loadComponent: () =>
+    import('./admin/profile-edit/profile-edit')
+      .then(m => m.ProfileEdit)
+},
+{
+  path: 'admin/verification',
+  loadComponent: () =>
+    import('./admin/verification/verification')
+      .then(m => m.Verification)
+},
+{
     path: '**',
     redirectTo: ''
-  }
+  },
 
 ];
