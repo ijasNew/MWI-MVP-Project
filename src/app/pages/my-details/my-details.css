@@ -575,3 +575,138 @@
   }
 
 }
+
+.profile-update-policy {
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.policy-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.profile-update-policy h2 {
+  margin: 0 0 10px;
+}
+
+.profile-update-policy p {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+/* =========================
+   PROFILE UPDATE POLICY
+========================= */
+
+.profile-update-policy {
+  margin-bottom: 24px;
+  padding: 20px;
+
+  border: 1px solid #e5e5e9;
+  border-radius: 15px;
+
+  background: #fff;
+}
+
+.policy-content {
+  max-width: 760px;
+}
+
+.policy-label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #88888f;
+
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 1.2px;
+}
+
+.profile-update-policy h2 {
+  margin: 0 0 10px;
+
+  color: #29292d;
+
+  font-size: 20px;
+  letter-spacing: -.3px;
+}
+
+.profile-update-policy p {
+  margin: 8px 0;
+
+  color: #66666d;
+
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+
+/* =========================
+   WHATSAPP SUPPORT
+========================= */
+
+.whatsapp-support-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 10px;
+  padding: 10px 14px;
+
+  border: 1px solid #222;
+  border-radius: 8px;
+
+  background: #222;
+  color: #fff;
+
+  text-decoration: none;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  transition:
+    background .18s ease,
+    color .18s ease;
+}
+
+.whatsapp-support-btn:hover {
+  background: #fff;
+  color: #222;
+}
+
+.whatsapp-support-btn i {
+  font-size: 14px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+
+  .profile-update-policy {
+    padding: 17px;
+  }
+
+  .profile-update-policy h2 {
+    font-size: 18px;
+  }
+
+  .whatsapp-support-btn {
+    width: 100%;
+  }
+
+}

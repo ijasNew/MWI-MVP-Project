@@ -12,14 +12,6 @@ import { ProfileCompletionService } from '../../services/profile-completion';
 })
 export class CompleteProfile implements OnInit {
 
-
-
-  basicCompleted = false;
-  locationCompleted = false;
-  religionCompleted = false;
-  educationCompleted = false;
-  preferenceCompleted = false;
-
   physicalCompleted = false;
   contactCompleted = false;
   workCompleted = false;
@@ -66,54 +58,6 @@ export class CompleteProfile implements OnInit {
           profile
         );
 
-
-      // Individual section status
-
-      this.basicCompleted =
-        !!(
-          profile.fullName &&
-          profile.gender &&
-          profile.age &&
-          profile.maritalStatus &&
-          profile.height
-        );
-
-
-      this.locationCompleted =
-        !!(
-          profile.houseName &&
-          profile.place &&
-          profile.district &&
-          profile.pincode
-        );
-
-
-      this.religionCompleted =
-        !!(
-          profile.religion &&
-          profile.preferredReligion
-        );
-
-
-      this.educationCompleted =
-        !!(
-          profile.highestEducation &&
-          profile.specialization &&
-          profile.jobTitle &&
-          profile.jobSector
-        );
-
-
-      this.preferenceCompleted =
-        !!(
-          profile.preferredAgeMin != null &&
-          profile.preferredAgeMax != null &&
-          profile.preferredHeightMin != null &&
-          profile.preferredHeightMax != null &&
-          profile.preferredMaritalStatus?.length &&
-          profile.preferredReligion &&
-          profile.preferredLocations?.length
-        );
 
 
       this.physicalCompleted =
@@ -212,14 +156,6 @@ export class CompleteProfile implements OnInit {
       );
 
     }
-
-  }
-
-  openMyDetails(): void {
-
-    this.router.navigate([
-      '/my-details'
-    ]);
 
   }
   openPhysicalDetails(): void {

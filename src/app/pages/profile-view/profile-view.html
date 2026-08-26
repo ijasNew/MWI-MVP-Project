@@ -342,45 +342,48 @@
           </strong>
         </div>
 
+        @if (canShowKidsDetails()) {
 
-        @if (profile.hasKids) {
+  @if (profile.hasKids) {
 
-          <div>
-            <span>Kids</span>
-            <strong>
-              {{ formatValue(profile.hasKids) }}
-            </strong>
-          </div>
+    <div>
+      <span>Kids</span>
+      <strong>
+        {{ formatValue(profile.hasKids) }}
+      </strong>
+    </div>
 
-        }
+  }
+
+  @if (profile.numberOfKids) {
+
+    <div>
+      <span>Number of Kids</span>
+      <strong>
+        {{ profile.numberOfKids }}
+      </strong>
+    </div>
+
+  }
+
+  @if (profile.kidsLivingStatus) {
+
+    <div>
+      <span>Kids Living Status</span>
+      <strong>
+        {{ formatValue(profile.kidsLivingStatus) }}
+      </strong>
+    </div>
+
+  }
+
+}
+ 
+
+ 
 
 
-        @if (profile.numberOfKids) {
-
-          <div>
-            <span>Number of Kids</span>
-            <strong>
-              {{ profile.numberOfKids }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.kidsLivingStatus) {
-
-          <div>
-            <span>Kids Living Status</span>
-            <strong>
-              {{
-                formatValue(
-                  profile.kidsLivingStatus
-                )
-              }}
-            </strong>
-          </div>
-
-        }
+        
 
       </div>
 
@@ -527,17 +530,12 @@
         }
 
 
-        @if (profile.workLocation) {
-
-          <div>
-            <span>Work Location</span>
-            <strong>
-              {{ profile.workLocation }}
-            </strong>
-          </div>
-
-        }
-
+       <div>
+  <span>Work Location</span>
+  <strong>
+    {{ formatWorkLocation(profile) }}
+  </strong>
+</div>
 
         @if (profile.annualIncome) {
 

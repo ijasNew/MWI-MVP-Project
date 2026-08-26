@@ -391,8 +391,63 @@ export class ProfileView implements OnInit {
     return labels[value] || value;
 
   }
+formatWorkLocation(profile: Profile): string {
 
+  // Legacy saved value
+  if (profile.workLocation) {
+    return profile.workLocation;
+  }
 
+  // India
+  if (
+    profile.workLocationType === 'india_same_state' ||
+    profile.workLocationType === 'india_other_state'
+  ) {
+
+    const parts = [
+      profile.workDistrict,
+      profile.workState
+    ].filter(Boolean);
+
+    return parts.length
+      ? parts.join(', ')
+      : '-';
+  }
+
+  // Outside India
+  if (
+    profile.workLocationType === 'outside_india'
+  ) {
+
+    const parts = [
+      profile.workCity,
+      profile.workCountry
+    ].filter(Boolean);
+
+    return parts.length
+      ? parts.join(', ')
+      : '-';
+  }
+
+  return '-';
+}
+canShowKidsDetails(): boolean {
+
+  if (!this.profile?.maritalStatus) {
+    return false;
+  }
+
+  const status = this.profile.maritalStatus
+    .toString()
+    .trim()
+    .toLowerCase();
+
+  return ![
+    'never married',
+    'never_married',
+    'divorced'
+  ].includes(status);
+}
   formatList(
     values?: string[]
   ): string {

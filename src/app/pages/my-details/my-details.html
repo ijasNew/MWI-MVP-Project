@@ -4,6 +4,7 @@
 
   <div class="my-details-page">
 
+
     @if (user) {
 
     <!-- =========================================
@@ -48,8 +49,50 @@
       </div>
 
     </header>
+<!-- PROFILE UPDATE POLICY -->
+<section
+  class="profile-update-policy"
+  role="note"
+  aria-label="Profile editing information"
+>
+  <div class="policy-content">
 
+    <span class="policy-label">
+      PROFILE UPDATE POLICY
+    </span>
 
+    <h2>
+      Home Verification
+    </h2>
+
+    <p>
+      You can update your additional profile details before
+      Home Verification.
+    </p>
+
+    <p>
+      Once your profile is Home Verified, editing will be disabled
+      to protect the accuracy and trust of your verified information.
+    </p>
+
+    <p>
+      Need to update something after verification?
+      Please contact our Match With Ijas service team.
+      We will assist you with the required changes.
+    </p>
+
+    <a
+      href="https://wa.me/919746900055?text=Hi%20Match%20With%20Ijas%2C%20I%20need%20help%20updating%20my%20profile."
+      target="_blank"
+      rel="noopener noreferrer"
+      class="whatsapp-support-btn"
+    >
+      <i class="fa-brands fa-whatsapp"></i>
+      Contact Support on WhatsApp
+    </a>
+
+  </div>
+</section>
     <!-- =========================================
          01 BASIC DETAILS
          ========================================= -->
@@ -158,55 +201,55 @@
 
 
         @if (
-          user.hasKids === 'yes' ||
-          user.hasKids === 'Yes'
+        user.hasKids === 'yes' ||
+        user.hasKids === 'Yes'
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Kids
-            </span>
+          <span>
+            Kids
+          </span>
 
-            <strong>
-              Yes
-            </strong>
+          <strong>
+            Yes
+          </strong>
 
-          </div>
-
-
-          @if (user.numberOfKids) {
-
-            <div>
-
-              <span>
-                Number of Kids
-              </span>
-
-              <strong>
-                {{ user.numberOfKids }}
-              </strong>
-
-            </div>
-
-          }
+        </div>
 
 
-          @if (user.kidsLivingStatus) {
+        @if (user.numberOfKids) {
 
-            <div>
+        <div>
 
-              <span>
-                Kids Living Status
-              </span>
+          <span>
+            Number of Kids
+          </span>
 
-              <strong>
-                {{ formatValue(user.kidsLivingStatus) }}
-              </strong>
+          <strong>
+            {{ user.numberOfKids }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
+
+
+        @if (user.kidsLivingStatus) {
+
+        <div>
+
+          <span>
+            Kids Living Status
+          </span>
+
+          <strong>
+            {{ formatValue(user.kidsLivingStatus) }}
+          </strong>
+
+        </div>
+
+        }
 
         }
 
@@ -253,11 +296,7 @@
         </div>
 
 
-        <button
-          type="button"
-          class="edit-btn"
-          (click)="openPhysicalDetails()"
-        >
+        <button type="button" class="edit-btn" (click)="openPhysicalDetails()">
 
           <i class="fa-solid fa-pen"></i>
 
@@ -370,17 +409,17 @@
 
         @if (user.specialization) {
 
-          <div>
+        <div>
 
-            <span>
-              Specialization
-            </span>
+          <span>
+            Specialization
+          </span>
 
-            <strong>
-              {{ user.specialization }}
-            </strong>
+          <strong>
+            {{ user.specialization }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -440,11 +479,7 @@
         </div>
 
 
-        <button
-          type="button"
-          class="edit-btn"
-          (click)="openWorkDetails()"
-        >
+        <button type="button" class="edit-btn" (click)="openWorkDetails()">
 
           <i class="fa-solid fa-pen"></i>
 
@@ -538,11 +573,7 @@
         </div>
 
 
-        <button
-          type="button"
-          class="edit-btn"
-          (click)="openContactDetails()"
-        >
+        <button type="button" class="edit-btn" (click)="openContactDetails()">
 
           <i class="fa-solid fa-pen"></i>
 
@@ -745,55 +776,55 @@
 
         @if (user.religion === 'Muslim') {
 
-          @if (user.sect) {
+        @if (user.sect) {
 
-            <div>
+        <div>
 
-              <span>
-                Sect
-              </span>
+          <span>
+            Sect
+          </span>
 
-              <strong>
-                {{ user.sect }}
-              </strong>
+          <strong>
+            {{ user.sect }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
-
-
-          @if (user.muslimGroup) {
-
-            <div>
-
-              <span>
-                Sunni Group
-              </span>
-
-              <strong>
-                {{ user.muslimGroup }}
-              </strong>
-
-            </div>
-
-          }
+        }
 
 
-          @if (user.salafiGroup) {
+        @if (user.muslimGroup) {
 
-            <div>
+        <div>
 
-              <span>
-                Salafi Group
-              </span>
+          <span>
+            Sunni Group
+          </span>
 
-              <strong>
-                {{ user.salafiGroup }}
-              </strong>
+          <strong>
+            {{ user.muslimGroup }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
+
+
+        @if (user.salafiGroup) {
+
+        <div>
+
+          <span>
+            Salafi Group
+          </span>
+
+          <strong>
+            {{ user.salafiGroup }}
+          </strong>
+
+        </div>
+
+        }
 
         }
 
@@ -801,88 +832,88 @@
         <!-- HINDU -->
 
         @if (
-          user.religion?.toLowerCase() === 'hindu'
+        user.religion?.toLowerCase() === 'hindu'
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Caste
-            </span>
+          <span>
+            Caste
+          </span>
 
-            <strong>
-              {{ user.caste || '-' }}
-            </strong>
+          <strong>
+            {{ user.caste || '-' }}
+          </strong>
 
-          </div>
-
-
-          @if (user.subCaste) {
-
-            <div>
-
-              <span>
-                Sub Caste
-              </span>
-
-              <strong>
-                {{ user.subCaste }}
-              </strong>
-
-            </div>
-
-          }
+        </div>
 
 
-          @if (user.nakshatra) {
+        @if (user.subCaste) {
 
-            <div>
+        <div>
 
-              <span>
-                Nakshatra
-              </span>
+          <span>
+            Sub Caste
+          </span>
 
-              <strong>
-                {{ user.nakshatra }}
-              </strong>
+          <strong>
+            {{ user.subCaste }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
-
-
-          @if (user.rashi) {
-
-            <div>
-
-              <span>
-                Rashi
-              </span>
-
-              <strong>
-                {{ user.rashi }}
-              </strong>
-
-            </div>
-
-          }
+        }
 
 
-          @if (user.dosham) {
+        @if (user.nakshatra) {
 
-            <div>
+        <div>
 
-              <span>
-                Dosham
-              </span>
+          <span>
+            Nakshatra
+          </span>
 
-              <strong>
-                {{ formatValue(user.dosham) }}
-              </strong>
+          <strong>
+            {{ user.nakshatra }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
+
+
+        @if (user.rashi) {
+
+        <div>
+
+          <span>
+            Rashi
+          </span>
+
+          <strong>
+            {{ user.rashi }}
+          </strong>
+
+        </div>
+
+        }
+
+
+        @if (user.dosham) {
+
+        <div>
+
+          <span>
+            Dosham
+          </span>
+
+          <strong>
+            {{ formatValue(user.dosham) }}
+          </strong>
+
+        </div>
+
+        }
 
         }
 
@@ -891,55 +922,55 @@
 
         @if (user.religion === 'Christian') {
 
-          @if (user.denomination) {
+        @if (user.denomination) {
 
-            <div>
+        <div>
 
-              <span>
-                Denomination
-              </span>
+          <span>
+            Denomination
+          </span>
 
-              <strong>
-                {{ user.denomination }}
-              </strong>
+          <strong>
+            {{ user.denomination }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
-
-
-          @if (user.christianSubGroup) {
-
-            <div>
-
-              <span>
-                Sub Denomination
-              </span>
-
-              <strong>
-                {{ user.christianSubGroup }}
-              </strong>
-
-            </div>
-
-          }
+        }
 
 
-          @if (user.parishName) {
+        @if (user.christianSubGroup) {
 
-            <div>
+        <div>
 
-              <span>
-                Parish / Church
-              </span>
+          <span>
+            Sub Denomination
+          </span>
 
-              <strong>
-                {{ user.parishName }}
-              </strong>
+          <strong>
+            {{ user.christianSubGroup }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
+
+
+        @if (user.parishName) {
+
+        <div>
+
+          <span>
+            Parish / Church
+          </span>
+
+          <strong>
+            {{ user.parishName }}
+          </strong>
+
+        </div>
+
+        }
 
         }
 
@@ -973,11 +1004,7 @@
         </div>
 
 
-        <button
-          type="button"
-          class="edit-btn"
-          (click)="openFamilyDetails()"
-        >
+        <button type="button" class="edit-btn" (click)="openFamilyDetails()">
 
           <i class="fa-solid fa-pen"></i>
 
@@ -1225,20 +1252,20 @@
         <!-- MARITAL STATUS -->
 
         @if (
-          user.preferredMaritalStatus?.length
+        user.preferredMaritalStatus?.length
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Marital Status
-            </span>
+          <span>
+            Marital Status
+          </span>
 
-            <strong>
-              {{ user.preferredMaritalStatus.join(', ') }}
-            </strong>
+          <strong>
+            {{ user.preferredMaritalStatus.join(', ') }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1247,17 +1274,17 @@
 
         @if (user.acceptanceOfKids) {
 
-          <div>
+        <div>
 
-            <span>
-              Acceptance of Kids
-            </span>
+          <span>
+            Acceptance of Kids
+          </span>
 
-            <strong>
-              {{ formatValue(user.acceptanceOfKids) }}
-            </strong>
+          <strong>
+            {{ formatValue(user.acceptanceOfKids) }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1281,61 +1308,61 @@
 
         @if (user.religion === 'Muslim') {
 
-          @if (
-            user.preferredSects?.length
-          ) {
+        @if (
+        user.preferredSects?.length
+        ) {
 
-            <div>
+        <div>
 
-              <span>
-                Preferred Sect
-              </span>
+          <span>
+            Preferred Sect
+          </span>
 
-              <strong>
-                {{ user.preferredSects.join(', ') }}
-              </strong>
+          <strong>
+            {{ user.preferredSects.join(', ') }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
-
-
-          @if (
-            user.preferredSunniGroups?.length
-          ) {
-
-            <div>
-
-              <span>
-                Preferred Sunni Group
-              </span>
-
-              <strong>
-                {{ user.preferredSunniGroups.join(', ') }}
-              </strong>
-
-            </div>
-
-          }
+        }
 
 
-          @if (
-            user.preferredSalafiGroups?.length
-          ) {
+        @if (
+        user.preferredSunniGroups?.length
+        ) {
 
-            <div>
+        <div>
 
-              <span>
-                Preferred Salafi Group
-              </span>
+          <span>
+            Preferred Sunni Group
+          </span>
 
-              <strong>
-                {{ user.preferredSalafiGroups.join(', ') }}
-              </strong>
+          <strong>
+            {{ user.preferredSunniGroups.join(', ') }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
+
+
+        @if (
+        user.preferredSalafiGroups?.length
+        ) {
+
+        <div>
+
+          <span>
+            Preferred Salafi Group
+          </span>
+
+          <strong>
+            {{ user.preferredSalafiGroups.join(', ') }}
+          </strong>
+
+        </div>
+
+        }
 
         }
 
@@ -1344,42 +1371,42 @@
 
         @if (user.religion === 'Hindu') {
 
-          @if (
-            user.preferredCaste?.length
-          ) {
+        @if (
+        user.preferredCaste?.length
+        ) {
 
-            <div>
+        <div>
 
-              <span>
-                Preferred Caste
-              </span>
+          <span>
+            Preferred Caste
+          </span>
 
-              <strong>
-                {{ user.preferredCaste.join(', ') }}
-              </strong>
+          <strong>
+            {{ user.preferredCaste.join(', ') }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
 
 
-          @if (
-            user.preferredSubCaste?.length
-          ) {
+        @if (
+        user.preferredSubCaste?.length
+        ) {
 
-            <div>
+        <div>
 
-              <span>
-                Preferred Sub Caste
-              </span>
+          <span>
+            Preferred Sub Caste
+          </span>
 
-              <strong>
-                {{ user.preferredSubCaste.join(', ') }}
-              </strong>
+          <strong>
+            {{ user.preferredSubCaste.join(', ') }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
 
         }
 
@@ -1388,42 +1415,42 @@
 
         @if (user.religion === 'Christian') {
 
-          @if (
-            user.preferredSects?.length
-          ) {
+        @if (
+        user.preferredSects?.length
+        ) {
 
-            <div>
+        <div>
 
-              <span>
-                Preferred Denomination
-              </span>
+          <span>
+            Preferred Denomination
+          </span>
 
-              <strong>
-                {{ user.preferredSects.join(', ') }}
-              </strong>
+          <strong>
+            {{ user.preferredSects.join(', ') }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
 
 
-          @if (
-            user.preferredSubCaste?.length
-          ) {
+        @if (
+        user.preferredSubCaste?.length
+        ) {
 
-            <div>
+        <div>
 
-              <span>
-                Preferred Sub Group
-              </span>
+          <span>
+            Preferred Sub Group
+          </span>
 
-              <strong>
-                {{ user.preferredSubCaste.join(', ') }}
-              </strong>
+          <strong>
+            {{ user.preferredSubCaste.join(', ') }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
 
         }
 
@@ -1431,20 +1458,20 @@
         <!-- EDUCATION -->
 
         @if (
-          user.preferredEducation?.length
+        user.preferredEducation?.length
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Preferred Education
-            </span>
+          <span>
+            Preferred Education
+          </span>
 
-            <strong>
-              {{ user.preferredEducation.join(', ') }}
-            </strong>
+          <strong>
+            {{ user.preferredEducation.join(', ') }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1452,20 +1479,20 @@
         <!-- SPECIFIC EDUCATION -->
 
         @if (
-          user.preferredEducationSpecific?.length
+        user.preferredEducationSpecific?.length
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Specific Qualification
-            </span>
+          <span>
+            Specific Qualification
+          </span>
 
-            <strong>
-              {{ user.preferredEducationSpecific.join(', ') }}
-            </strong>
+          <strong>
+            {{ user.preferredEducationSpecific.join(', ') }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1473,20 +1500,20 @@
         <!-- CAREER -->
 
         @if (
-          user.preferredCareerSector?.length
+        user.preferredCareerSector?.length
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Preferred Career / Job Sector
-            </span>
+          <span>
+            Preferred Career / Job Sector
+          </span>
 
-            <strong>
-              {{ user.preferredCareerSector.join(', ') }}
-            </strong>
+          <strong>
+            {{ user.preferredCareerSector.join(', ') }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1494,20 +1521,20 @@
         <!-- LOCATION -->
 
         @if (
-          user.preferredLocations?.length
+        user.preferredLocations?.length
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Preferred Location
-            </span>
+          <span>
+            Preferred Location
+          </span>
 
-            <strong>
-              {{ user.preferredLocations.join(', ') }}
-            </strong>
+          <strong>
+            {{ user.preferredLocations.join(', ') }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1541,11 +1568,7 @@
         </div>
 
 
-        <button
-          type="button"
-          class="edit-btn"
-          (click)="openAdditionalPreferences()"
-        >
+        <button type="button" class="edit-btn" (click)="openAdditionalPreferences()">
 
           <i class="fa-solid fa-pen"></i>
 
@@ -1562,20 +1585,20 @@
         <!-- FAMILY STATUS -->
 
         @if (
-          user.preferredFamilyStatus?.length
+        user.preferredFamilyStatus?.length
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Preferred Family Status
-            </span>
+          <span>
+            Preferred Family Status
+          </span>
 
-            <strong>
-              {{ user.preferredFamilyStatus.join(', ') }}
-            </strong>
+          <strong>
+            {{ user.preferredFamilyStatus.join(', ') }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1583,20 +1606,20 @@
         <!-- PHYSICAL STATUS -->
 
         @if (
-          user.preferredPhysicalStatus?.length
+        user.preferredPhysicalStatus?.length
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Preferred Physical Status
-            </span>
+          <span>
+            Preferred Physical Status
+          </span>
 
-            <strong>
-              {{ user.preferredPhysicalStatus.join(', ') }}
-            </strong>
+          <strong>
+            {{ user.preferredPhysicalStatus.join(', ') }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1604,20 +1627,20 @@
         <!-- INCOME -->
 
         @if (
-          user.preferredIncome?.length
+        user.preferredIncome?.length
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Preferred Income
-            </span>
+          <span>
+            Preferred Income
+          </span>
 
-            <strong>
-              {{ user.preferredIncome.join(', ') }}
-            </strong>
+          <strong>
+            {{ user.preferredIncome.join(', ') }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1627,20 +1650,20 @@
         -->
 
         @if (
-          user.preferredLocationRadius
+        user.preferredLocationRadius
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Preferred Location Radius
-            </span>
+          <span>
+            Preferred Location Radius
+          </span>
 
-            <strong>
-              {{ user.preferredLocationRadius }}
-            </strong>
+          <strong>
+            {{ user.preferredLocationRadius }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1648,20 +1671,20 @@
         <!-- COMPLEXION -->
 
         @if (
-          user.preferredComplexion?.length
+        user.preferredComplexion?.length
         ) {
 
-          <div>
+        <div>
 
-            <span>
-              Preferred Complexion
-            </span>
+          <span>
+            Preferred Complexion
+          </span>
 
-            <strong>
-              {{ user.preferredComplexion.join(', ') }}
-            </strong>
+          <strong>
+            {{ user.preferredComplexion.join(', ') }}
+          </strong>
 
-          </div>
+        </div>
 
         }
 
@@ -1669,45 +1692,45 @@
         <!-- HINDU HOROSCOPE -->
 
         @if (
-          user.religion === 'Hindu'
+        user.religion === 'Hindu'
         ) {
 
-          @if (
-            user.horoscopeRequired
-          ) {
+        @if (
+        user.horoscopeRequired
+        ) {
 
-            <div>
+        <div>
 
-              <span>
-                Horoscope Required
-              </span>
+          <span>
+            Horoscope Required
+          </span>
 
-              <strong>
-                {{ formatValue(user.horoscopeRequired) }}
-              </strong>
+          <strong>
+            {{ formatValue(user.horoscopeRequired) }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
 
 
-          @if (
-            user.preferredStar?.length
-          ) {
+        @if (
+        user.preferredStar?.length
+        ) {
 
-            <div>
+        <div>
 
-              <span>
-                Preferred Star
-              </span>
+          <span>
+            Preferred Star
+          </span>
 
-              <strong>
-                {{ user.preferredStar.join(', ') }}
-              </strong>
+          <strong>
+            {{ user.preferredStar.join(', ') }}
+          </strong>
 
-            </div>
+        </div>
 
-          }
+        }
 
         }
 
@@ -1741,11 +1764,7 @@
         </div>
 
 
-        <button
-          type="button"
-          class="edit-btn"
-          (click)="openExpectations()"
-        >
+        <button type="button" class="edit-btn" (click)="openExpectations()">
 
           <i class="fa-solid fa-pen"></i>
 
@@ -1779,9 +1798,7 @@
          12 PROFILE PHOTOS
          ========================================= -->
 
-    <section
-      class="details-card photo-section"
-    >
+    <section class="details-card photo-section">
 
       <div class="card-header">
 
@@ -1802,11 +1819,7 @@
         </div>
 
 
-        <button
-          type="button"
-          class="edit-btn"
-          (click)="openProfilePhotos()"
-        >
+        <button type="button" class="edit-btn" (click)="openProfilePhotos()">
 
           <i class="fa-solid fa-pen"></i>
 
@@ -1820,53 +1833,47 @@
       <!-- PHOTO GALLERY -->
 
       @if (
-        user.photos?.length
+      user.photos?.length
       ) {
 
-        <div class="photo-gallery">
+      <div class="photo-gallery">
 
-          @for (
-            photo of user.photos;
-            track $index
-          ) {
+        @for (
+        photo of user.photos;
+        track $index
+        ) {
 
-            <div
-              class="photo-item"
-              (click)="
+        <div class="photo-item" (click)="
                 openPhotoViewer(
                   photo,
                   $index
                 )
-              "
-            >
+              ">
 
-              <img
-                [src]="photo"
-                [alt]="
+          <img [src]="photo" [alt]="
                   'Profile photo ' +
                   ($index + 1)
-                "
-              />
-
-            </div>
-
-          }
+                " />
 
         </div>
+
+        }
+
+      </div>
 
       }
 
       @else {
 
-        <div class="photo-empty">
+      <div class="photo-empty">
 
-          <i class="fa-solid fa-camera"></i>
+        <i class="fa-solid fa-camera"></i>
 
-          <p>
-            No profile photos added
-          </p>
+        <p>
+          No profile photos added
+        </p>
 
-        </div>
+      </div>
 
       }
 
@@ -1878,97 +1885,69 @@
          ========================================= -->
 
     @if (
-      isPhotoViewerOpen &&
-      selectedPhoto
+    isPhotoViewerOpen &&
+    selectedPhoto
     ) {
 
-      <div
-        class="photo-viewer"
-        (click)="closePhotoViewer()"
-        (touchstart)="
+    <div class="photo-viewer" (click)="closePhotoViewer()" (touchstart)="
           handlePhotoTouchStart($event)
-        "
-        (touchend)="
+        " (touchend)="
           handlePhotoTouchEnd($event)
-        "
-      >
+        ">
 
 
-        <!-- CLOSE -->
+      <!-- CLOSE -->
 
-        <button
-          type="button"
-          class="photo-viewer-close"
-          (click)="
+      <button type="button" class="photo-viewer-close" (click)="
             closePhotoViewer();
             $event.stopPropagation()
-          "
-          aria-label="Close photo viewer"
-        >
+          " aria-label="Close photo viewer">
 
-          <i class="fa-solid fa-xmark"></i>
+        <i class="fa-solid fa-xmark"></i>
+
+      </button>
+
+
+      <!-- PREVIOUS -->
+
+      @if (
+      selectedPhotoIndex > 0
+      ) {
+
+      <button type="button" class="photo-viewer-nav photo-viewer-prev" (click)="
+              previousPhoto();
+              $event.stopPropagation()
+            " aria-label="Previous photo">
+
+        <i class="fa-solid fa-chevron-left"></i>
+
+      </button>
+
+      }
+
+
+      <!-- IMAGE -->
+
+      <img [src]="selectedPhoto" alt="Profile photo" class="photo-viewer-image" (click)="$event.stopPropagation()" />
+
+
+      <!-- NEXT -->
+
+      @if (
+      user.photos &&
+      selectedPhotoIndex < user.photos.length - 1 ) { <button type="button" class="photo-viewer-nav photo-viewer-next"
+        (click)="
+              nextPhoto();
+              $event.stopPropagation()
+            " aria-label="Next photo">
+
+        <i class="fa-solid fa-chevron-right"></i>
 
         </button>
 
-
-        <!-- PREVIOUS -->
-
-        @if (
-          selectedPhotoIndex > 0
-        ) {
-
-          <button
-            type="button"
-            class="photo-viewer-nav photo-viewer-prev"
-            (click)="
-              previousPhoto();
-              $event.stopPropagation()
-            "
-            aria-label="Previous photo"
-          >
-
-            <i class="fa-solid fa-chevron-left"></i>
-
-          </button>
-
         }
 
-
-        <!-- IMAGE -->
-
-        <img
-          [src]="selectedPhoto"
-          alt="Profile photo"
-          class="photo-viewer-image"
-          (click)="$event.stopPropagation()"
-        />
-
-
-        <!-- NEXT -->
-
-        @if (
-          user.photos &&
-          selectedPhotoIndex <
-            user.photos.length - 1
-        ) {
-
-          <button
-            type="button"
-            class="photo-viewer-nav photo-viewer-next"
-            (click)="
-              nextPhoto();
-              $event.stopPropagation()
-            "
-            aria-label="Next photo"
-          >
-
-            <i class="fa-solid fa-chevron-right"></i>
-
-          </button>
-
-        }
-
-      </div>
+    </div>
 
     }
 
@@ -1997,19 +1976,19 @@
 
     @else {
 
-      <div class="empty-state">
+    <div class="empty-state">
 
-        <i class="fa-solid fa-user-slash"></i>
+      <i class="fa-solid fa-user-slash"></i>
 
-        <h2>
-          Profile details unavailable
-        </h2>
+      <h2>
+        Profile details unavailable
+      </h2>
 
-        <p>
-          Please register or login again.
-        </p>
+      <p>
+        Please register or login again.
+      </p>
 
-      </div>
+    </div>
 
     }
 

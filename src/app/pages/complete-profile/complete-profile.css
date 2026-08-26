@@ -8,15 +8,12 @@
 
 .dashboard-main {
   margin-left: 250px;
-
   min-height: 100vh;
-
   padding: 38px 45px 70px;
 }
 
 .dashboard-main > * {
   max-width: 1120px;
-
   margin-left: auto;
   margin-right: auto;
 }
@@ -30,18 +27,21 @@
 
   .dashboard-main {
     margin-left: 0;
-
     padding: 28px 16px 50px;
   }
 
 }
+
+
 .complete-profile-page {
   max-width: 1120px;
   margin: 0 auto;
 }
 
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .profile-header {
   margin-bottom: 25px;
@@ -49,38 +49,33 @@
 
 .page-label {
   color: #88888f;
-
   font-size: 10px;
   font-weight: 750;
-
   letter-spacing: 1.2px;
 }
 
 .profile-header h1 {
   margin: 5px 0 6px;
-
   font-size: 32px;
   letter-spacing: -.7px;
 }
 
 .profile-header p {
   margin: 0;
-
   color: #77777e;
-
   font-size: 14px;
 }
 
 
-/* PROGRESS */
+/* =========================
+   PROGRESS
+========================= */
 
 .progress-card {
   margin-bottom: 20px;
   padding: 20px;
-
   border: 1px solid #e5e5e9;
   border-radius: 15px;
-
   background: #fff;
 }
 
@@ -88,17 +83,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   margin-bottom: 12px;
 }
 
 .progress-top span {
   display: block;
-
   margin-bottom: 4px;
-
   color: #88888f;
-
   font-size: 10px;
 }
 
@@ -108,60 +99,117 @@
 
 .progress-status {
   padding: 6px 10px;
-
   border-radius: 7px;
-
   background: #f1f1f4;
-
   color: #66666d;
-
   font-size: 10px;
   font-weight: 600;
 }
 
 .progress-bar {
   height: 8px;
-
   overflow: hidden;
-
   border-radius: 10px;
-
   background: #ededf0;
 }
 
 .progress-fill {
   height: 100%;
-
   border-radius: inherit;
-
   background: #222;
 }
 
 .progress-card p {
   margin: 10px 0 0;
-
   color: #88888f;
-
   font-size: 11px;
 }
 
 
-/* LIST */
+/* =========================
+   PROFILE UPDATE POLICY
+========================= */
+
+.verification-notice {
+  margin-bottom: 22px;
+}
+
+.verification-notice .progress-top {
+  margin-bottom: 8px;
+}
+
+.verification-notice .progress-top strong {
+  font-size: 22px;
+}
+
+.verification-notice p {
+  margin: 8px 0 0;
+  color: #77777e;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================
+   WHATSAPP SUPPORT
+========================= */
+
+.whatsapp-support-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  margin-top: 12px;
+  padding: 10px 15px;
+
+  border: 1px solid #222;
+  border-radius: 8px;
+
+  background: #222;
+  color: #fff;
+
+  text-decoration: none;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.whatsapp-support-btn:hover {
+  background: #fff;
+  color: #222;
+  border-color: #222;
+}
+
+.whatsapp-support-btn i {
+  font-size: 14px;
+}
+
+
+/* =========================
+   LIST
+========================= */
 
 .completion-list {
   display: flex;
   flex-direction: column;
-
   gap: 12px;
 }
 
 
-/* CARD */
+/* =========================
+   CARD
+========================= */
 
 .completion-card {
   display: flex;
   align-items: center;
-
   gap: 16px;
 
   padding: 16px;
@@ -182,7 +230,9 @@
 }
 
 
-/* ICON */
+/* =========================
+   ICON
+========================= */
 
 .completion-icon {
   width: 45px;
@@ -197,14 +247,15 @@
   border-radius: 11px;
 
   background: #f1f1f4;
-
   color: #66666d;
 
   font-size: 16px;
 }
 
 
-/* CONTENT */
+/* =========================
+   CONTENT
+========================= */
 
 .completion-content {
   flex: 1;
@@ -213,28 +264,26 @@
 
 .completion-content h2 {
   margin: 0 0 4px;
-
   font-size: 15px;
 }
 
 .completion-content p {
   margin: 0 0 6px;
-
   color: #88888f;
-
   font-size: 11px;
   line-height: 1.5;
 }
 
 .completion-meta {
   color: #99999f;
-
   font-size: 9px;
   font-weight: 600;
 }
 
 
-/* BUTTON */
+/* =========================
+   BUTTON
+========================= */
 
 .completion-card button {
   display: inline-flex;
@@ -248,16 +297,13 @@
   border-radius: 7px;
 
   background: #fff;
-
   color: #555;
 
   font-family: inherit;
-
   font-size: 10px;
   font-weight: 650;
 
   white-space: nowrap;
-
   cursor: pointer;
 }
 
@@ -266,7 +312,9 @@
 }
 
 
-/* MOBILE */
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 650px) {
 
@@ -302,6 +350,10 @@
   .completion-card button {
     width: 100%;
     justify-content: center;
+  }
+
+  .whatsapp-support-btn {
+    width: 100%;
   }
 
 }

@@ -57,7 +57,10 @@
 
                 <div class="progress-bar">
 
-                    <div class="progress-fill" [style.width.%]="completionPercentage"></div>
+                    <div
+                        class="progress-fill"
+                        [style.width.%]="completionPercentage">
+                    </div>
 
                 </div>
 
@@ -70,232 +73,67 @@
             </section>
 
 
+            <!-- PROFILE UPDATE POLICY -->
+
+            <section
+                class="progress-card verification-notice"
+                role="note"
+                aria-label="Profile editing information">
+
+                <div class="progress-top">
+
+                    <div>
+
+                        <span>
+                            Profile Update Policy
+                        </span>
+
+                        <strong>
+                            Home Verification
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <p>
+                    You can complete and update your additional
+                    profile details before Home Verification.
+                </p>
+
+                <p>
+                    Once your profile is Home Verified, editing will
+                    be disabled to protect the accuracy and trust of
+                    your verified information.
+                </p>
+
+                <p>
+                    Need to update something after verification?
+                    Our Match With Ijas service team can assist you
+                    with the required changes.
+                </p>
+
+
+                <a
+                    href="https://wa.me/919746900055?text=Hi%20Match%20With%20Ijas%2C%20I%20need%20help%20updating%20my%20profile."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="whatsapp-support-btn">
+
+                    <i class="fa-brands fa-whatsapp"></i>
+
+                    Contact Support on WhatsApp
+
+                </a>
+
+            </section>
+
+
             <!-- PROFILE SECTIONS -->
 
             <div class="completion-list">
-                <!-- BASIC DETAILS -->
 
-                <article class="completion-card">
-
-                    <div class="completion-icon">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-
-                    <div class="completion-content">
-
-                        <h2>
-                            Basic Details
-                        </h2>
-
-                        <p>
-                            Your name, gender, age, marital status
-                            and basic profile information.
-                        </p>
-
-                        <span class="completion-meta">
-
-                            @if (basicCompleted) {
-                            Completed
-                            } @else {
-                            Not completed
-                            }
-
-                        </span>
-
-                    </div>
-
-                    <button type="button" (click)="openMyDetails()">
-
-                        @if (basicCompleted) {
-                        View Details
-                        } @else {
-                        Add Details
-                        }
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-                </article>
-
-                <!-- LOCATION -->
-
-                <article class="completion-card">
-
-                    <div class="completion-icon">
-                        <i class="fa-solid fa-location-dot"></i>
-                    </div>
-
-                    <div class="completion-content">
-
-                        <h2>
-                            Location
-                        </h2>
-
-                        <p>
-                            Your house name, place, district
-                            and pincode.
-                        </p>
-
-                        <span class="completion-meta">
-
-                            @if (locationCompleted) {
-                            Completed
-                            } @else {
-                            Not completed
-                            }
-
-                        </span>
-
-                    </div>
-
-                    <button type="button" (click)="openMyDetails()">
-
-                        @if (locationCompleted) {
-                        View Details
-                        } @else {
-                        Add Details
-                        }
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-                </article>
-
-                <!-- RELIGION & COMMUNITY -->
-
-                <article class="completion-card">
-
-                    <div class="completion-icon">
-                        <i class="fa-solid fa-hands-praying"></i>
-                    </div>
-
-                    <div class="completion-content">
-
-                        <h2>
-                            Religion & Community
-                        </h2>
-
-                        <p>
-                            Your religion, community and
-                            related profile details.
-                        </p>
-
-                        <span class="completion-meta">
-
-                            @if (religionCompleted) {
-                            Completed
-                            } @else {
-                            Not completed
-                            }
-
-                        </span>
-
-                    </div>
-
-                    <button type="button" (click)="openMyDetails()">
-
-                        @if (religionCompleted) {
-                        View Details
-                        } @else {
-                        Add Details
-                        }
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-                </article>
-
-                <!-- EDUCATION & CAREER -->
-
-                <article class="completion-card">
-
-                    <div class="completion-icon">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </div>
-
-                    <div class="completion-content">
-
-                        <h2>
-                            Education & Career
-                        </h2>
-
-                        <p>
-                            Your education, specialization,
-                            job sector and current occupation.
-                        </p>
-
-                        <span class="completion-meta">
-
-                            @if (educationCompleted) {
-                            Completed
-                            } @else {
-                            Not completed
-                            }
-
-                        </span>
-
-                    </div>
-
-                    <button type="button" (click)="openMyDetails()">
-
-                        @if (educationCompleted) {
-                        View Details
-                        } @else {
-                        Add Details
-                        }
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-                </article>
-
-                <!-- PARTNER PREFERENCE -->
-
-                <article class="completion-card">
-
-                    <div class="completion-icon">
-                        <i class="fa-solid fa-heart-circle-check"></i>
-                    </div>
-
-                    <div class="completion-content">
-
-                        <h2>
-                            Partner Preference
-                        </h2>
-
-                        <p>
-                            Your preferred age, height, marital status,
-                            religion and location.
-                        </p>
-
-                        <span class="completion-meta">
-
-                            @if (preferenceCompleted) {
-                            Completed
-                            } @else {
-                            Not completed
-                            }
-
-                        </span>
-
-                    </div>
-
-                    <button type="button" (click)="openMyDetails()">
-
-                        @if (preferenceCompleted) {
-                        View Details
-                        } @else {
-                        Add Details
-                        }
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-                </article>
 
                 <!-- PHYSICAL -->
 
@@ -319,22 +157,36 @@
                         <span class="completion-meta">
 
                             @if (physicalCompleted) {
-                            Completed
+
+                                Completed
+
                             } @else {
-                            Not completed
+
+                                Not completed
+
                             }
 
                         </span>
+
                     </div>
 
-                    <button type="button" (click)="openPhysicalDetails()">
+
+                    <button
+                        type="button"
+                        (click)="openPhysicalDetails()">
+
                         @if (physicalCompleted) {
-                        Edit Details
+
+                            Edit Details
+
                         } @else {
-                        Add Details
+
+                            Add Details
+
                         }
 
                         <i class="fa-solid fa-arrow-right"></i>
+
                     </button>
 
                 </article>
@@ -360,29 +212,39 @@
                         </p>
 
                         <span class="completion-meta">
+
                             @if (contactCompleted) {
-                            Completed
+
+                                Completed
+
                             } @else {
-                            Not completed
+
+                                Not completed
+
                             }
+
                         </span>
 
                     </div>
 
 
-                    <button type="button" (click)="openContactDetails()">
+                    <button
+                        type="button"
+                        (click)="openContactDetails()">
+
                         @if (contactCompleted) {
-                        Edit Details
+
+                            Edit Details
+
                         } @else {
-                        Add Details
+
+                            Add Details
+
                         }
 
                         <i class="fa-solid fa-arrow-right"></i>
+
                     </button>
-
-
-
-
 
                 </article>
 
@@ -407,24 +269,38 @@
                         </p>
 
                         <span class="completion-meta">
+
                             @if (workCompleted) {
-                            Completed
+
+                                Completed
+
                             } @else {
-                            Not completed
+
+                                Not completed
+
                             }
+
                         </span>
+
                     </div>
 
 
+                    <button
+                        type="button"
+                        (click)="openWorkDetails()">
 
-                    <button type="button" (click)="openWorkDetails()">
                         @if (workCompleted) {
-                        Edit Details
+
+                            Edit Details
+
                         } @else {
-                        Add Details
+
+                            Add Details
+
                         }
 
                         <i class="fa-solid fa-arrow-right"></i>
+
                     </button>
 
                 </article>
@@ -450,29 +326,44 @@
                         </p>
 
                         <span class="completion-meta">
+
                             @if (familyCompleted) {
-                            Completed
+
+                                Completed
+
                             } @else {
-                            Not completed
+
+                                Not completed
+
                             }
+
                         </span>
 
                     </div>
 
-                    <button type="button" (click)="openFamilyDetails()">
+
+                    <button
+                        type="button"
+                        (click)="openFamilyDetails()">
+
                         @if (familyCompleted) {
-                        Edit Details
+
+                            Edit Details
+
                         } @else {
-                        Add Details
+
+                            Add Details
+
                         }
 
                         <i class="fa-solid fa-arrow-right"></i>
+
                     </button>
 
                 </article>
 
 
-                <!-- PREFERENCE -->
+                <!-- ADDITIONAL PREFERENCES -->
 
                 <article class="completion-card">
 
@@ -492,22 +383,38 @@
                         </p>
 
                         <span class="completion-meta">
+
                             @if (additionalPreferencesCompleted) {
-                            Completed
+
+                                Completed
+
                             } @else {
-                            Not completed
+
+                                Not completed
+
                             }
+
                         </span>
+
                     </div>
 
-                    <button type="button" (click)="openAdditionalPreferences()">
+
+                    <button
+                        type="button"
+                        (click)="openAdditionalPreferences()">
+
                         @if (additionalPreferencesCompleted) {
-                        Edit Details
+
+                            Edit Details
+
                         } @else {
-                        Add Details
+
+                            Add Details
+
                         }
 
                         <i class="fa-solid fa-arrow-right"></i>
+
                     </button>
 
                 </article>
@@ -533,29 +440,44 @@
                         </p>
 
                         <span class="completion-meta">
+
                             @if (expectationsCompleted) {
-                            Completed
+
+                                Completed
+
                             } @else {
-                            Not completed
+
+                                Not completed
+
                             }
+
                         </span>
 
                     </div>
 
-                    <button type="button" (click)="openExpectations()">
+
+                    <button
+                        type="button"
+                        (click)="openExpectations()">
+
                         @if (expectationsCompleted) {
-                        Edit Details
+
+                            Edit Details
+
                         } @else {
-                        Add Details
+
+                            Add Details
+
                         }
 
                         <i class="fa-solid fa-arrow-right"></i>
+
                     </button>
 
                 </article>
 
 
-                <!-- PHOTOS -->
+                <!-- PROFILE PHOTOS -->
 
                 <article class="completion-card photo-card">
 
@@ -574,27 +496,35 @@
                             profile more complete.
                         </p>
 
-                        <!-- <span class="completion-meta">
-                    0 of 4 photos added
-                </span> -->
-
-
                         <span class="completion-meta">
+
                             @if (photosCompleted) {
-                            Completed
+
+                                Completed
+
                             } @else {
-                            Not completed
+
+                                Not completed
+
                             }
+
                         </span>
 
                     </div>
 
-                    <button type="button" (click)="openProfilePhotos()">
+
+                    <button
+                        type="button"
+                        (click)="openProfilePhotos()">
 
                         @if (photosCompleted) {
-                        Edit Photos
+
+                            Edit Photos
+
                         } @else {
-                        Add Photos
+
+                            Add Photos
+
                         }
 
                         <i class="fa-solid fa-arrow-right"></i>
@@ -602,6 +532,7 @@
                     </button>
 
                 </article>
+
 
             </div>
 
