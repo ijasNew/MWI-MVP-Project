@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
 import { ProfileService } from '../../services/profile';
+import { Profile } from '../../models/profile.model';
 
 @Component({
   selector: 'app-my-details',
@@ -18,7 +19,7 @@ export class MyDetails implements OnInit {
   private profileService: ProfileService
 ) {}
 
-  user: any = null;
+  user: Profile | null = null;
   selectedPhoto: string | null = null;
 
   isPhotoViewerOpen = false;

@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
-import { ProfileCompletionService } from '../../services/profile-completion';
 
+import {
+  ProfileCompletionService,
+  ProfileCompletionStatus
+} from '../../services/profile-completion';
+
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-complete-profile',
+  standalone: true,
   imports: [UserMenu],
   templateUrl: './complete-profile.html',
   styleUrl: './complete-profile.css'
@@ -22,165 +28,170 @@ export class CompleteProfile implements OnInit {
 
   completionPercentage = 0;
 
+
   constructor(
     private router: Router,
+    private profileService: ProfileService,
     private profileCompletionService: ProfileCompletionService
-  ) { }
+  ) {}
+
+
+  // =====================================================
+  // INIT
+  // =====================================================
 
   ngOnInit(): void {
-    sessionStorage.removeItem('mwi_edit_source');
+
+    // Clear edit-source flag when entering
+    // Complete Profile normally.
+    sessionStorage.removeItem(
+      'mwi_edit_source'
+    );
 
     this.calculateProfileCompletion();
-
   }
+
+
+  // =====================================================
+  // CALCULATE PROFILE COMPLETION
+  // =====================================================
 
   calculateProfileCompletion(): void {
 
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+    const profile =
+      this.profileService.getCurrentProfile();
 
-    if (!saved) {
+
+    if (!profile) {
+
+      this.resetCompletion();
+
       return;
     }
 
-    try {
 
-      const profile =
-        JSON.parse(saved);
-
-
-      // Calculate using shared service
-
-      this.completionPercentage =
-        this.profileCompletionService.calculate(
-          profile
-        );
-
-
-
-      this.physicalCompleted =
-        !!(
-          profile.weight &&
-          profile.bodyType &&
-          profile.complexion &&
-          profile.physicalStatus
-        );
-
-
-      this.contactCompleted =
-        !!(
-          profile.secondaryMobile ||
-          profile.whatsappNumber ||
-          profile.email
-        );
-
-
-      const hasWorkLocation =
-        !!(
-          profile.workLocation ||
-          (
-            profile.workLocationType &&
-            (
-              (
-                (
-                  profile.workLocationType === 'india_same_state' ||
-                  profile.workLocationType === 'india_other_state'
-                ) &&
-                profile.workState &&
-                profile.workDistrict
-              ) ||
-              (
-                profile.workLocationType === 'outside_india' &&
-                profile.workCountry &&
-                profile.workCity
-              )
-            )
-          )
-        );
-
-      this.workCompleted =
-        !!(
-          profile.collegeUniversity ||
-          profile.companyName ||
-          hasWorkLocation ||
-          profile.annualIncome != null
-        );
-
-
-      this.familyCompleted =
-        !!(
-          profile.fatherName ||
-          profile.motherName ||
-          profile.brothers != null ||
-          profile.sisters != null ||
-          profile.marriedBrothers != null ||
-          profile.marriedSisters != null ||
-          profile.familyStatus ||
-          profile.homeType
-        );
-
-
-      this.additionalPreferencesCompleted =
-        !!(
-          profile.preferredFamilyStatus?.length ||
-          profile.preferredPhysicalStatus?.length ||
-          profile.preferredIncome?.length ||
-          profile.preferredLocationRadius?.length ||
-          profile.preferredComplexion?.length ||
-          profile.horoscopeRequired ||
-          profile.preferredStar?.length
-        );
-
-
-      this.expectationsCompleted =
-        !!(
-          profile.expectations &&
-          profile.expectations.trim().length > 0
-        );
-
-
-      this.photosCompleted =
-        !!(
-          profile.photoCount &&
-          profile.photoCount > 0
-        );
-
-
-    } catch (error) {
-
-      console.error(
-        'Unable to calculate profile completion',
-        error
+    const status: ProfileCompletionStatus =
+      this.profileCompletionService.getStatus(
+        profile
       );
 
-    }
 
+    // -----------------------------------------------------
+    // Percentage
+    // -----------------------------------------------------
+
+    this.completionPercentage =
+      status.percentage;
+
+
+    // -----------------------------------------------------
+    // Section status
+    // -----------------------------------------------------
+
+    this.physicalCompleted =
+      status.physical;
+
+    this.contactCompleted =
+      status.contact;
+
+    this.workCompleted =
+      status.work;
+
+    this.familyCompleted =
+      status.family;
+
+    this.additionalPreferencesCompleted =
+      status.additionalPreferences;
+
+    this.expectationsCompleted =
+      status.expectations;
+
+    this.photosCompleted =
+      status.photos;
   }
+
+
+  // =====================================================
+  // RESET
+  // =====================================================
+
+  private resetCompletion(): void {
+
+    this.completionPercentage = 0;
+
+    this.physicalCompleted = false;
+
+    this.contactCompleted = false;
+
+    this.workCompleted = false;
+
+    this.familyCompleted = false;
+
+    this.additionalPreferencesCompleted = false;
+
+    this.expectationsCompleted = false;
+
+    this.photosCompleted = false;
+  }
+
+
+  // =====================================================
+  // NAVIGATION
+  // =====================================================
+
   openPhysicalDetails(): void {
 
     this.router.navigate([
       '/physical-details'
     ]);
+  }
 
-  }
+
   openContactDetails(): void {
-    this.router.navigate(['/contact-details']);
+
+    this.router.navigate([
+      '/contact-details'
+    ]);
   }
+
+
   openWorkDetails(): void {
-    this.router.navigate(['/work-details']);
+
+    this.router.navigate([
+      '/work-details'
+    ]);
   }
+
+
   openFamilyDetails(): void {
-    this.router.navigate(['/family-details']);
+
+    this.router.navigate([
+      '/family-details'
+    ]);
   }
+
+
   openAdditionalPreferences(): void {
-    this.router.navigate(['/additional-preferences']);
+
+    this.router.navigate([
+      '/additional-preferences'
+    ]);
   }
+
+
   openExpectations(): void {
-    this.router.navigate(['/expectations']);
+
+    this.router.navigate([
+      '/expectations'
+    ]);
   }
+
+
   openProfilePhotos(): void {
-    this.router.navigate(['/profile-photos']);
+
+    this.router.navigate([
+      '/profile-photos'
+    ]);
   }
+
 }

@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { ProfileService } from '../../services/profile';
+
 @Component({
   selector: 'app-expectations',
+  standalone: true,
   imports: [FormsModule],
   templateUrl: './expectations.html',
   styleUrl: './expectations.css'
@@ -17,66 +20,49 @@ export class Expectations implements OnInit {
   submitted = false;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private profileService: ProfileService
   ) {}
 
 
-  // =========================
+  // =====================================================
   // INIT
-  // =========================
+  // =====================================================
 
   ngOnInit(): void {
 
+    // -----------------------------------------------------
+    // Return destination
+    // -----------------------------------------------------
+
     const fromMyDetails =
-      sessionStorage.getItem(
-        'mwi_edit_source'
-      );
+      sessionStorage.getItem('mwi_edit_source');
 
-    if (
-      fromMyDetails === 'my-details'
-    ) {
-
-      this.returnTo =
-        '/my-details';
-
+    if (fromMyDetails === 'my-details') {
+      this.returnTo = '/my-details';
     }
 
 
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+    // -----------------------------------------------------
+    // Load current profile
+    // -----------------------------------------------------
 
-    if (!saved) {
+    const profile =
+      this.profileService.getCurrentProfile();
+
+    if (!profile) {
       return;
     }
 
 
-    try {
-
-      const profile =
-        JSON.parse(saved);
-
-
-      this.expectations =
-        profile.expectations || '';
-
-
-    } catch (error) {
-
-      console.error(
-        'Unable to load expectations',
-        error
-      );
-
-    }
-
+    this.expectations =
+      profile.expectations || '';
   }
 
 
-  // =========================
+  // =====================================================
   // CONTACT INFORMATION CHECK
-  // =========================
+  // =====================================================
 
   containsPrivateContactInfo(
     value: string
@@ -87,17 +73,26 @@ export class Expectations implements OnInit {
     }
 
 
+    // -----------------------------------------------------
     // Email
+    // -----------------------------------------------------
+
     const emailPattern =
       /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
 
 
-    // Phone numbers
+    // -----------------------------------------------------
+    // Phone number
+    // -----------------------------------------------------
+
     const phonePattern =
       /(?:\+?\d[\d\s().-]{7,}\d)/;
 
 
-    // URLs / websites
+    // -----------------------------------------------------
+    // URL / Website
+    // -----------------------------------------------------
+
     const urlPattern =
       /\b(?:https?:\/\/|www\.)\S+/i;
 
@@ -107,13 +102,12 @@ export class Expectations implements OnInit {
       phonePattern.test(value) ||
       urlPattern.test(value)
     );
-
   }
 
 
-  // =========================
-  // TEXT VALIDATION
-  // =========================
+  // =====================================================
+  // VALIDATION
+  // =====================================================
 
   isExpectationsInvalid(): boolean {
 
@@ -128,118 +122,100 @@ export class Expectations implements OnInit {
 
 
     // Maximum length
-    if (
-      text.length > 1000
-    ) {
-
+    if (text.length > 1000) {
       return true;
-
     }
 
 
-    // Private contact details
+    // Private contact information
     if (
-      this.containsPrivateContactInfo(
-        text
-      )
+      this.containsPrivateContactInfo(text)
     ) {
-
       return true;
-
     }
 
 
     return false;
-
   }
 
 
-  // =========================
+  // =====================================================
   // SAVE
-  // =========================
+  // =====================================================
 
   saveDetails(): void {
 
     this.submitted = true;
 
 
-    if (
-      this.isExpectationsInvalid()
-    ) {
+    // -----------------------------------------------------
+    // Validate
+    // -----------------------------------------------------
 
-      return;
-
-    }
-
-
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
-
-
-    if (!saved) {
+    if (this.isExpectationsInvalid()) {
       return;
     }
 
 
-    try {
+    // -----------------------------------------------------
+    // Clean text
+    // -----------------------------------------------------
 
-      const profile =
-        JSON.parse(saved);
-
-
-      const cleanedText =
-        this.expectations
-          .trim()
-          .replace(/\s+/g, ' ');
+    const cleanedText =
+      this.expectations
+        .trim()
+        .replace(/\s+/g, '');
 
 
-      profile.expectations =
-        cleanedText;
+    // -----------------------------------------------------
+    // Update current profile
+    // -----------------------------------------------------
+
+    const updatedProfile =
+      this.profileService.updateProfile({
+
+        expectations:
+          cleanedText,
+
+        expectationsCompleted:
+          cleanedText.length > 0
+
+      });
 
 
-      // =========================
-      // SECTION STATUS
-      // =========================
+    // -----------------------------------------------------
+    // Update failed
+    // -----------------------------------------------------
 
-      profile.expectationsCompleted =
-        cleanedText.length > 0;
-
-
-      sessionStorage.setItem(
-        'mwi_registration',
-        JSON.stringify(profile)
-      );
-
-
-      this.router.navigate([
-        this.returnTo
-      ]);
-
-
-    } catch (error) {
+    if (!updatedProfile) {
 
       console.error(
-        'Unable to save expectations',
-        error
+        'Unable to update expectations'
       );
 
+      return;
     }
 
+
+    // -----------------------------------------------------
+    // Navigate
+    // -----------------------------------------------------
+
+    this.router.navigate([
+      this.returnTo
+    ]);
   }
 
 
-  // =========================
+  // =====================================================
   // BACK
-  // =========================
+  // =====================================================
 
   goBack(): void {
 
     this.router.navigate([
       this.returnTo
     ]);
-
   }
 
 }

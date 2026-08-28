@@ -22,18 +22,12 @@ export class PhysicalDetails implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const fromMyDetails =
-      sessionStorage.getItem('mwi_edit_source');
+    
 
-    if (fromMyDetails === 'my-details') {
-      this.returnTo = '/my-details';
-    }
-    const saved =
-      sessionStorage.getItem('mwi_registration');
+     
+     
 
-    if (!saved) {
-      return;
-    }
+    
 
     try {
 

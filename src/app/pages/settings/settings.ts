@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-settings',
@@ -26,46 +27,26 @@ export class Settings implements OnInit {
 
 
   constructor(
-    private router: Router
-  ) {}
+    private router: Router,
+    private profileService: ProfileService
+
+  ) { }
 
 
   // =========================
   // INIT
   // =========================
-
   ngOnInit(): void {
 
-    const savedData =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+    const profile =
+      this.profileService.getCurrentProfile();
 
-
-    if (!savedData) {
+    if (!profile) {
       return;
     }
 
-
-    try {
-
-      this.user =
-        JSON.parse(savedData);
-
-    } catch (error) {
-
-      console.error(
-        'Invalid registration data',
-        error
-      );
-
-      this.user = null;
-
-    }
-
+    this.user = profile;
   }
-
-
   // =========================
   // CHANGE PASSWORD
   // =========================

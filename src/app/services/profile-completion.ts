@@ -1,4 +1,22 @@
 import { Injectable } from '@angular/core';
+import { Profile } from '../models/profile.model';
+
+export interface ProfileCompletionStatus {
+  percentage: number;
+
+  basic: boolean;
+  location: boolean;
+  religion: boolean;
+  education: boolean;
+  preference: boolean;
+  physical: boolean;
+  contact: boolean;
+  work: boolean;
+  family: boolean;
+  additionalPreferences: boolean;
+  expectations: boolean;
+  photos: boolean;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -8,20 +26,52 @@ export class ProfileCompletionService {
   constructor() {}
 
 
-  calculate(profile: any): number {
+  // =====================================================
+  // PUBLIC
+  // =====================================================
+
+  calculate(profile: Profile | null): number {
+
+    return this.getStatus(profile).percentage;
+  }
+
+
+  // =====================================================
+  // COMPLETE STATUS
+  // =====================================================
+
+  getStatus(
+    profile: Profile | null
+  ): ProfileCompletionStatus {
 
     if (!profile) {
-      return 0;
+
+      return {
+        percentage: 0,
+
+        basic: false,
+        location: false,
+        religion: false,
+        education: false,
+        preference: false,
+        physical: false,
+        contact: false,
+        work: false,
+        family: false,
+        additionalPreferences: false,
+        expectations: false,
+        photos: false
+      };
     }
 
 
-    // =========================
+    // ===================================================
     // 01 BASIC DETAILS
-    // =========================
+    // ===================================================
 
-    const basicCompleted =
+    const basic =
       !!(
-        profile.fullName &&
+        profile.fullName?.trim() &&
         profile.gender &&
         profile.age &&
         profile.maritalStatus &&
@@ -29,35 +79,35 @@ export class ProfileCompletionService {
       );
 
 
-    // =========================
+    // ===================================================
     // 02 LOCATION
-    // =========================
+    // ===================================================
 
-    const locationCompleted =
+    const location =
       !!(
-        profile.houseName &&
-        profile.place &&
+        profile.houseName?.trim() &&
+        profile.place?.trim() &&
         profile.district &&
         profile.pincode
       );
 
 
-    // =========================
+    // ===================================================
     // 03 RELIGION & COMMUNITY
-    // =========================
+    // ===================================================
 
-    const religionCompleted =
+    const religion =
       !!(
         profile.religion &&
         profile.preferredReligion
       );
 
 
-    // =========================
+    // ===================================================
     // 04 EDUCATION & CAREER
-    // =========================
+    // ===================================================
 
-    const educationCompleted =
+    const education =
       !!(
         profile.highestEducation &&
         profile.specialization &&
@@ -66,11 +116,11 @@ export class ProfileCompletionService {
       );
 
 
-    // =========================
+    // ===================================================
     // 05 PARTNER PREFERENCE
-    // =========================
+    // ===================================================
 
-    const preferenceCompleted =
+    const preference =
       !!(
         profile.preferredAgeMin != null &&
         profile.preferredAgeMax != null &&
@@ -82,11 +132,11 @@ export class ProfileCompletionService {
       );
 
 
-    // =========================
+    // ===================================================
     // 06 PHYSICAL DETAILS
-    // =========================
+    // ===================================================
 
-    const physicalCompleted =
+    const physical =
       !!(
         profile.weight &&
         profile.bodyType &&
@@ -95,21 +145,22 @@ export class ProfileCompletionService {
       );
 
 
-    // =========================
+    // ===================================================
     // 07 CONTACT INFORMATION
-    // =========================
+    // ===================================================
 
-    const contactCompleted =
+    const contact =
       !!(
-        profile.secondaryMobile ||
+        profile.phone ||
         profile.whatsappNumber ||
+        profile.secondaryMobile ||
         profile.email
       );
 
 
-    // =========================
-    // 08 WORK & EDUCATION
-    // =========================
+    // ===================================================
+    // 08 WORK DETAILS
+    // ===================================================
 
     const hasWorkLocation =
       !!(
@@ -119,14 +170,17 @@ export class ProfileCompletionService {
           (
             (
               (
-                profile.workLocationType === 'india_same_state' ||
-                profile.workLocationType === 'india_other_state'
+                profile.workLocationType ===
+                  'india_same_state' ||
+                profile.workLocationType ===
+                  'india_other_state'
               ) &&
               profile.workState &&
               profile.workDistrict
             ) ||
             (
-              profile.workLocationType === 'outside_india' &&
+              profile.workLocationType ===
+                'outside_india' &&
               profile.workCountry &&
               profile.workCity
             )
@@ -134,23 +188,24 @@ export class ProfileCompletionService {
         )
       );
 
-    const workCompleted =
+
+    const work =
       !!(
-        profile.collegeUniversity ||
-        profile.companyName ||
+        profile.collegeUniversity?.trim() ||
+        profile.companyName?.trim() ||
         hasWorkLocation ||
-        profile.annualIncome != null
+        profile.annualIncome
       );
 
 
-    // =========================
+    // ===================================================
     // 09 FAMILY DETAILS
-    // =========================
+    // ===================================================
 
-    const familyCompleted =
+    const family =
       !!(
-        profile.fatherName ||
-        profile.motherName ||
+        profile.fatherName?.trim() ||
+        profile.motherName?.trim() ||
         profile.brothers != null ||
         profile.sisters != null ||
         profile.marriedBrothers != null ||
@@ -160,11 +215,11 @@ export class ProfileCompletionService {
       );
 
 
-    // =========================
+    // ===================================================
     // 10 ADDITIONAL PREFERENCES
-    // =========================
+    // ===================================================
 
-    const additionalPreferencesCompleted =
+    const additionalPreferences =
       !!(
         profile.preferredFamilyStatus?.length ||
         profile.preferredPhysicalStatus?.length ||
@@ -176,43 +231,45 @@ export class ProfileCompletionService {
       );
 
 
-    // =========================
+    // ===================================================
     // 11 EXPECTATIONS
-    // =========================
+    // ===================================================
 
-    const expectationsCompleted =
+    const expectations =
       !!(
         profile.expectations &&
         profile.expectations.trim().length > 0
       );
 
 
-    // =========================
+    // ===================================================
     // 12 PROFILE PHOTOS
-    // =========================
+    // ===================================================
 
-    const photosCompleted =
+    const photos =
       !!(
         profile.photoCount &&
         profile.photoCount > 0
       );
 
 
+    // ===================================================
+    // ALL SECTIONS
+    // ===================================================
+
     const sections = [
-
-      basicCompleted,
-      locationCompleted,
-      religionCompleted,
-      educationCompleted,
-      preferenceCompleted,
-      physicalCompleted,
-      contactCompleted,
-      workCompleted,
-      familyCompleted,
-      additionalPreferencesCompleted,
-      expectationsCompleted,
-      photosCompleted
-
+      basic,
+      location,
+      religion,
+      education,
+      preference,
+      physical,
+      contact,
+      work,
+      family,
+      additionalPreferences,
+      expectations,
+      photos
     ];
 
 
@@ -220,13 +277,47 @@ export class ProfileCompletionService {
       sections.filter(Boolean).length;
 
 
-    return Math.round(
-      (
-        completedSections /
-        sections.length
-      ) * 100
-    );
+    const percentage =
+      Math.round(
+        (
+          completedSections /
+          sections.length
+        ) * 100
+      );
 
+
+    // ===================================================
+    // RETURN
+    // ===================================================
+
+    return {
+
+      percentage,
+
+      basic,
+
+      location,
+
+      religion,
+
+      education,
+
+      preference,
+
+      physical,
+
+      contact,
+
+      work,
+
+      family,
+
+      additionalPreferences,
+
+      expectations,
+
+      photos
+    };
   }
 
 }

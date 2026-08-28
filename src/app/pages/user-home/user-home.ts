@@ -1,80 +1,81 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { UserMenu } from '../../components/user-menu/user-menu';
+
+import { ProfileService } from '../../services/profile';
 import { ProfileCompletionService } from '../../services/profile-completion';
+
+import { Profile } from '../../models/profile.model';
 
 @Component({
   selector: 'app-user-home',
+  standalone: true,
   imports: [UserMenu],
   templateUrl: './user-home.html',
   styleUrl: './user-home.css'
 })
-
 export class UserHome implements OnInit {
 
-  constructor(
-    private router: Router,
-    private profileCompletionService: ProfileCompletionService
-  ) { }
+  user: Profile | null = null;
 
-
-  user: any = null;
   profileCompletion = 0;
 
   showProfilePopup = false;
 
 
+  constructor(
+    private router: Router,
+    private profileService: ProfileService,
+    private profileCompletionService: ProfileCompletionService
+  ) {}
+
+
+  // =====================================================
+  // INIT
+  // =====================================================
+
   ngOnInit(): void {
 
-    const savedData =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+    // -----------------------------------------------------
+    // Get current user's profile
+    // -----------------------------------------------------
 
-    if (!savedData) {
+    const profile =
+      this.profileService.getCurrentProfile();
+
+
+    if (!profile) {
       return;
     }
 
-    try {
 
-      this.user =
-        JSON.parse(savedData);
+    this.user = profile;
 
-      console.log(
-        'Registration data:',
-        this.user
+
+    // -----------------------------------------------------
+    // Calculate profile completion
+    // -----------------------------------------------------
+
+    this.profileCompletion =
+      this.profileCompletionService.calculate(
+        profile
       );
 
-      this.profileCompletion =
-        this.profileCompletionService.calculate(
-          this.user
-        );
 
+    // -----------------------------------------------------
+    // Show completion popup
+    // -----------------------------------------------------
 
-      if (this.profileCompletion < 90) {
-
-        this.showProfilePopup = true;
-
-      }
-      // Calculate profile completion
-
-       
-
-       
-
-    } catch (error) {
-
-      console.error(
-        'Invalid registration data',
-        error
-      );
-
-      this.user = null;
-
+    if (this.profileCompletion < 90) {
+      this.showProfilePopup = true;
     }
-
   }
- 
+
+
+  // =====================================================
+  // FORMAT HEIGHT
+  // =====================================================
 
   formatHeight(
     totalInches: number
@@ -84,18 +85,24 @@ export class UserHome implements OnInit {
       return '';
     }
 
+
     const feet =
       Math.floor(
         totalInches / 12
       );
 
+
     const inches =
       totalInches % 12;
 
-    return `${feet}'${inches}"`;
 
+    return `${feet}'${inches}"`;
   }
 
+
+  // =====================================================
+  // OPEN PROFILE
+  // =====================================================
 
   openProfile(
     memberId: string
@@ -109,32 +116,46 @@ export class UserHome implements OnInit {
         returnUrl: '/user-home'
       }
     });
-
   }
 
+
+  // =====================================================
+  // OPEN ALL PROFILES
+  // =====================================================
 
   openAllProfiles(): void {
 
     this.router.navigate([
       '/matching-profiles'
     ]);
-
   }
 
+
+  // =====================================================
+  // OPEN VERIFICATION
+  // =====================================================
 
   openVerification(): void {
 
     this.router.navigate([
       '/upgrade-profile'
     ]);
-
   }
+
+
+  // =====================================================
+  // CLOSE PROFILE POPUP
+  // =====================================================
+
   closeProfilePopup(): void {
 
     this.showProfilePopup = false;
-
   }
 
+
+  // =====================================================
+  // COMPLETE PROFILE
+  // =====================================================
 
   completeProfile(): void {
 
@@ -143,6 +164,6 @@ export class UserHome implements OnInit {
     this.router.navigate([
       '/complete-profile'
     ]);
-
   }
+
 }

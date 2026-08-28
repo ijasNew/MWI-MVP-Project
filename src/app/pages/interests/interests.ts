@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
 import { ProfileService } from '../../services/profile';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-interests',
@@ -13,7 +14,7 @@ export class Interests implements OnInit {
 
   constructor(
     private router: Router,
-     private profileService: ProfileService
+     private profileService: ProfileService,private authService: AuthService
   ) {}
 
   user: any = null;
@@ -156,13 +157,7 @@ cancelInterest(
 }
 
   logout(): void {
-
-    sessionStorage.removeItem(
-      'mwi_registration'
-    );
-
-    window.location.href = '/';
-
-  }
+  this.authService.logoutUser();
+}
 
 }

@@ -22,7 +22,7 @@ export class ProfileView implements OnInit {
 
   isInterestSent = false;
   isShortlisted = false;
-  isInterestAccepted = false;
+  isInterestAccepted = true;
   isContactVisible = false;
   private returnUrl = '/user-home';
 

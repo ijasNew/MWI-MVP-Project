@@ -6,6 +6,7 @@ import {
 import { filter } from 'rxjs';
 
 import { AuthService } from '../../services/auth';
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-user-menu',
@@ -24,7 +25,8 @@ export class UserMenu implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private profileService: ProfileService
   ) {}
 
 
@@ -62,54 +64,18 @@ export class UserMenu implements OnInit {
   // LOAD USER
   // =========================
 
-  loadUser(): void {
+ loadUser(): void {
 
-    /*
-     * First try authenticated user data.
-     */
-    const authUser =
-      this.authService.getCurrentUser();
+  const profile =
+    this.profileService.getCurrentProfile();
 
-    if (authUser) {
-
-      this.user = authUser;
-
-      return;
-    }
-
-
-    /*
-     * Temporary fallback:
-     * registration data is still used
-     * for the current frontend flow.
-     */
-    const savedData =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
-
-    if (!savedData) {
-      return;
-    }
-
-    try {
-
-      this.user =
-        JSON.parse(savedData);
-
-    } catch (error) {
-
-      console.error(
-        'Invalid registration data',
-        error
-      );
-
-      this.user = null;
-
-    }
-
+  if (!profile) {
+    this.user = null;
+    return;
   }
 
+  this.user = profile;
+}
 
   // =========================
   // ACTIVE MENU
