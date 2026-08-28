@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-my-details',
@@ -13,7 +14,8 @@ import { UserMenu } from '../../components/user-menu/user-menu';
 export class MyDetails implements OnInit {
 
   constructor(
-  private router: Router
+  private router: Router,
+  private profileService: ProfileService
 ) {}
 
   user: any = null;
@@ -25,25 +27,11 @@ touchStartX = 0;
 touchEndX = 0;
  
   ngOnInit(): void {
-    
 
-    const savedData =
-      sessionStorage.getItem('mwi_registration');
+  this.user =
+    this.profileService.getCurrentProfile();
 
-    if (savedData) {
-
-      try {
-        this.user = JSON.parse(savedData);
-      } catch (error) {
-        console.error(
-          'Invalid registration data',
-          error
-        );
-      }
-
-    }
-
-  }
+}
 
   formatHeight(totalInches: number): string {
 

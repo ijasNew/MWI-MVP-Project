@@ -9,6 +9,8 @@ import { Router, RouterLink } from '@angular/router';
 import { Profile } from '../../models/profile.model'
 import { ApiService } from '../../services/api'
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth';
+import { ProfileService } from '../../services/profile';
 import * as L from 'leaflet';
 
 @Component({
@@ -862,7 +864,9 @@ export class Register implements AfterViewChecked {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private apiService: ApiService,
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService,
+    private profileService: ProfileService
   ) { }
 
 
@@ -3806,14 +3810,24 @@ export class Register implements AfterViewChecked {
 
 
     // TEMPORARY
-    // Database save will come later.
     const profile = this.buildProfile();
 
-    sessionStorage.setItem(
-      'mwi_registration',
-      JSON.stringify(profile)
-    );
+    /*
+     * Save registration profile temporarily.
+     * Backend will replace this later.
+     */
+      this.profileService.saveProfile(profile);
 
+    /*
+     * Mark this user as authenticated.
+     * This allows AuthGuard to recognize the
+     * newly registered user.
+     */
+    this.authService.loginUser({
+      phone: this.phone,
+      memberId: this.memberId,
+      name: this.fullName
+    });
 
     this.step = 'success';
 

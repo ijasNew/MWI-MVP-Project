@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
 
 @Component({
@@ -11,8 +12,34 @@ export class Shortlisted {
 
   readonly hasShortlistedProfiles = true;
 
-  removeShortlist(name: string): void {
-    console.log('Remove from shortlist:', name);
+  constructor(
+    private router: Router
+  ) {}
+
+  viewProfile(memberId: string): void {
+
+    if (!memberId) {
+      return;
+    }
+
+    this.router.navigate([
+      '/profile-view',
+      memberId
+    ], {
+      state: {
+        returnUrl: '/shortlisted'
+      }
+    });
+  }
+
+
+  removeShortlist(memberId: string): void {
+
+    console.log(
+      'Remove from shortlist:',
+      memberId
+    );
+
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-interests',
@@ -11,7 +12,8 @@ import { UserMenu } from '../../components/user-menu/user-menu';
 export class Interests implements OnInit {
 
   constructor(
-    private router: Router
+    private router: Router,
+     private profileService: ProfileService
   ) {}
 
   user: any = null;
@@ -20,36 +22,18 @@ export class Interests implements OnInit {
 
   activeTab = 'received';
 
+ngOnInit(): void {
 
-  ngOnInit(): void {
+  const profile =
+    this.profileService.getCurrentProfile();
 
-    const savedData =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
-
-    if (!savedData) {
-      return;
-    }
-
-    try {
-
-      this.user =
-        JSON.parse(savedData);
-
-    } catch (error) {
-
-      console.error(
-        'Invalid registration data',
-        error
-      );
-
-      this.user = null;
-
-    }
-
+  if (!profile) {
+    return;
   }
 
+  this.user = profile;
+}
+  
 
   toggleMenu(): void {
 
@@ -90,7 +74,86 @@ export class Interests implements OnInit {
     ).toUpperCase();
 
   }
+// =========================
+// VIEW PROFILE
+// =========================
 
+viewProfile(memberId: string): void {
+
+  if (!memberId) {
+    return;
+  }
+
+  this.router.navigate([
+    '/profile-view',
+    memberId
+  ], {
+    state: {
+      returnUrl: '/interests'
+    }
+  });
+
+}
+
+
+// =========================
+// ACCEPT INTEREST
+// =========================
+
+acceptInterest(
+  interestId: string
+): void {
+
+  if (!interestId) {
+    return;
+  }
+
+  console.log(
+    'Accept interest:',
+    interestId
+  );
+
+}
+
+
+// =========================
+// DECLINE INTEREST
+// =========================
+
+declineInterest(
+  interestId: string
+): void {
+
+  if (!interestId) {
+    return;
+  }
+
+  console.log(
+    'Decline interest:',
+    interestId
+  );
+
+}
+
+
+// =========================
+// CANCEL INTEREST
+// =========================
+
+cancelInterest(
+  interestId: string
+): void {
+
+  if (!interestId) {
+    return;
+  }
+
+  console.log(
+    'Cancel interest:',
+    interestId
+  );
+
+}
 
   logout(): void {
 

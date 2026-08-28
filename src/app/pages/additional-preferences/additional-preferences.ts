@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-additional-preferences',
@@ -101,7 +102,8 @@ export class AdditionalPreferences implements OnInit {
 
 
   constructor(
-    private router: Router
+    private router: Router,
+    private profileService: ProfileService
   ) {}
 
 
@@ -111,121 +113,95 @@ export class AdditionalPreferences implements OnInit {
 
   ngOnInit(): void {
 
-    const fromMyDetails =
-      sessionStorage.getItem(
-        'mwi_edit_source'
-      );
+  const fromMyDetails =
+    sessionStorage.getItem('mwi_edit_source');
 
-
-    if (
-      fromMyDetails === 'my-details'
-    ) {
-
-      this.returnTo =
-        '/my-details';
-
-    }
-
-
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
-
-
-    if (!saved) {
-      return;
-    }
-
-
-    try {
-
-      const profile =
-        JSON.parse(saved);
-
-
-      this.religion =
-        profile.religion || '';
-
-
-      this.preferredFamilyStatus =
-        Array.isArray(
-          profile.preferredFamilyStatus
-        )
-          ? profile.preferredFamilyStatus
-          : [];
-
-
-      this.preferredPhysicalStatus =
-        Array.isArray(
-          profile.preferredPhysicalStatus
-        )
-          ? profile.preferredPhysicalStatus
-          : [];
-
-
-      /*
-       * OLD DATA MAY HAVE ARRAY
-       * CONVERT IT TO SINGLE VALUE
-       */
-
-      if (
-        Array.isArray(
-          profile.preferredLocationRadius
-        )
-      ) {
-
-        this.preferredLocationRadius =
-          profile.preferredLocationRadius[0] ||
-          '';
-
-      } else {
-
-        this.preferredLocationRadius =
-          profile.preferredLocationRadius ||
-          '';
-
-      }
-
-
-      this.preferredIncome =
-        Array.isArray(
-          profile.preferredIncome
-        )
-          ? profile.preferredIncome
-          : [];
-
-
-      this.preferredComplexion =
-        Array.isArray(
-          profile.preferredComplexion
-        )
-          ? profile.preferredComplexion
-          : [];
-
-
-      this.horoscopeRequired =
-        profile.horoscopeRequired || '';
-
-
-      this.preferredStar =
-        Array.isArray(
-          profile.preferredStar
-        )
-          ? profile.preferredStar
-          : [];
-
-
-    } catch (error) {
-
-      console.error(
-        'Unable to load additional preferences',
-        error
-      );
-
-    }
-
+  if (fromMyDetails === 'my-details') {
+    this.returnTo = '/my-details';
   }
+
+
+  const profile =
+    this.profileService.getCurrentProfile();
+
+  if (!profile) {
+    return;
+  }
+
+
+  // =========================
+  // RELIGION
+  // =========================
+
+  this.religion =
+    profile.religion || '';
+
+
+  // =========================
+  // REQUIRED PREFERENCES
+  // =========================
+
+  this.preferredFamilyStatus =
+    Array.isArray(profile.preferredFamilyStatus)
+      ? [...profile.preferredFamilyStatus]
+      : [];
+
+
+  this.preferredPhysicalStatus =
+    Array.isArray(profile.preferredPhysicalStatus)
+      ? [...profile.preferredPhysicalStatus]
+      : [];
+
+
+  // =========================
+  // LOCATION
+  // =========================
+
+  if (
+    Array.isArray(
+      profile.preferredLocationRadius
+    )
+  ) {
+
+    this.preferredLocationRadius =
+      profile.preferredLocationRadius[0] || '';
+
+  } else {
+
+    this.preferredLocationRadius =
+      profile.preferredLocationRadius || '';
+  }
+
+
+  // =========================
+  // OPTIONAL PREFERENCES
+  // =========================
+
+  this.preferredIncome =
+    Array.isArray(profile.preferredIncome)
+      ? [...profile.preferredIncome]
+      : [];
+
+
+  this.preferredComplexion =
+    Array.isArray(profile.preferredComplexion)
+      ? [...profile.preferredComplexion]
+      : [];
+
+
+  // =========================
+  // HINDU HOROSCOPE
+  // =========================
+
+  this.horoscopeRequired =
+    profile.horoscopeRequired || '';
+
+
+  this.preferredStar =
+    Array.isArray(profile.preferredStar)
+      ? [...profile.preferredStar]
+      : [];
+}
 
 
   // =========================
@@ -489,103 +465,80 @@ export class AdditionalPreferences implements OnInit {
     // =========================
     // LOAD PROFILE
     // =========================
+// =========================
+// UPDATE PROFILE
+// =========================
 
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+const updatedProfile =
+  this.profileService.updateProfile({
 
+    // =========================
+    // REQUIRED PREFERENCES
+    // =========================
 
-    if (!saved) {
-      return;
-    }
+    preferredFamilyStatus:
+      [...this.preferredFamilyStatus],
 
+    preferredPhysicalStatus:
+      [...this.preferredPhysicalStatus],
 
-    try {
-
-      const profile =
-        JSON.parse(saved);
-
-
-      // =========================
-      // SAVE REQUIRED
-      // =========================
-
-      profile.preferredFamilyStatus =
-        this.preferredFamilyStatus;
+    preferredLocationRadius:
+  this.preferredLocationRadius
+    ? [this.preferredLocationRadius]
+    : [],
 
 
-      profile.preferredPhysicalStatus =
-        this.preferredPhysicalStatus;
+    // =========================
+    // OPTIONAL PREFERENCES
+    // =========================
+
+    preferredIncome:
+      [...this.preferredIncome],
+
+    preferredComplexion:
+      [...this.preferredComplexion],
 
 
-      profile.preferredLocationRadius =
-        this.preferredLocationRadius;
+    // =========================
+    // HINDU HOROSCOPE
+    // =========================
+
+    ...(this.religion === 'Hindu'
+      ? {
+          horoscopeRequired:
+            this.horoscopeRequired,
+
+          preferredStar:
+            [...this.preferredStar]
+        }
+      : {
+          horoscopeRequired: undefined,
+          preferredStar: undefined
+        }),
 
 
-      // =========================
-      // SAVE OPTIONAL
-      // =========================
+    // =========================
+    // SECTION COMPLETED
+    // =========================
 
-      profile.preferredIncome =
-        this.preferredIncome;
-
-
-      profile.preferredComplexion =
-        this.preferredComplexion;
+    additionalPreferencesCompleted:
+      true
+  });
 
 
-      // =========================
-      // HINDU HOROSCOPE
-      // =========================
+if (!updatedProfile) {
 
-      if (
-        this.religion === 'Hindu'
-      ) {
+  console.error(
+    'Unable to update additional preferences'
+  );
 
-        profile.horoscopeRequired =
-          this.horoscopeRequired;
+  return;
+}
 
 
-        profile.preferredStar =
-          this.preferredStar;
-
-      } else {
-
-        delete profile.horoscopeRequired;
-
-        delete profile.preferredStar;
-
-      }
-
-
-      // =========================
-      // SECTION COMPLETED
-      // =========================
-
-      profile.additionalPreferencesCompleted =
-        true;
-
-
-      sessionStorage.setItem(
-        'mwi_registration',
-        JSON.stringify(profile)
-      );
-
-
-      this.router.navigate([
-        this.returnTo
-      ]);
-
-
-    } catch (error) {
-
-      console.error(
-        'Unable to save additional preferences',
-        error
-      );
-
-    }
+this.router.navigate([
+  this.returnTo
+]);
 
   }
 

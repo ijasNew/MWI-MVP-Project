@@ -6,11 +6,7 @@
 
   <div class="top-bar">
 
-    <button
-      type="button"
-      class="back-btn"
-      (click)="goBack()"
-    >
+    <button type="button" class="back-btn" (click)="goBack()">
 
       <i class="fa-solid fa-arrow-left"></i>
 
@@ -27,15 +23,15 @@
 
   @if (isLoading) {
 
-    <div class="state-box">
+  <div class="state-box">
 
-      <i class="fa-solid fa-spinner"></i>
+    <i class="fa-solid fa-spinner"></i>
 
-      <p>
-        Loading profile...
-      </p>
+    <p>
+      Loading profile...
+    </p>
 
-    </div>
+  </div>
 
   }
 
@@ -46,27 +42,23 @@
 
   @if (!isLoading && !profile) {
 
-    <div class="state-box">
+  <div class="state-box">
 
-      <i class="fa-solid fa-user-slash"></i>
+    <i class="fa-solid fa-user-slash"></i>
 
-      <h2>
-        Profile Not Found
-      </h2>
+    <h2>
+      Profile Not Found
+    </h2>
 
-      <p>
-        This profile is currently unavailable.
-      </p>
+    <p>
+      This profile is currently unavailable.
+    </p>
 
-      <button
-        type="button"
-        class="back-home-btn"
-        (click)="goBack()"
-      >
-        Back to Home
-      </button>
+    <button type="button" class="back-home-btn" (click)="goBack()">
+      Back to Home
+    </button>
 
-    </div>
+  </div>
 
   }
 
@@ -74,255 +66,1046 @@
   @if (profile) {
 
 
-    <!-- =========================
+  <!-- =========================
          PROFILE HEADER
     ========================== -->
 
-    <section class="profile-header">
+  <section class="profile-header">
 
 
-      <!-- PHOTO -->
+    <!-- PHOTO -->
 
-      <div class="profile-photo-area">
+    <div class="profile-photo-area">
 
-        @if (profile.photos?.length) {
+      @if (profile.photos?.length) {
 
-          <div
-            class="main-photo"
-            (touchstart)="handlePhotoTouchStart($event)"
-            (touchend)="handlePhotoTouchEnd($event)"
-          >
+      <div class="main-photo" (touchstart)="handlePhotoTouchStart($event)" (touchend)="handlePhotoTouchEnd($event)">
 
-            <img
-              [src]="
+        <img [src]="
                 profile.photos[selectedPhotoIndex]
-              "
-              [alt]="profile.fullName"
-              (click)="
+              " [alt]="profile.fullName" (click)="
                 openPhotoViewer(
                   profile.photos[selectedPhotoIndex],
                   selectedPhotoIndex
                 )
-              "
-            />
+              " />
 
-            @if (profile.homeVerified) {
+        @if (profile.homeVerified) {
 
-              <span class="verified-badge">
+        <span class="verified-badge">
 
-                <i class="fa-solid fa-check"></i>
+          <i class="fa-solid fa-check"></i>
 
-                Verified
+          Verified
 
-              </span>
+        </span>
 
-            }
+        }
 
-            @if (profile.photos.length > 1) {
+        @if (profile.photos.length > 1) {
 
-              <span class="photo-count">
+        <span class="photo-count">
 
-                {{ selectedPhotoIndex + 1 }}
-                /
-                {{ profile.photos.length }}
+          {{ selectedPhotoIndex + 1 }}
+          /
+          {{ profile.photos.length }}
 
-              </span>
+        </span>
 
-            }
+        }
 
-          </div>
+      </div>
 
 
-          @if (profile.photos.length > 1) {
+      @if (profile.photos.length > 1) {
 
-            <div class="photo-thumbnails">
+      <div class="photo-thumbnails">
 
-              @for (
-                photo of profile.photos;
-                track $index
-              ) {
+        @for (
+        photo of profile.photos;
+        track $index
+        ) {
 
-                <button
-                  type="button"
-                  class="photo-thumb"
-                  [class.active]="
+        <button type="button" class="photo-thumb" [class.active]="
                     selectedPhotoIndex === $index
-                  "
-                  (click)="
+                  " (click)="
                     openPhotoViewer(
                       photo,
                       $index
                     )
-                  "
-                >
+                  ">
 
-                  <img
-                    [src]="photo"
-                    alt="Profile photo"
-                  />
+          <img [src]="photo" alt="Profile photo" />
 
-                </button>
-
-              }
-
-            </div>
-
-          }
-
-        } @else {
-
-          <div class="photo-placeholder">
-
-            <i class="fa-solid fa-user"></i>
-
-          </div>
+        </button>
 
         }
 
       </div>
 
+      }
 
-      <!-- SUMMARY -->
+      } @else {
 
-      <div class="profile-summary">
+      <div class="photo-placeholder">
 
-        <span class="member-id">
+        <i class="fa-solid fa-user"></i>
 
-          Profile ID:
-          {{ profile.memberId }}
+      </div>
 
+      }
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="profile-summary">
+
+      <span class="member-id">
+
+        Profile ID:
+        {{ profile.memberId }}
+
+      </span>
+
+
+      <h1>
+        {{ profile.fullName }}
+      </h1>
+
+
+      <div class="profile-meta">
+
+        <span>
+          {{ profile.age }} years
         </span>
 
+        <span>
+          {{ profile.gender }}
+        </span>
 
-        <h1>
-          {{ profile.fullName }}
-        </h1>
-
-
-        <div class="profile-meta">
-
-          <span>
-            {{ profile.age }} years
-          </span>
-
-          <span>
-            {{ profile.gender }}
-          </span>
-
-          <span>
-            {{ formatHeight(profile.height) }}
-          </span>
-
-        </div>
-
-
-        <div class="location-line">
-
-          <i class="fa-solid fa-location-dot"></i>
-
-          {{ profile.place }},
-          {{ profile.district }}
-
-        </div>
-
-
-        @if (profile.homeVerified) {
-
-          <div class="verified-text">
-
-            <i class="fa-solid fa-circle-check"></i>
-
-            Home Verified Profile
-
-          </div>
-
-        }
-
-
-        <div class="action-buttons">
-
-          <button
-            type="button"
-            class="interest-btn"
-            (click)="sendInterest()"
-          >
-
-            <i class="fa-solid fa-heart"></i>
-
-            Send Interest
-
-          </button>
-
-
-          <button
-            type="button"
-            class="shortlist-btn"
-            (click)="toggleShortlist()"
-          >
-
-            <i class="fa-solid fa-star"></i>
-
-            Shortlist
-
-          </button>
-
-        </div>
+        <span>
+          {{ formatHeight(profile.height) }}
+        </span>
 
       </div>
 
-    </section>
+
+      <div class="location-line">
+
+        <i class="fa-solid fa-location-dot"></i>
+
+        {{ profile.place }},
+        {{ profile.district }}
+
+      </div>
 
 
-    <!-- =========================
+      @if (profile.homeVerified) {
+
+      <div class="verified-text">
+
+        <i class="fa-solid fa-circle-check"></i>
+
+        Home Verified Profile
+
+      </div>
+
+      }
+
+
+      <div class="action-buttons">
+
+        <button type="button" class="interest-btn" [class.sent]="isInterestSent" [disabled]="isInterestSent"
+          (click)="sendInterest()">
+          <i class="fa-solid" [class.fa-heart]="!isInterestSent" [class.fa-check]="isInterestSent"></i>
+
+          {{ isInterestSent ? 'Interest Sent' : 'Send Interest' }}
+        </button>
+
+        <button type="button" class="shortlist-btn" [class.active]="isShortlisted" (click)="toggleShortlist()">
+          <i class="fa-solid fa-star"></i>
+
+          {{ isShortlisted ? 'Shortlisted' : 'Shortlist' }}
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
          01 BASIC DETAILS
     ========================== -->
 
-    <section class="details-card">
+  <section class="details-card">
 
-      <div class="section-title">
+    <div class="section-title">
 
-        <span>
-          01
-        </span>
+      <span>
+        01
+      </span>
 
-        <div>
-          <h2>Basic Details</h2>
-          <p>Personal information</p>
-        </div>
+      <div>
+        <h2>Basic Details</h2>
+        <p>Personal information</p>
+      </div>
+
+    </div>
+
+
+    <div class="details-grid">
+
+      <div>
+        <span>Profile For</span>
+        <strong>
+          {{ formatValue(profile.profileFor) }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Name</span>
+        <strong>
+          {{ profile.fullName }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Gender</span>
+        <strong>
+          {{ profile.gender }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Age</span>
+        <strong>
+          {{ profile.age }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Marital Status</span>
+        <strong>
+          {{ formatValue(profile.maritalStatus) }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Height</span>
+        <strong>
+          {{ formatHeight(profile.height) }}
+        </strong>
+      </div>
+
+      @if (canShowKidsDetails()) {
+
+      @if (profile.hasKids) {
+
+      <div>
+        <span>Kids</span>
+        <strong>
+          {{ formatValue(profile.hasKids) }}
+        </strong>
+      </div>
+
+      }
+
+      @if (profile.numberOfKids) {
+
+      <div>
+        <span>Number of Kids</span>
+        <strong>
+          {{ profile.numberOfKids }}
+        </strong>
+      </div>
+
+      }
+
+      @if (profile.kidsLivingStatus) {
+
+      <div>
+        <span>Kids Living Status</span>
+        <strong>
+          {{ formatValue(profile.kidsLivingStatus) }}
+        </strong>
+      </div>
+
+      }
+
+      }
+
+
+
+
+
+
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+         02 PHYSICAL DETAILS
+    ========================== -->
+
+  <section class="details-card">
+
+    <div class="section-title">
+
+      <span>02</span>
+
+      <div>
+        <h2>Physical Details</h2>
+        <p>Physical information</p>
+      </div>
+
+    </div>
+
+
+    <div class="details-grid">
+
+      <div>
+        <span>Weight</span>
+        <strong>
+          {{
+          profile.weight
+          ? profile.weight + ' kg'
+          : '-'
+          }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Body Type</span>
+        <strong>
+          {{ profile.bodyType || '-' }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Complexion</span>
+        <strong>
+          {{ profile.complexion || '-' }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Physical Status</span>
+        <strong>
+          {{ profile.physicalStatus || '-' }}
+        </strong>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+         03 EDUCATION & CAREER
+    ========================== -->
+
+  <section class="details-card">
+
+    <div class="section-title">
+
+      <span>03</span>
+
+      <div>
+        <h2>Education & Career</h2>
+        <p>Education and professional details</p>
+      </div>
+
+    </div>
+
+
+    <div class="details-grid">
+
+      <div>
+        <span>Highest Education</span>
+        <strong>
+          {{ profile.highestEducation }}
+        </strong>
+      </div>
+
+
+      @if (profile.specialization) {
+
+      <div>
+        <span>Specialization</span>
+        <strong>
+          {{ profile.specialization }}
+        </strong>
+      </div>
+
+      }
+
+
+      <div>
+        <span>Job Title</span>
+        <strong>
+          {{ profile.jobTitle }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Job Sector</span>
+        <strong>
+          {{ profile.jobSector }}
+        </strong>
+      </div>
+
+
+      @if (profile.collegeUniversity) {
+
+      <div>
+        <span>College / University</span>
+        <strong>
+          {{ profile.collegeUniversity }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.companyName) {
+
+      <div>
+        <span>Company</span>
+        <strong>
+          {{ profile.companyName }}
+        </strong>
+      </div>
+
+      }
+
+
+      <div>
+        <span>Work Location</span>
+        <strong>
+          {{ formatWorkLocation(profile) }}
+        </strong>
+      </div>
+
+      @if (profile.annualIncome) {
+
+      <div>
+        <span>Annual Income</span>
+        <strong>
+          {{ profile.annualIncome }}
+        </strong>
+      </div>
+
+      }
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+         04 CONTACT
+    ========================== -->
+
+  <section class="details-card">
+
+    <div class="section-title">
+
+      <span>04</span>
+
+      <div>
+        <h2>Contact Information</h2>
+        <p>Contact details</p>
+      </div>
+
+    </div>
+
+    @if (!isInterestAccepted) {
+
+  <div class="contact-locked">
+
+    <i class="fa-solid fa-lock"></i>
+
+    <div>
+
+      <strong>
+        Contact details are protected
+      </strong>
+
+      <p>
+        Contact information will be available
+        after the interest is accepted.
+      </p>
+
+    </div>
+
+  </div>
+
+} @else {
+
+  @if (!isContactVisible) {
+
+    <div class="contact-locked">
+
+      <i class="fa-solid fa-phone"></i>
+
+      <div>
+
+        <strong>
+          Contact details are available
+        </strong>
+
+        <p>
+          Your interest has been accepted.
+        </p>
+
+        <button
+          type="button"
+          class="view-contact-btn"
+          (click)="viewContact()"
+        >
+          <i class="fa-solid fa-eye"></i>
+          View Contact
+        </button>
 
       </div>
+
+    </div>
+
+  } @else {
+
+    <div class="contact-visible">
+
+      @if (profile.phone) {
+        <div class="contact-item">
+          <i class="fa-solid fa-phone"></i>
+
+          <div>
+            <span>Phone</span>
+            <strong>
+              {{ profile.phone }}
+            </strong>
+          </div>
+        </div>
+      }
+
+      @if (profile.whatsappNumber) {
+        <div class="contact-item">
+          <i class="fa-brands fa-whatsapp"></i>
+
+          <div>
+            <span>WhatsApp</span>
+            <strong>
+              {{ profile.whatsappNumber }}
+            </strong>
+          </div>
+        </div>
+      }
+
+      @if (profile.secondaryMobile) {
+        <div class="contact-item">
+          <i class="fa-solid fa-mobile-screen"></i>
+
+          <div>
+            <span>Secondary Mobile</span>
+            <strong>
+              {{ profile.secondaryMobile }}
+            </strong>
+          </div>
+        </div>
+      }
+
+      @if (profile.email) {
+        <div class="contact-item">
+          <i class="fa-solid fa-envelope"></i>
+
+          <div>
+            <span>Email</span>
+            <strong>
+              {{ profile.email }}
+            </strong>
+          </div>
+        </div>
+      }
+
+    </div>
+
+  }
+
+}
+
+
+  </section>
+
+
+  <!-- =========================
+         05 LOCATION
+    ========================== -->
+
+  <section class="details-card">
+
+    <div class="section-title">
+
+      <span>05</span>
+
+      <div>
+        <h2>Location</h2>
+        <p>Profile location</p>
+      </div>
+
+    </div>
+
+
+    <div class="details-grid">
+
+      <div>
+        <span>House Name</span>
+        <strong>
+          {{ profile.houseName || '-' }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Place</span>
+        <strong>
+          {{ profile.place || '-' }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>District</span>
+        <strong>
+          {{ profile.district }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>State</span>
+        <strong>
+          {{ profile.state }}
+        </strong>
+      </div>
+
+
+      <div>
+        <span>Pincode</span>
+        <strong>
+          {{ profile.pincode }}
+        </strong>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+         06 RELIGION & COMMUNITY
+    ========================== -->
+
+  <section class="details-card">
+
+    <div class="section-title">
+
+      <span>06</span>
+
+      <div>
+        <h2>Religion & Community</h2>
+        <p>Community information</p>
+      </div>
+
+    </div>
+
+
+    <div class="details-grid">
+
+      <div>
+        <span>Religion</span>
+        <strong>
+          {{ profile.religion }}
+        </strong>
+      </div>
+
+
+      @if (profile.sect) {
+
+      <div>
+        <span>Sect</span>
+        <strong>
+          {{ profile.sect }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.muslimGroup) {
+
+      <div>
+        <span>Sunni Group</span>
+        <strong>
+          {{ profile.muslimGroup }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.salafiGroup) {
+
+      <div>
+        <span>Salafi Group</span>
+        <strong>
+          {{ profile.salafiGroup }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.caste) {
+
+      <div>
+        <span>Caste</span>
+        <strong>
+          {{ profile.caste }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.subCaste) {
+
+      <div>
+        <span>Sub Caste</span>
+        <strong>
+          {{ profile.subCaste }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.nakshatra) {
+
+      <div>
+        <span>Nakshatra</span>
+        <strong>
+          {{ profile.nakshatra }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.rashi) {
+
+      <div>
+        <span>Rashi</span>
+        <strong>
+          {{ profile.rashi }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.dosham) {
+
+      <div>
+        <span>Dosham</span>
+        <strong>
+          {{ profile.dosham }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.denomination) {
+
+      <div>
+        <span>Denomination</span>
+        <strong>
+          {{ profile.denomination }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.christianSubGroup) {
+
+      <div>
+        <span>Sub Denomination</span>
+        <strong>
+          {{ profile.christianSubGroup }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.parishName) {
+
+      <div>
+        <span>Parish</span>
+        <strong>
+          {{ profile.parishName }}
+        </strong>
+      </div>
+
+      }
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+         07 FAMILY DETAILS
+    ========================== -->
+
+  <section class="details-card">
+
+    <div class="section-title">
+
+      <span>07</span>
+
+      <div>
+        <h2>Family Details</h2>
+        <p>Family information</p>
+      </div>
+
+    </div>
+
+
+    <div class="details-grid">
+
+      @if (profile.fatherName) {
+
+      <div>
+        <span>Father</span>
+        <strong>
+          {{ profile.fatherName }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.fatherOccupation) {
+
+      <div>
+        <span>Father Occupation</span>
+        <strong>
+          {{ profile.fatherOccupation }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.fatherStatus) {
+
+      <div>
+        <span>Father Status</span>
+        <strong>
+          {{ formatValue(profile.fatherStatus) }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.motherName) {
+
+      <div>
+        <span>Mother</span>
+        <strong>
+          {{ profile.motherName }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.motherOccupation) {
+
+      <div>
+        <span>Mother Occupation</span>
+        <strong>
+          {{ profile.motherOccupation }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.motherStatus) {
+
+      <div>
+        <span>Mother Status</span>
+        <strong>
+          {{ formatValue(profile.motherStatus) }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.brothers !== null &&
+      profile.brothers !== undefined) {
+
+      <div>
+        <span>Brothers</span>
+        <strong>
+          {{ profile.brothers }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.sisters !== null &&
+      profile.sisters !== undefined) {
+
+      <div>
+        <span>Sisters</span>
+        <strong>
+          {{ profile.sisters }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (
+      profile.marriedBrothers !== null &&
+      profile.marriedBrothers !== undefined
+      ) {
+
+      <div>
+        <span>Married Brothers</span>
+        <strong>
+          {{ profile.marriedBrothers }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (
+      profile.marriedSisters !== null &&
+      profile.marriedSisters !== undefined
+      ) {
+
+      <div>
+        <span>Married Sisters</span>
+        <strong>
+          {{ profile.marriedSisters }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.familyStatus) {
+
+      <div>
+        <span>Family Status</span>
+        <strong>
+          {{ profile.familyStatus }}
+        </strong>
+      </div>
+
+      }
+
+
+      @if (profile.homeType) {
+
+      <div>
+        <span>Home Type</span>
+        <strong>
+          {{ profile.homeType }}
+        </strong>
+      </div>
+
+      }
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+         08 PREFERENCE
+         Partner + Additional
+    ========================== -->
+
+  <section class="details-card">
+
+    <div class="section-title">
+
+      <span>08</span>
+
+      <div>
+        <h2>Preference</h2>
+        <p>Partner preferences</p>
+      </div>
+
+    </div>
+
+
+    <!-- PARTNER PREFERENCE -->
+
+    <div class="preference-subsection">
+
+      <h3>
+        Partner Preference
+      </h3>
 
 
       <div class="details-grid">
 
         <div>
-          <span>Profile For</span>
+          <span>Preferred Age</span>
           <strong>
-            {{ formatValue(profile.profileFor) }}
+
+            {{ profile.preferredAgeMin }}
+            -
+            {{ profile.preferredAgeMax }}
+
           </strong>
         </div>
 
 
         <div>
-          <span>Name</span>
+          <span>Preferred Height</span>
           <strong>
-            {{ profile.fullName }}
-          </strong>
-        </div>
 
+            {{ formatHeight(profile.preferredHeightMin) }}
+            -
+            {{ formatHeight(profile.preferredHeightMax) }}
 
-        <div>
-          <span>Gender</span>
-          <strong>
-            {{ profile.gender }}
-          </strong>
-        </div>
-
-
-        <div>
-          <span>Age</span>
-          <strong>
-            {{ profile.age }}
           </strong>
         </div>
 
@@ -330,110 +1113,138 @@
         <div>
           <span>Marital Status</span>
           <strong>
-            {{ formatValue(profile.maritalStatus) }}
-          </strong>
-        </div>
-
-
-        <div>
-          <span>Height</span>
-          <strong>
-            {{ formatHeight(profile.height) }}
-          </strong>
-        </div>
-
-        @if (canShowKidsDetails()) {
-
-  @if (profile.hasKids) {
-
-    <div>
-      <span>Kids</span>
-      <strong>
-        {{ formatValue(profile.hasKids) }}
-      </strong>
-    </div>
-
-  }
-
-  @if (profile.numberOfKids) {
-
-    <div>
-      <span>Number of Kids</span>
-      <strong>
-        {{ profile.numberOfKids }}
-      </strong>
-    </div>
-
-  }
-
-  @if (profile.kidsLivingStatus) {
-
-    <div>
-      <span>Kids Living Status</span>
-      <strong>
-        {{ formatValue(profile.kidsLivingStatus) }}
-      </strong>
-    </div>
-
-  }
-
-}
- 
-
- 
-
-
-        
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         02 PHYSICAL DETAILS
-    ========================== -->
-
-    <section class="details-card">
-
-      <div class="section-title">
-
-        <span>02</span>
-
-        <div>
-          <h2>Physical Details</h2>
-          <p>Physical information</p>
-        </div>
-
-      </div>
-
-
-      <div class="details-grid">
-
-        <div>
-          <span>Weight</span>
-          <strong>
             {{
-              profile.weight
-                ? profile.weight + ' kg'
-                : '-'
+            formatList(
+            profile.preferredMaritalStatus
+            )
             }}
           </strong>
         </div>
 
 
         <div>
-          <span>Body Type</span>
+          <span>Acceptance of Kids</span>
           <strong>
-            {{ profile.bodyType || '-' }}
+            {{
+            formatValue(
+            profile.acceptanceOfKids
+            )
+            }}
           </strong>
         </div>
 
 
         <div>
-          <span>Complexion</span>
+          <span>Religion</span>
           <strong>
-            {{ profile.complexion || '-' }}
+            {{ profile.preferredReligion || '-' }}
+          </strong>
+        </div>
+
+
+        <div>
+          <span>Sects</span>
+          <strong>
+            {{
+            formatList(
+            profile.preferredSects
+            )
+            }}
+          </strong>
+        </div>
+
+
+        <div>
+          <span>Sunni Groups</span>
+          <strong>
+            {{
+            formatList(
+            profile.preferredSunniGroups
+            )
+            }}
+          </strong>
+        </div>
+
+
+        <div>
+          <span>Salafi Groups</span>
+          <strong>
+            {{
+            formatList(
+            profile.preferredSalafiGroups
+            )
+            }}
+          </strong>
+        </div>
+
+
+        <div>
+          <span>Caste</span>
+          <strong>
+            {{
+            formatList(
+            profile.preferredCaste
+            )
+            }}
+          </strong>
+        </div>
+
+
+        <div>
+          <span>Sub Caste</span>
+          <strong>
+            {{
+            formatList(
+            profile.preferredSubCaste
+            )
+            }}
+          </strong>
+        </div>
+
+
+        <div>
+          <span>Education</span>
+          <strong>
+            {{
+            formatList(
+            profile.preferredEducation
+            )
+            }}
+          </strong>
+        </div>
+
+
+        <div>
+          <span>Career Sector</span>
+          <strong>
+            {{
+            formatList(
+            profile.preferredCareerSector
+            )
+            }}
+          </strong>
+        </div>
+
+
+        <div>
+          <span>Locations</span>
+          <strong>
+            {{
+            formatList(
+            profile.preferredLocations
+            )
+            }}
+          </strong>
+        </div>
+
+        <div>
+          <span>Family Status</span>
+          <strong>
+            {{
+            formatList(
+            profile.preferredFamilyStatus
+            )
+            }}
           </strong>
         </div>
 
@@ -441,929 +1252,169 @@
         <div>
           <span>Physical Status</span>
           <strong>
-            {{ profile.physicalStatus || '-' }}
+            {{
+            formatList(
+            profile.preferredPhysicalStatus
+            )
+            }}
           </strong>
         </div>
 
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         03 EDUCATION & CAREER
-    ========================== -->
-
-    <section class="details-card">
-
-      <div class="section-title">
-
-        <span>03</span>
 
         <div>
-          <h2>Education & Career</h2>
-          <p>Education and professional details</p>
-        </div>
-
-      </div>
-
-
-      <div class="details-grid">
-
-        <div>
-          <span>Highest Education</span>
+          <span>Income</span>
           <strong>
-            {{ profile.highestEducation }}
+            {{
+            formatList(
+            profile.preferredIncome
+            )
+            }}
           </strong>
         </div>
 
 
-        @if (profile.specialization) {
-
-          <div>
-            <span>Specialization</span>
-            <strong>
-              {{ profile.specialization }}
-            </strong>
-          </div>
-
-        }
-
-
         <div>
-          <span>Job Title</span>
+          <span>Location Radius</span>
           <strong>
-            {{ profile.jobTitle }}
+            {{
+            formatList(
+            profile.preferredLocationRadius
+            )
+            }}
           </strong>
         </div>
 
 
         <div>
-          <span>Job Sector</span>
+          <span>Complexion</span>
           <strong>
-            {{ profile.jobSector }}
+            {{
+            formatList(
+            profile.preferredComplexion
+            )
+            }}
           </strong>
         </div>
 
 
-        @if (profile.collegeUniversity) {
-
-          <div>
-            <span>College / University</span>
-            <strong>
-              {{ profile.collegeUniversity }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.companyName) {
-
-          <div>
-            <span>Company</span>
-            <strong>
-              {{ profile.companyName }}
-            </strong>
-          </div>
-
-        }
-
-
-       <div>
-  <span>Work Location</span>
-  <strong>
-    {{ formatWorkLocation(profile) }}
-  </strong>
-</div>
-
-        @if (profile.annualIncome) {
-
-          <div>
-            <span>Annual Income</span>
-            <strong>
-              {{ profile.annualIncome }}
-            </strong>
-          </div>
-
-        }
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         04 CONTACT
-    ========================== -->
-
-    <section class="details-card">
-
-      <div class="section-title">
-
-        <span>04</span>
+        @if (profile.horoscopeRequired) {
 
         <div>
-          <h2>Contact Information</h2>
-          <p>Contact details</p>
-        </div>
-
-      </div>
-
-
-      <div class="contact-locked">
-
-        <i class="fa-solid fa-lock"></i>
-
-        <div>
-
+          <span>Horoscope Required</span>
           <strong>
-            Contact details are protected
+            {{
+            formatValue(
+            profile.horoscopeRequired
+            )
+            }}
           </strong>
-
-          <p>
-            Contact information will be available
-            according to your interest and
-            verification status.
-          </p>
-
         </div>
 
-      </div>
-
-    </section>
+        }
 
 
-    <!-- =========================
-         05 LOCATION
-    ========================== -->
-
-    <section class="details-card">
-
-      <div class="section-title">
-
-        <span>05</span>
+        @if (profile.preferredStar?.length) {
 
         <div>
-          <h2>Location</h2>
-          <p>Profile location</p>
-        </div>
-
-      </div>
-
-
-      <div class="details-grid">
-
-        <div>
-          <span>House Name</span>
+          <span>Preferred Star</span>
           <strong>
-            {{ profile.houseName || '-' }}
+            {{
+            formatList(
+            profile.preferredStar
+            )
+            }}
           </strong>
         </div>
 
+        }
 
-        <div>
-          <span>Place</span>
-          <strong>
-            {{ profile.place || '-' }}
-          </strong>
-        </div>
-
-
-        <div>
-          <span>District</span>
-          <strong>
-            {{ profile.district }}
-          </strong>
-        </div>
-
-
-        <div>
-          <span>State</span>
-          <strong>
-            {{ profile.state }}
-          </strong>
-        </div>
-
-
-        <div>
-          <span>Pincode</span>
-          <strong>
-            {{ profile.pincode }}
-          </strong>
-        </div>
 
       </div>
 
-    </section>
+    </div>
 
 
-    <!-- =========================
-         06 RELIGION & COMMUNITY
-    ========================== -->
 
-    <section class="details-card">
 
-      <div class="section-title">
+  </section>
 
-        <span>06</span>
 
-        <div>
-          <h2>Religion & Community</h2>
-          <p>Community information</p>
-        </div>
-
-      </div>
-
-
-      <div class="details-grid">
-
-        <div>
-          <span>Religion</span>
-          <strong>
-            {{ profile.religion }}
-          </strong>
-        </div>
-
-
-        @if (profile.sect) {
-
-          <div>
-            <span>Sect</span>
-            <strong>
-              {{ profile.sect }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.muslimGroup) {
-
-          <div>
-            <span>Sunni Group</span>
-            <strong>
-              {{ profile.muslimGroup }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.salafiGroup) {
-
-          <div>
-            <span>Salafi Group</span>
-            <strong>
-              {{ profile.salafiGroup }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.caste) {
-
-          <div>
-            <span>Caste</span>
-            <strong>
-              {{ profile.caste }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.subCaste) {
-
-          <div>
-            <span>Sub Caste</span>
-            <strong>
-              {{ profile.subCaste }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.nakshatra) {
-
-          <div>
-            <span>Nakshatra</span>
-            <strong>
-              {{ profile.nakshatra }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.rashi) {
-
-          <div>
-            <span>Rashi</span>
-            <strong>
-              {{ profile.rashi }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.dosham) {
-
-          <div>
-            <span>Dosham</span>
-            <strong>
-              {{ profile.dosham }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.denomination) {
-
-          <div>
-            <span>Denomination</span>
-            <strong>
-              {{ profile.denomination }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.christianSubGroup) {
-
-          <div>
-            <span>Sub Denomination</span>
-            <strong>
-              {{ profile.christianSubGroup }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.parishName) {
-
-          <div>
-            <span>Parish</span>
-            <strong>
-              {{ profile.parishName }}
-            </strong>
-          </div>
-
-        }
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         07 FAMILY DETAILS
-    ========================== -->
-
-    <section class="details-card">
-
-      <div class="section-title">
-
-        <span>07</span>
-
-        <div>
-          <h2>Family Details</h2>
-          <p>Family information</p>
-        </div>
-
-      </div>
-
-
-      <div class="details-grid">
-
-        @if (profile.fatherName) {
-
-          <div>
-            <span>Father</span>
-            <strong>
-              {{ profile.fatherName }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.fatherOccupation) {
-
-          <div>
-            <span>Father Occupation</span>
-            <strong>
-              {{ profile.fatherOccupation }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.fatherStatus) {
-
-          <div>
-            <span>Father Status</span>
-            <strong>
-              {{ formatValue(profile.fatherStatus) }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.motherName) {
-
-          <div>
-            <span>Mother</span>
-            <strong>
-              {{ profile.motherName }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.motherOccupation) {
-
-          <div>
-            <span>Mother Occupation</span>
-            <strong>
-              {{ profile.motherOccupation }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.motherStatus) {
-
-          <div>
-            <span>Mother Status</span>
-            <strong>
-              {{ formatValue(profile.motherStatus) }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.brothers !== null &&
-             profile.brothers !== undefined) {
-
-          <div>
-            <span>Brothers</span>
-            <strong>
-              {{ profile.brothers }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.sisters !== null &&
-             profile.sisters !== undefined) {
-
-          <div>
-            <span>Sisters</span>
-            <strong>
-              {{ profile.sisters }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (
-          profile.marriedBrothers !== null &&
-          profile.marriedBrothers !== undefined
-        ) {
-
-          <div>
-            <span>Married Brothers</span>
-            <strong>
-              {{ profile.marriedBrothers }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (
-          profile.marriedSisters !== null &&
-          profile.marriedSisters !== undefined
-        ) {
-
-          <div>
-            <span>Married Sisters</span>
-            <strong>
-              {{ profile.marriedSisters }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.familyStatus) {
-
-          <div>
-            <span>Family Status</span>
-            <strong>
-              {{ profile.familyStatus }}
-            </strong>
-          </div>
-
-        }
-
-
-        @if (profile.homeType) {
-
-          <div>
-            <span>Home Type</span>
-            <strong>
-              {{ profile.homeType }}
-            </strong>
-          </div>
-
-        }
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         08 PREFERENCE
-         Partner + Additional
-    ========================== -->
-
-    <section class="details-card">
-
-      <div class="section-title">
-
-        <span>08</span>
-
-        <div>
-          <h2>Preference</h2>
-          <p>Partner preferences</p>
-        </div>
-
-      </div>
-
-
-      <!-- PARTNER PREFERENCE -->
-
-      <div class="preference-subsection">
-
-        <h3>
-          Partner Preference
-        </h3>
-
-
-        <div class="details-grid">
-
-          <div>
-            <span>Preferred Age</span>
-            <strong>
-
-              {{ profile.preferredAgeMin }}
-              -
-              {{ profile.preferredAgeMax }}
-
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Preferred Height</span>
-            <strong>
-
-              {{ formatHeight(profile.preferredHeightMin) }}
-              -
-              {{ formatHeight(profile.preferredHeightMax) }}
-
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Marital Status</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredMaritalStatus
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Acceptance of Kids</span>
-            <strong>
-              {{
-                formatValue(
-                  profile.acceptanceOfKids
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Religion</span>
-            <strong>
-              {{ profile.preferredReligion || '-' }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Sects</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredSects
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Sunni Groups</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredSunniGroups
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Salafi Groups</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredSalafiGroups
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Caste</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredCaste
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Sub Caste</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredSubCaste
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Education</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredEducation
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Career Sector</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredCareerSector
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Locations</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredLocations
-                )
-              }}
-            </strong>
-          </div>
-
-           <div>
-            <span>Family Status</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredFamilyStatus
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Physical Status</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredPhysicalStatus
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Income</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredIncome
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Location Radius</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredLocationRadius
-                )
-              }}
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Complexion</span>
-            <strong>
-              {{
-                formatList(
-                  profile.preferredComplexion
-                )
-              }}
-            </strong>
-          </div>
-
-
-          @if (profile.horoscopeRequired) {
-
-            <div>
-              <span>Horoscope Required</span>
-              <strong>
-                {{
-                  formatValue(
-                    profile.horoscopeRequired
-                  )
-                }}
-              </strong>
-            </div>
-
-          }
-
-
-          @if (profile.preferredStar?.length) {
-
-            <div>
-              <span>Preferred Star</span>
-              <strong>
-                {{
-                  formatList(
-                    profile.preferredStar
-                  )
-                }}
-              </strong>
-            </div>
-
-          }
-
-
-        </div>
-
-      </div>
-
-
-       
-
-    </section>
-
-
-    <!-- =========================
+  <!-- =========================
          09 EXPECTATIONS
     ========================== -->
 
-    @if (profile.expectations) {
+  @if (profile.expectations) {
 
-      <section class="details-card">
+  <section class="details-card">
 
-        <div class="section-title">
+    <div class="section-title">
 
-          <span>09</span>
+      <span>09</span>
 
-          <div>
-            <h2>Expectations</h2>
-            <p>Looking for in a preferred match</p>
-          </div>
+      <div>
+        <h2>Expectations</h2>
+        <p>Looking for in a preferred match</p>
+      </div>
 
-        </div>
-
-
-        <div class="expectations-box">
-
-          {{ profile.expectations }}
-
-        </div>
-
-      </section>
-
-    }
+    </div>
 
 
-    <!-- =========================
+    <div class="expectations-box">
+
+      {{ profile.expectations }}
+
+    </div>
+
+  </section>
+
+  }
+
+
+  <!-- =========================
          10 PHOTOS
     ========================== -->
 
-    @if (profile.photos?.length) {
+  @if (profile.photos?.length) {
 
-      <section class="details-card">
+  <section class="details-card">
 
-        <div class="section-title">
+    <div class="section-title">
 
-          <span>10</span>
+      <span>10</span>
 
-          <div>
-            <h2>Photos</h2>
-            <p>Profile photos</p>
-          </div>
+      <div>
+        <h2>Photos</h2>
+        <p>Profile photos</p>
+      </div>
 
-        </div>
+    </div>
 
 
-        <div class="photo-grid">
+    <div class="photo-grid">
 
-          @for (
-            photo of profile.photos;
-            track $index
-          ) {
+      @for (
+      photo of profile.photos;
+      track $index
+      ) {
 
-            <button
-              type="button"
-              class="gallery-photo"
-              (click)="
+      <button type="button" class="gallery-photo" (click)="
                 openPhotoViewer(
                   photo,
                   $index
                 )
-              "
-            >
+              ">
 
-              <img
-                [src]="photo"
-                alt="Profile photo"
-              />
+        <img [src]="photo" alt="Profile photo" />
 
-            </button>
+      </button>
 
-          }
+      }
 
-        </div>
+    </div>
 
-      </section>
+  </section>
 
-    }
+  }
 
 
   }
@@ -1374,72 +1425,49 @@
   ========================== -->
 
   @if (
-    isPhotoViewerOpen &&
-    selectedPhoto
+  isPhotoViewerOpen &&
+  selectedPhoto
   ) {
 
-    <div
-      class="photo-viewer"
-      (click)="closePhotoViewer()"
-    >
+  <div class="photo-viewer" (click)="closePhotoViewer()">
 
-      <button
-        type="button"
-        class="viewer-close"
-        (click)="closePhotoViewer()"
-      >
+    <button type="button" class="viewer-close" (click)="closePhotoViewer()">
 
-        <i class="fa-solid fa-xmark"></i>
+      <i class="fa-solid fa-xmark"></i>
 
-      </button>
+    </button>
 
 
-      <button
-        type="button"
-        class="viewer-prev"
-        [disabled]="
+    <button type="button" class="viewer-prev" [disabled]="
           selectedPhotoIndex === 0
-        "
-        (click)="
+        " (click)="
           previousPhoto();
           $event.stopPropagation()
-        "
-      >
+        ">
 
-        <i class="fa-solid fa-chevron-left"></i>
+      <i class="fa-solid fa-chevron-left"></i>
 
-      </button>
-
-
-      <img
-        [src]="selectedPhoto"
-        alt="Profile photo"
-        class="viewer-image"
-        (touchstart)="handlePhotoTouchStart($event)"
-        (touchend)="handlePhotoTouchEnd($event)"
-        (click)="$event.stopPropagation()"
-      />
+    </button>
 
 
-      <button
-        type="button"
-        class="viewer-next"
-        [disabled]="
+    <img [src]="selectedPhoto" alt="Profile photo" class="viewer-image" (touchstart)="handlePhotoTouchStart($event)"
+      (touchend)="handlePhotoTouchEnd($event)" (click)="$event.stopPropagation()" />
+
+
+    <button type="button" class="viewer-next" [disabled]="
           !profile?.photos ||
           selectedPhotoIndex ===
           profile.photos.length - 1
-        "
-        (click)="
+        " (click)="
           nextPhoto();
           $event.stopPropagation()
-        "
-      >
+        ">
 
-        <i class="fa-solid fa-chevron-right"></i>
+      <i class="fa-solid fa-chevron-right"></i>
 
-      </button>
+    </button>
 
-    </div>
+  </div>
 
   }
 

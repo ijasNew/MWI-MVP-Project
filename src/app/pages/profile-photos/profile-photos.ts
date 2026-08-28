@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 
 import { Router } from '@angular/router';
+import { ProfileService } from '../../services/profile';
 
 
 @Component({
@@ -38,7 +39,8 @@ export class ProfilePhotos implements OnInit {
 
   constructor(
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+     private profileService: ProfileService
   ) {}
 
 
@@ -48,73 +50,34 @@ export class ProfilePhotos implements OnInit {
 
   ngOnInit(): void {
 
-    const fromMyDetails =
-      sessionStorage.getItem(
-        'mwi_edit_source'
-      );
+  const fromMyDetails =
+    sessionStorage.getItem('mwi_edit_source');
 
-
-    if (
-      fromMyDetails === 'my-details'
-    ) {
-
-      this.returnTo =
-        '/my-details';
-
-    }
-
-
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
-
-
-    if (!saved) {
-      return;
-    }
-
-
-    try {
-
-      const profile =
-        JSON.parse(saved);
-
-
-      if (
-        Array.isArray(
-          profile.photos
-        )
-      ) {
-
-        this.photos =
-          profile.photos
-            .filter(
-              (photo: unknown) =>
-                typeof photo === 'string' &&
-                photo.startsWith(
-                  'data:image/'
-                )
-            )
-            .slice(
-              0,
-              this.maxPhotos
-            );
-
-      }
-
-
-    } catch (error) {
-
-      console.error(
-        'Unable to load profile photos',
-        error
-      );
-
-    }
-
+  if (fromMyDetails === 'my-details') {
+    this.returnTo = '/my-details';
   }
 
+
+  const profile =
+    this.profileService.getCurrentProfile();
+
+  if (!profile) {
+    return;
+  }
+
+
+  if (Array.isArray(profile.photos)) {
+
+    this.photos =
+      profile.photos
+        .filter(
+          (photo: unknown) =>
+            typeof photo === 'string' &&
+            photo.startsWith('data:image/')
+        )
+        .slice(0, this.maxPhotos);
+  }
+}
 
   // =========================
   // FILE SELECTION
@@ -503,65 +466,36 @@ export class ProfilePhotos implements OnInit {
     }
 
 
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+    const updatedProfile =
+  this.profileService.updateProfile({
+
+    photoCount:
+      this.photos.length,
+
+    photos:
+      [...this.photos],
+
+    profilePhotosCompleted:
+      this.photos.length > 0
+  });
 
 
-    if (!saved) {
+if (!updatedProfile) {
 
-      this.photoError =
-        'Registration data not found.';
+  console.error(
+    'Unable to save profile photos'
+  );
 
-      return;
+  this.photoError =
+    'Unable to save photos. Please try again.';
 
-    }
-
-
-    try {
-
-      const profile =
-        JSON.parse(saved);
+  return;
+}
 
 
-      profile.photoCount =
-        this.photos.length;
-
-
-      profile.photos =
-        [...this.photos];
-
-
-      profile.profilePhotosCompleted =
-        this.photos.length > 0;
-
-
-      sessionStorage.setItem(
-        'mwi_registration',
-        JSON.stringify(
-          profile
-        )
-      );
-
-
-      this.router.navigate([
-        this.returnTo
-      ]);
-
-
-    } catch (error) {
-
-      console.error(
-        'Unable to save profile photos',
-        error
-      );
-
-
-      this.photoError =
-        'Unable to save photos. Please try again.';
-
-    }
+this.router.navigate([
+  this.returnTo
+]);
 
   }
 

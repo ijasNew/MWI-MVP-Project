@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-physical-details',
@@ -16,7 +17,8 @@ export class PhysicalDetails implements OnInit {
   physicalStatus = '';
   returnTo: string = '/complete-profile';
   constructor(
-    private router: Router
+    private router: Router,
+    private profileService: ProfileService
   ) { }
 
   ngOnInit(): void {
@@ -35,9 +37,12 @@ export class PhysicalDetails implements OnInit {
 
     try {
 
-      const profile = JSON.parse(saved);
+      const profile =
+        this.profileService.getCurrentProfile();
 
-      // Load already saved values
+      if (!profile) {
+        return;
+      }
 
       this.weight =
         profile.weight ?? null;
@@ -158,61 +163,29 @@ export class PhysicalDetails implements OnInit {
     // LOAD PROFILE
     // =========================
 
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+    const updatedProfile =
+  this.profileService.updateProfile({
+    ...(this.weight !== null
+      ? { weight: this.weight }
+      : {}),
 
-    if (!saved) {
+    bodyType: this.bodyType,
+    complexion: this.complexion,
+    physicalStatus: this.physicalStatus,
+    physicalDetailsCompleted: true
+  });
+
+    if (!updatedProfile) {
+      console.error(
+        'Unable to update profile'
+      );
       return;
     }
+    this.router.navigate([
+      this.returnTo
+    ]);
 
 
-    try {
-
-      const profile =
-        JSON.parse(saved);
-
-
-      profile.weight =
-        this.weight;
-
-      profile.bodyType =
-        this.bodyType;
-
-      profile.complexion =
-        this.complexion;
-
-      profile.physicalStatus =
-        this.physicalStatus;
-
-
-      // =========================
-      // SECTION COMPLETED
-      // =========================
-
-      profile.physicalDetailsCompleted =
-        true;
-
-
-      sessionStorage.setItem(
-        'mwi_registration',
-        JSON.stringify(profile)
-      );
-
-
-      this.router.navigate([
-        this.returnTo
-      ]);
-
-    } catch (error) {
-
-      console.error(
-        'Unable to save physical details',
-        error
-      );
-
-    }
 
   }
   isWeightInvalid(): boolean {
@@ -233,38 +206,38 @@ export class PhysicalDetails implements OnInit {
   }
   isBodyTypeInvalid(): boolean {
 
-  const validBodyTypes = [
-    'Slim',
-    'Average',
-    'Athletic',
-    'Heavy'
-  ];
+    const validBodyTypes = [
+      'Slim',
+      'Average',
+      'Athletic',
+      'Heavy'
+    ];
 
-  return !!this.bodyType &&
-    !validBodyTypes.includes(
-      this.bodyType
-    );
+    return !!this.bodyType &&
+      !validBodyTypes.includes(
+        this.bodyType
+      );
 
-}
+  }
 
 
-isComplexionInvalid(): boolean {
+  isComplexionInvalid(): boolean {
 
-  const validComplexions = [
-    'Very Fair',
-    'Fair',
-    'Wheatish',
-    'Medium',
-    'Dusky',
-    'Dark'
-  ];
+    const validComplexions = [
+      'Very Fair',
+      'Fair',
+      'Wheatish',
+      'Medium',
+      'Dusky',
+      'Dark'
+    ];
 
-  return !!this.complexion &&
-    !validComplexions.includes(
-      this.complexion
-    );
+    return !!this.complexion &&
+      !validComplexions.includes(
+        this.complexion
+      );
 
-}
+  }
   goBack(): void {
 
     this.router.navigate([

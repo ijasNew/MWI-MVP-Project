@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-family-details',
@@ -77,7 +78,8 @@ export class FamilyDetails implements OnInit {
 
 
   constructor(
-    private router: Router
+    private router: Router,
+    private profileService: ProfileService
   ) {}
 
 
@@ -87,87 +89,61 @@ export class FamilyDetails implements OnInit {
 
   ngOnInit(): void {
 
-    const fromMyDetails =
-      sessionStorage.getItem(
-        'mwi_edit_source'
-      );
+  const fromMyDetails =
+    sessionStorage.getItem('mwi_edit_source');
 
-    if (
-      fromMyDetails === 'my-details'
-    ) {
-
-      this.returnTo =
-        '/my-details';
-
-    }
-
-
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
-
-    if (!saved) {
-      return;
-    }
-
-
-    try {
-
-      const profile =
-        JSON.parse(saved);
-
-
-      this.fatherName =
-        profile.fatherName || '';
-
-      this.fatherOccupation =
-        profile.fatherOccupation || '';
-
-      this.fatherStatus =
-        profile.fatherStatus || '';
-
-
-      this.motherName =
-        profile.motherName || '';
-
-      this.motherOccupation =
-        profile.motherOccupation || '';
-
-      this.motherStatus =
-        profile.motherStatus || '';
-
-
-      this.brothers =
-        profile.brothers ?? null;
-
-      this.sisters =
-        profile.sisters ?? null;
-
-      this.marriedBrothers =
-        profile.marriedBrothers ?? null;
-
-      this.marriedSisters =
-        profile.marriedSisters ?? null;
-
-
-      this.familyStatus =
-        profile.familyStatus || '';
-
-      this.homeType =
-        profile.homeType || '';
-
-
-    } catch (error) {
-
-      console.error(
-        'Unable to load family details',
-        error
-      );
-
-    }
-
+  if (fromMyDetails === 'my-details') {
+    this.returnTo = '/my-details';
   }
+
+
+  const profile =
+    this.profileService.getCurrentProfile();
+
+  if (!profile) {
+    return;
+  }
+
+
+  this.fatherName =
+    profile.fatherName || '';
+
+  this.fatherOccupation =
+    profile.fatherOccupation || '';
+
+  this.fatherStatus =
+    profile.fatherStatus || '';
+
+
+  this.motherName =
+    profile.motherName || '';
+
+  this.motherOccupation =
+    profile.motherOccupation || '';
+
+  this.motherStatus =
+    profile.motherStatus || '';
+
+
+  this.brothers =
+    profile.brothers ?? null;
+
+  this.sisters =
+    profile.sisters ?? null;
+
+  this.marriedBrothers =
+    profile.marriedBrothers ?? null;
+
+  this.marriedSisters =
+    profile.marriedSisters ?? null;
+
+
+  this.familyStatus =
+    profile.familyStatus || '';
+
+  this.homeType =
+    profile.homeType || '';
+}
 
 
   // =========================
@@ -461,89 +437,63 @@ export class FamilyDetails implements OnInit {
     // LOAD PROFILE
     // =========================
 
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+    const updatedProfile =
+  this.profileService.updateProfile({
 
-    if (!saved) {
-      return;
-    }
+    fatherName:
+      this.fatherName.trim(),
 
+    fatherOccupation:
+      this.fatherOccupation.trim(),
 
-    try {
+    fatherStatus:
+      this.fatherStatus,
 
-      const profile =
-        JSON.parse(saved);
+    motherName:
+      this.motherName.trim(),
 
+    motherOccupation:
+      this.motherOccupation.trim(),
 
-      profile.fatherName =
-        this.fatherName.trim();
+    motherStatus:
+      this.motherStatus,
 
-      profile.fatherOccupation =
-        this.fatherOccupation.trim();
+    brothers:
+      this.brothers,
 
-      profile.fatherStatus =
-        this.fatherStatus;
+    sisters:
+      this.sisters,
 
+    marriedBrothers:
+      this.marriedBrothers,
 
-      profile.motherName =
-        this.motherName.trim();
+    marriedSisters:
+      this.marriedSisters,
 
-      profile.motherOccupation =
-        this.motherOccupation.trim();
+    familyStatus:
+      this.familyStatus,
 
-      profile.motherStatus =
-        this.motherStatus;
+    homeType:
+      this.homeType,
 
-
-      profile.brothers =
-        this.brothers;
-
-      profile.sisters =
-        this.sisters;
-
-      profile.marriedBrothers =
-        this.marriedBrothers;
-
-      profile.marriedSisters =
-        this.marriedSisters;
+    familyDetailsCompleted:
+      true
+  });
 
 
-      profile.familyStatus =
-        this.familyStatus;
+if (!updatedProfile) {
 
-      profile.homeType =
-        this.homeType;
+  console.error(
+    'Unable to update family details'
+  );
 
-
-      // =========================
-      // SECTION COMPLETED
-      // =========================
-
-      profile.familyDetailsCompleted =
-        true;
+  return;
+}
 
 
-      sessionStorage.setItem(
-        'mwi_registration',
-        JSON.stringify(profile)
-      );
-
-
-      this.router.navigate([
-        this.returnTo
-      ]);
-
-
-    } catch (error) {
-
-      console.error(
-        'Unable to save family details',
-        error
-      );
-
-    }
+this.router.navigate([
+  this.returnTo
+]);
 
   }
 

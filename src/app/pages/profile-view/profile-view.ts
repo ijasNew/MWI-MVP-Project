@@ -20,6 +20,10 @@ export class ProfileView implements OnInit {
 
   isPhotoViewerOpen = false;
 
+  isInterestSent = false;
+  isShortlisted = false;
+  isInterestAccepted = false;
+  isContactVisible = false;
   private returnUrl = '/user-home';
 
   touchStartX = 0;
@@ -54,277 +58,277 @@ export class ProfileView implements OnInit {
   }
 
 
-   loadProfile(memberId: string): void {
+  loadProfile(memberId: string): void {
 
-  const dummyProfile: Profile = {
+    const dummyProfile: Profile = {
 
-    // =========================
-    // ACCOUNT
-    // =========================
+      // =========================
+      // ACCOUNT
+      // =========================
 
-    memberId: memberId,
+      memberId: memberId,
 
-    phone: '9876543210',
+      phone: '9876543210',
 
 
-    // =========================
-    // BASIC DETAILS
-    // =========================
+      // =========================
+      // BASIC DETAILS
+      // =========================
 
-    profileFor: 'self',
+      profileFor: 'self',
 
-    gender: 'Female',
+      gender: 'Female',
 
-    fullName: 'Ayesha Fathima',
+      fullName: 'Ayesha Fathima',
 
-    maritalStatus: 'Never Married',
+      maritalStatus: 'Never Married',
 
-    hasKids: 'no',
+      hasKids: 'no',
 
-    numberOfKids: '0',
+      numberOfKids: '0',
 
-    kidsLivingStatus: '',
+      kidsLivingStatus: '',
 
-    dobDay: '15',
+      dobDay: '15',
 
-    dobMonth: '06',
+      dobMonth: '06',
 
-    dobYear: '1998',
+      dobYear: '1998',
 
-    age: 28,
+      age: 28,
 
-    height: 64,
+      height: 64,
 
 
-    // =========================
-    // LOCATION
-    // =========================
+      // =========================
+      // LOCATION
+      // =========================
 
-    district: 'Kozhikode',
+      district: 'Kozhikode',
 
-    state: 'Kerala',
+      state: 'Kerala',
 
-    pincode: '673001',
+      pincode: '673001',
 
-    houseName: 'Sample House',
+      houseName: 'Sample House',
 
-    place: 'Kozhikode',
+      place: 'Kozhikode',
 
 
-    // =========================
-    // RELIGION
-    // =========================
+      // =========================
+      // RELIGION
+      // =========================
 
-    religion: 'Muslim',
+      religion: 'Muslim',
 
-    sect: 'Sunni',
+      sect: 'Sunni',
 
-    muslimGroup: 'AP-Sunni',
+      muslimGroup: 'AP-Sunni',
 
-    salafiGroup: '',
+      salafiGroup: '',
 
 
-    // =========================
-    // EDUCATION & CAREER
-    // =========================
+      // =========================
+      // EDUCATION & CAREER
+      // =========================
 
-    highestEducation: "Master's Degree",
+      highestEducation: "Master's Degree",
 
-    specialization: 'MSc Computer Science',
+      specialization: 'MSc Computer Science',
 
-    jobTitle: 'Software Engineer',
+      jobTitle: 'Software Engineer',
 
-    jobSector: 'IT',
+      jobSector: 'IT',
 
 
-    // =========================
-    // PARTNER PREFERENCE
-    // =========================
+      // =========================
+      // PARTNER PREFERENCE
+      // =========================
 
-    preferredAgeMin: 28,
+      preferredAgeMin: 28,
 
-    preferredAgeMax: 35,
+      preferredAgeMax: 35,
 
-    preferredHeightMin: 60,
+      preferredHeightMin: 60,
 
-    preferredHeightMax: 70,
+      preferredHeightMax: 70,
 
-    preferredMaritalStatus: [
-      'Never Married'
-    ],
+      preferredMaritalStatus: [
+        'Never Married'
+      ],
 
-    acceptanceOfKids: 'no',
+      acceptanceOfKids: 'no',
 
-    preferredReligion: 'Muslim',
+      preferredReligion: 'Muslim',
 
-    preferredSects: [
-      'Sunni'
-    ],
+      preferredSects: [
+        'Sunni'
+      ],
 
-    preferredSunniGroups: [
-      'AP-Sunni',
-      'EK-Sunni'
-    ],
+      preferredSunniGroups: [
+        'AP-Sunni',
+        'EK-Sunni'
+      ],
 
-    preferredSalafiGroups: [],
+      preferredSalafiGroups: [],
 
-    preferredCaste: [],
+      preferredCaste: [],
 
-    preferredSubCaste: [],
+      preferredSubCaste: [],
 
-    preferredEducation: [
-      "Bachelor's Degree",
-      "Master's Degree"
-    ],
-    preferredEducationSpecific: [],
+      preferredEducation: [
+        "Bachelor's Degree",
+        "Master's Degree"
+      ],
+      preferredEducationSpecific: [],
 
-    preferredCareerSector: [
-      'IT',
-      'Engineering'
-    ],
+      preferredCareerSector: [
+        'IT',
+        'Engineering'
+      ],
 
-    preferredLocations: [
-      'Malappuram',
-      'Kozhikode'
-    ],
+      preferredLocations: [
+        'Malappuram',
+        'Kozhikode'
+      ],
 
 
-    // =========================
-    // PHYSICAL DETAILS
-    // =========================
+      // =========================
+      // PHYSICAL DETAILS
+      // =========================
 
-    weight: 55,
+      weight: 55,
 
-    bodyType: 'Slim',
+      bodyType: 'Slim',
 
-    complexion: 'Medium',
+      complexion: 'Medium',
 
-    physicalStatus: 'Normal',
+      physicalStatus: 'Normal',
 
 
-    // =========================
-    // CONTACT
-    // =========================
+      // =========================
+      // CONTACT
+      // =========================
 
-    secondaryMobile: '',
+      secondaryMobile: '',
 
-    whatsappNumber: '',
+      whatsappNumber: '',
 
-    email: '',
+      email: '',
 
 
-    // =========================
-    // WORK / EDUCATION
-    // =========================
+      // =========================
+      // WORK / EDUCATION
+      // =========================
 
-    collegeUniversity:
-      'University of Calicut',
+      collegeUniversity:
+        'University of Calicut',
 
-    annualIncome:
-      '₹5 - ₹10 Lakh',
+      annualIncome:
+        '₹5 - ₹10 Lakh',
 
-    workLocation:
-      'Kozhikode',
+      workLocation:
+        'Kozhikode',
 
-    companyName:
-      'Private IT Company',
+      companyName:
+        'Private IT Company',
 
 
-    // =========================
-    // FAMILY
-    // =========================
+      // =========================
+      // FAMILY
+      // =========================
 
-    fatherName:
-      'Abdul Rahman',
+      fatherName:
+        'Abdul Rahman',
 
-    fatherOccupation:
-      'Business',
+      fatherOccupation:
+        'Business',
 
-    fatherStatus:
-      'Alive',
+      fatherStatus:
+        'Alive',
 
-    motherName:
-      'Amina',
+      motherName:
+        'Amina',
 
-    motherOccupation:
-      'Teacher',
+      motherOccupation:
+        'Teacher',
 
-    motherStatus:
-      'Alive',
- 
+      motherStatus:
+        'Alive',
 
-     
 
-    familyStatus:
-      'Upper Middle Class',
 
-    homeType:
-      'Own House',
 
+      familyStatus:
+        'Upper Middle Class',
 
-    // =========================
-    // ADDITIONAL PREFERENCES
-    // =========================
+      homeType:
+        'Own House',
 
-    preferredFamilyStatus: [
-      'Upper Middle Class'
-    ],
 
-    preferredPhysicalStatus: [
-      'Normal'
-    ],
+      // =========================
+      // ADDITIONAL PREFERENCES
+      // =========================
 
+      preferredFamilyStatus: [
+        'Upper Middle Class'
+      ],
 
+      preferredPhysicalStatus: [
+        'Normal'
+      ],
 
-    // HINDU SPECIFIC
 
-    horoscopeRequired:
-      'no',
 
-    
-    // =========================
-    // EXPECTATIONS
-    // =========================
+      // HINDU SPECIFIC
 
-    expectations:
-      'Looking for a well educated, responsible and family-oriented partner. Good character, mutual respect and understanding are important.',
+      horoscopeRequired:
+        'no',
 
 
-    // =========================
-    // PHOTOS
-    // =========================
+      // =========================
+      // EXPECTATIONS
+      // =========================
 
-    photos: [],
+      expectations:
+        'Looking for a well educated, responsible and family-oriented partner. Good character, mutual respect and understanding are important.',
 
-    primaryPhoto: '',
 
+      // =========================
+      // PHOTOS
+      // =========================
 
-    // =========================
-    // PROFILE COMPLETION
-    // =========================
+      photos: [],
 
-    registrationCompleted: true,
+      primaryPhoto: '',
 
-    completionPercentage: 100,
 
+      // =========================
+      // PROFILE COMPLETION
+      // =========================
 
-    // =========================
-    // STATUS
-    // =========================
+      registrationCompleted: true,
 
-    homeVerified: true, 
-    profileCreatedAt:
-      '2026-08-19'
-      
+      completionPercentage: 100,
 
-  };
 
+      // =========================
+      // STATUS
+      // =========================
 
-  this.profile = dummyProfile;
+      homeVerified: true,
+      profileCreatedAt:
+        '2026-08-19'
 
-  this.isLoading = false;
 
-}
+    };
+
+
+    this.profile = dummyProfile;
+
+    this.isLoading = false;
+
+  }
 
   goBack(): void {
 
@@ -391,63 +395,63 @@ export class ProfileView implements OnInit {
     return labels[value] || value;
 
   }
-formatWorkLocation(profile: Profile): string {
+  formatWorkLocation(profile: Profile): string {
 
-  // Legacy saved value
-  if (profile.workLocation) {
-    return profile.workLocation;
+    // Legacy saved value
+    if (profile.workLocation) {
+      return profile.workLocation;
+    }
+
+    // India
+    if (
+      profile.workLocationType === 'india_same_state' ||
+      profile.workLocationType === 'india_other_state'
+    ) {
+
+      const parts = [
+        profile.workDistrict,
+        profile.workState
+      ].filter(Boolean);
+
+      return parts.length
+        ? parts.join(', ')
+        : '-';
+    }
+
+    // Outside India
+    if (
+      profile.workLocationType === 'outside_india'
+    ) {
+
+      const parts = [
+        profile.workCity,
+        profile.workCountry
+      ].filter(Boolean);
+
+      return parts.length
+        ? parts.join(', ')
+        : '-';
+    }
+
+    return '-';
   }
+  canShowKidsDetails(): boolean {
 
-  // India
-  if (
-    profile.workLocationType === 'india_same_state' ||
-    profile.workLocationType === 'india_other_state'
-  ) {
+    if (!this.profile?.maritalStatus) {
+      return false;
+    }
 
-    const parts = [
-      profile.workDistrict,
-      profile.workState
-    ].filter(Boolean);
+    const status = this.profile.maritalStatus
+      .toString()
+      .trim()
+      .toLowerCase();
 
-    return parts.length
-      ? parts.join(', ')
-      : '-';
+    return ![
+      'never married',
+      'never_married',
+      'divorced'
+    ].includes(status);
   }
-
-  // Outside India
-  if (
-    profile.workLocationType === 'outside_india'
-  ) {
-
-    const parts = [
-      profile.workCity,
-      profile.workCountry
-    ].filter(Boolean);
-
-    return parts.length
-      ? parts.join(', ')
-      : '-';
-  }
-
-  return '-';
-}
-canShowKidsDetails(): boolean {
-
-  if (!this.profile?.maritalStatus) {
-    return false;
-  }
-
-  const status = this.profile.maritalStatus
-    .toString()
-    .trim()
-    .toLowerCase();
-
-  return ![
-    'never married',
-    'never_married',
-    'divorced'
-  ].includes(status);
-}
   formatList(
     values?: string[]
   ): string {
@@ -579,13 +583,17 @@ canShowKidsDetails(): boolean {
       return;
     }
 
+    if (this.isInterestSent) {
+      return;
+    }
+
+    this.isInterestSent = true;
+
     console.log(
-      'Send interest:',
+      'Interest sent to:',
       this.profile.memberId
     );
-
   }
-
 
   toggleShortlist(): void {
 
@@ -593,11 +601,26 @@ canShowKidsDetails(): boolean {
       return;
     }
 
+    this.isShortlisted =
+      !this.isShortlisted;
+
     console.log(
-      'Shortlist:',
+      this.isShortlisted
+        ? 'Shortlisted:'
+        : 'Removed from shortlist:',
       this.profile.memberId
     );
+  }
+  viewContact(): void {
 
+  if (!this.profile) {
+    return;
   }
 
+  if (!this.isInterestAccepted) {
+    return;
+  }
+
+  this.isContactVisible = true;
+}
 }

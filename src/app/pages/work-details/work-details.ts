@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-work-details',
@@ -13,8 +14,11 @@ export class WorkDetails implements OnInit {
   returnTo: string = '/complete-profile';
 
   submitted = false;
+
   registeredState = '';
+
   collegeUniversity = '';
+
   companyName = '';
 
   // =========================
@@ -24,9 +28,11 @@ export class WorkDetails implements OnInit {
   workLocationType = '';
 
   workState = '';
+
   workDistrict = '';
 
   workCountry = '';
+
   workCity = '';
 
   annualIncome = '';
@@ -115,8 +121,9 @@ export class WorkDetails implements OnInit {
 
 
   constructor(
-    private router: Router
-  ) { }
+    private router: Router,
+    private profileService: ProfileService
+  ) {}
 
 
   // =========================
@@ -126,77 +133,47 @@ export class WorkDetails implements OnInit {
   ngOnInit(): void {
 
     const fromMyDetails =
-      sessionStorage.getItem(
-        'mwi_edit_source'
-      );
+      sessionStorage.getItem('mwi_edit_source');
 
-    if (
-      fromMyDetails === 'my-details'
-    ) {
-
-      this.returnTo =
-        '/my-details';
-
+    if (fromMyDetails === 'my-details') {
+      this.returnTo = '/my-details';
     }
 
 
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+    const profile =
+      this.profileService.getCurrentProfile();
 
-    if (!saved) {
+    if (!profile) {
       return;
     }
 
 
-    try {
+    this.collegeUniversity =
+      profile.collegeUniversity || '';
 
-      const profile =
-        JSON.parse(saved);
+    this.companyName =
+      profile.companyName || '';
 
+    this.workLocationType =
+      profile.workLocationType || '';
 
-      this.collegeUniversity =
-        profile.collegeUniversity || '';
+    this.workState =
+      profile.workState || '';
 
-      this.companyName =
-        profile.companyName || '';
+    this.workDistrict =
+      profile.workDistrict || '';
 
+    this.workCountry =
+      profile.workCountry || '';
 
-      this.workLocationType =
-        profile.workLocationType || '';
+    this.workCity =
+      profile.workCity || '';
 
+    this.annualIncome =
+      profile.annualIncome || '';
 
-      this.workState =
-        profile.workState || '';
-
-      this.workDistrict =
-        profile.workDistrict || '';
-
-
-      this.workCountry =
-        profile.workCountry || '';
-
-      this.workCity =
-        profile.workCity || '';
-
-
-      this.annualIncome =
-        profile.annualIncome || '';
-
-      this.registeredState =
-        profile.state || '';
-
-
-    } catch (error) {
-
-      console.error(
-        'Unable to load work details',
-        error
-      );
-
-    }
-
+    this.registeredState =
+      profile.state || '';
   }
 
 
@@ -222,9 +199,7 @@ export class WorkDetails implements OnInit {
       trimmed.length === 0 ||
       trimmed.length > maxLength
     ) {
-
       return true;
-
     }
 
 
@@ -232,10 +207,7 @@ export class WorkDetails implements OnInit {
       /^[A-Za-z0-9À-ÿ₹&.,'()\/\-]+(?:\s+[A-Za-z0-9À-ÿ₹&.,'()\/\-]+)*$/;
 
 
-    return !validPattern.test(
-      trimmed
-    );
-
+    return !validPattern.test(trimmed);
   }
 
 
@@ -246,20 +218,18 @@ export class WorkDetails implements OnInit {
   isWorkLocationInvalid(): boolean {
 
     // Work location is optional
-
     if (!this.workLocationType) {
       return false;
     }
 
 
     // Must be a valid location type
-
     const validType =
       this.workLocationTypes.some(
         item =>
-          item.value ===
-          this.workLocationType
+          item.value === this.workLocationType
       );
+
 
     if (!validType) {
       return true;
@@ -272,14 +242,15 @@ export class WorkDetails implements OnInit {
 
     if (
       this.workLocationType ===
-      'india_same_state' ||
+        'india_same_state' ||
       this.workLocationType ===
-      'india_other_state'
+        'india_other_state'
     ) {
 
       if (!this.workState) {
         return true;
       }
+
 
       if (
         !this.indianStates.includes(
@@ -295,9 +266,9 @@ export class WorkDetails implements OnInit {
 
       if (
         this.workLocationType ===
-        'india_same_state' &&
+          'india_same_state' &&
         this.workState !==
-        this.registeredState
+          this.registeredState
       ) {
         return true;
       }
@@ -309,6 +280,7 @@ export class WorkDetails implements OnInit {
         return true;
       }
 
+
       if (
         this.isTextFieldInvalid(
           this.workDistrict,
@@ -317,8 +289,8 @@ export class WorkDetails implements OnInit {
       ) {
         return true;
       }
-
     }
+
 
     // =========================
     // OUTSIDE INDIA
@@ -339,18 +311,14 @@ export class WorkDetails implements OnInit {
           this.workCountry
         )
       ) {
-
         return true;
-
       }
 
 
       if (
         !this.workCity.trim()
       ) {
-
         return true;
-
       }
 
 
@@ -360,16 +328,12 @@ export class WorkDetails implements OnInit {
           100
         )
       ) {
-
         return true;
-
       }
-
     }
 
 
     return false;
-
   }
 
 
@@ -382,7 +346,6 @@ export class WorkDetails implements OnInit {
     return !this.validIncomeOptions.includes(
       this.annualIncome
     );
-
   }
 
 
@@ -393,11 +356,12 @@ export class WorkDetails implements OnInit {
   onWorkLocationTypeChange(): void {
 
     this.workState = '';
+
     this.workDistrict = '';
 
     this.workCountry = '';
-    this.workCity = '';
 
+    this.workCity = '';
   }
 
 
@@ -422,9 +386,7 @@ export class WorkDetails implements OnInit {
         this.companyName
       )
     ) {
-
       return;
-
     }
 
 
@@ -435,9 +397,7 @@ export class WorkDetails implements OnInit {
     if (
       this.isWorkLocationInvalid()
     ) {
-
       return;
-
     }
 
 
@@ -448,84 +408,59 @@ export class WorkDetails implements OnInit {
     if (
       this.isAnnualIncomeInvalid()
     ) {
-
-      return;
-
-    }
-
-
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
-
-    if (!saved) {
       return;
     }
 
 
-    try {
+    // =========================
+    // UPDATE PROFILE
+    // =========================
 
-      const profile =
-        JSON.parse(saved);
+    const updatedProfile =
+      this.profileService.updateProfile({
 
+        collegeUniversity:
+          this.collegeUniversity.trim(),
 
-      profile.collegeUniversity =
-        this.collegeUniversity.trim();
+        companyName:
+          this.companyName.trim(),
 
+        workLocationType:
+          this.workLocationType,
 
-      profile.companyName =
-        this.companyName.trim();
+        workState:
+          this.workState,
 
+        workDistrict:
+          this.workDistrict.trim(),
 
-      profile.workLocationType =
-        this.workLocationType;
+        workCountry:
+          this.workCountry,
 
+        workCity:
+          this.workCity.trim(),
 
-      profile.workState =
-        this.workState;
+        annualIncome:
+          this.annualIncome,
 
-
-      profile.workDistrict =
-        this.workDistrict.trim();
-
-
-      profile.workCountry =
-        this.workCountry;
-
-
-      profile.workCity =
-        this.workCity.trim();
-
-
-      profile.annualIncome =
-        this.annualIncome;
+        workDetailsCompleted:
+          true
+      });
 
 
-      profile.workDetailsCompleted =
-        true;
-
-
-      sessionStorage.setItem(
-        'mwi_registration',
-        JSON.stringify(profile)
-      );
-
-
-      this.router.navigate([
-        this.returnTo
-      ]);
-
-
-    } catch (error) {
+    if (!updatedProfile) {
 
       console.error(
-        'Unable to save work details',
-        error
+        'Unable to update profile'
       );
 
+      return;
     }
 
+
+    this.router.navigate([
+      this.returnTo
+    ]);
   }
 
 
@@ -538,7 +473,6 @@ export class WorkDetails implements OnInit {
     this.router.navigate([
       this.returnTo
     ]);
-
   }
 
 
@@ -550,31 +484,24 @@ export class WorkDetails implements OnInit {
     field: string
   ): string {
 
-    const saved =
-      sessionStorage.getItem(
-        'mwi_registration'
-      );
+    const profile =
+      this.profileService.getCurrentProfile();
 
-    if (!saved) {
+
+    if (!profile) {
       return '-';
     }
 
 
-    try {
+    const value =
+      profile[
+        field as keyof typeof profile
+      ];
 
-      const profile =
-        JSON.parse(saved);
 
-      return (
-        profile[field] || '-'
-      );
-
-    } catch {
-
-      return '-';
-
-    }
-
+    return value
+      ? String(value)
+      : '-';
   }
 
 }
