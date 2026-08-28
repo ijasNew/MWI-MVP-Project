@@ -3,10 +3,17 @@
 }
 
 .admin-verification-page {
-  max-width: 1400px;
-  margin: 0 auto;
+  box-sizing: border-box;
+
+  margin-left: 230px;
+
+  width: calc(100% - 230px);
+
+  min-height: 100vh;
 
   padding: 35px 40px 60px;
+
+  background: #fafafa;
 }
 
 
@@ -611,7 +618,11 @@ tbody tr:last-child td {
 @media (max-width: 700px) {
 
   .admin-verification-page {
-    padding: 25px 16px 50px;
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 78px 16px 50px;
   }
 
   .page-header {

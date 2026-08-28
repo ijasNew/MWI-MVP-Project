@@ -1,0 +1,587 @@
+<app-admin-menu></app-admin-menu>
+
+<main class="admin-page">
+
+  <!-- HEADER -->
+
+  <header class="page-header">
+
+    <div>
+      <span class="page-label">
+        ADMIN / MATCHMAKING
+      </span>
+
+      <h1>
+        Find Match
+      </h1>
+
+      <p>
+        Enter a Member ID to find profiles based on their preferences.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="dashboard-button"
+      (click)="openDashboard()"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+      Dashboard
+    </button>
+
+  </header>
+
+
+  <!-- SEARCH -->
+
+  <section class="search-card">
+
+    <div class="search-title">
+
+      <div class="search-icon">
+        <i class="fa-solid fa-heart"></i>
+      </div>
+
+      <div>
+        <h2>
+          Find Matches
+        </h2>
+
+        <p>
+          Search a profile by Member ID and find suitable matches.
+        </p>
+      </div>
+
+    </div>
+
+
+    <form
+      class="search-form"
+      (ngSubmit)="findMatches()"
+    >
+
+      <label for="memberId">
+        Member ID
+      </label>
+
+      <div class="search-row">
+
+        <div class="member-input">
+
+          <i class="fa-solid fa-id-card"></i>
+
+          <input
+            id="memberId"
+            name="memberId"
+            type="text"
+            [(ngModel)]="memberId"
+            placeholder="Enter Member ID e.g. M1025"
+            autocomplete="off"
+          />
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="find-button"
+        >
+
+          <i class="fa-solid fa-magnifying-glass"></i>
+
+          Find Matches
+
+        </button>
+
+
+        @if (searched) {
+
+          <button
+            type="button"
+            class="reset-button"
+            (click)="clearSearch()"
+          >
+
+            <i class="fa-solid fa-rotate-left"></i>
+
+            Reset
+
+          </button>
+
+        }
+
+      </div>
+
+    </form>
+
+
+    <div class="matching-note">
+
+      <i class="fa-solid fa-circle-info"></i>
+
+      <span>
+        Current matching criteria: Age, Place, Marital Status,
+        Education and Height. More criteria can be added later.
+      </span>
+
+    </div>
+
+  </section>
+
+
+  <!-- MESSAGE -->
+
+  @if (searchMessage) {
+
+    <div class="message-box">
+
+      <i class="fa-solid fa-circle-info"></i>
+
+      <span>
+        {{ searchMessage }}
+      </span>
+
+    </div>
+
+  }
+
+
+  <!-- SELECTED PROFILE -->
+
+  @if (selectedProfile) {
+
+    <section class="selected-profile-card">
+
+      <div class="selected-heading">
+
+        <div>
+
+          <span class="section-label">
+            SEARCHED PROFILE
+          </span>
+
+          <h2>
+            {{ selectedProfile.name }}
+          </h2>
+
+        </div>
+
+        <span class="member-badge">
+          {{ selectedProfile.id }}
+        </span>
+
+      </div>
+
+
+      <div class="selected-content">
+
+        <div class="selected-avatar">
+
+          {{ selectedProfile.name.charAt(0) }}
+
+        </div>
+
+
+        <div class="selected-details">
+
+          <div class="detail-item">
+
+            <span>
+              Age
+            </span>
+
+            <strong>
+              {{ selectedProfile.age }} years
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Location
+            </span>
+
+            <strong>
+              {{ selectedProfile.place }},
+              {{ selectedProfile.district }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Marital Status
+            </span>
+
+            <strong>
+              {{ selectedProfile.maritalStatus }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Education
+            </span>
+
+            <strong>
+              {{ selectedProfile.highestEducation }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Height
+            </span>
+
+            <strong>
+              {{ selectedProfile.height }} cm
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="view-source-button"
+          (click)="viewProfile(selectedProfile.id)"
+        >
+
+          <i class="fa-regular fa-eye"></i>
+
+          View Profile
+
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- MATCH RESULTS -->
+
+  @if (selectedProfile && !searchMessage) {
+
+    <section class="results-section">
+
+      <div class="results-header">
+
+        <div>
+
+          <span class="section-label">
+            MATCH RESULTS
+          </span>
+
+          <h2>
+            Suitable Profiles
+          </h2>
+
+          <p>
+            Profiles are ranked according to the selected profile's
+            current preferences.
+          </p>
+
+        </div>
+
+
+        <div class="result-number">
+
+          <strong>
+            {{ matchResults.length }}
+          </strong>
+
+          <span>
+            matches
+          </span>
+
+        </div>
+
+      </div>
+
+
+      @if (matchResults.length > 0) {
+
+        <div class="match-grid">
+
+          @for (
+            result of matchResults;
+            track result.profile.id
+          ) {
+
+            <article
+              class="match-card"
+              (click)="viewProfile(result.profile.id)"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="'View profile ' + result.profile.name"
+            >
+
+
+              <!-- CARD TOP -->
+
+              <div class="card-top">
+
+                <div class="profile-avatar">
+
+                  {{ result.profile.name.charAt(0) }}
+
+                </div>
+
+
+                <div class="score-area">
+
+                  <span
+                    class="score"
+                    [class]="getScoreClass(result.score)"
+                  >
+                    {{ result.score }}%
+                  </span>
+
+                  <small>
+                    {{ getScoreLabel(result.score) }}
+                  </small>
+
+                </div>
+
+              </div>
+
+
+              <!-- PROFILE -->
+
+              <div class="match-profile">
+
+                <h3>
+                  {{ result.profile.name }}
+                </h3>
+
+                <span class="profile-id">
+                  {{ result.profile.id }}
+                </span>
+
+              </div>
+
+
+              <!-- BASIC INFO -->
+
+              <div class="basic-info">
+
+                <span>
+                  <i class="fa-solid fa-cake-candles"></i>
+                  {{ result.profile.age }} years
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-location-dot"></i>
+                  {{ result.profile.place }}
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-ruler-vertical"></i>
+                  {{ result.profile.height }} cm
+                </span>
+
+                <span>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  {{ result.profile.highestEducation }}
+                </span>
+
+              </div>
+
+
+              <!-- MATCH CRITERIA -->
+
+              <div class="criteria">
+
+                <div
+                  class="criteria-item"
+                  [class.match]="result.ageMatch"
+                >
+
+                  <i
+                    class="fa-solid"
+                    [class.fa-check]="result.ageMatch"
+                    [class.fa-xmark]="!result.ageMatch"
+                  ></i>
+
+                  <span>
+                    Age
+                  </span>
+
+                </div>
+
+
+                <div
+                  class="criteria-item"
+                  [class.match]="result.placeMatch"
+                >
+
+                  <i
+                    class="fa-solid"
+                    [class.fa-check]="result.placeMatch"
+                    [class.fa-xmark]="!result.placeMatch"
+                  ></i>
+
+                  <span>
+                    Place
+                  </span>
+
+                </div>
+
+
+                <div
+                  class="criteria-item"
+                  [class.match]="result.maritalStatusMatch"
+                >
+
+                  <i
+                    class="fa-solid"
+                    [class.fa-check]="result.maritalStatusMatch"
+                    [class.fa-xmark]="!result.maritalStatusMatch"
+                  ></i>
+
+                  <span>
+                    Marital
+                  </span>
+
+                </div>
+
+
+                <div
+                  class="criteria-item"
+                  [class.match]="result.educationMatch"
+                >
+
+                  <i
+                    class="fa-solid"
+                    [class.fa-check]="result.educationMatch"
+                    [class.fa-xmark]="!result.educationMatch"
+                  ></i>
+
+                  <span>
+                    Education
+                  </span>
+
+                </div>
+
+
+                <div
+                  class="criteria-item"
+                  [class.match]="result.heightMatch"
+                >
+
+                  <i
+                    class="fa-solid"
+                    [class.fa-check]="result.heightMatch"
+                    [class.fa-xmark]="!result.heightMatch"
+                  ></i>
+
+                  <span>
+                    Height
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <!-- CARD FOOTER -->
+
+              <div class="card-footer">
+
+                <span>
+                  {{ result.matchedCount }}
+                  / {{ result.totalCriteria }}
+                  criteria matched
+                </span>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      } @else {
+
+        <div class="empty-results">
+
+          <div class="empty-icon">
+
+            <i class="fa-solid fa-users-slash"></i>
+
+          </div>
+
+          <h3>
+            No suitable matches found
+          </h3>
+
+          <p>
+            No profiles currently match the basic preference criteria.
+          </p>
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+
+  <!-- BEFORE SEARCH -->
+
+  @if (!searched) {
+
+    <section class="initial-state">
+
+      <div class="initial-icon">
+
+        <i class="fa-solid fa-heart-circle-check"></i>
+
+      </div>
+
+      <h2>
+        Start Finding Matches
+      </h2>
+
+      <p>
+        Enter a Member ID above to compare the profile with
+        other registered profiles.
+      </p>
+
+    </section>
+
+  }
+
+
+  <!-- NOTE -->
+
+  <div class="page-note">
+
+    <i class="fa-solid fa-circle-info"></i>
+
+    <span>
+      Matching is currently based on frontend sample data and
+      basic mutual preferences. The matching engine will be
+      connected to the database during backend integration.
+    </span>
+
+  </div>
+
+</main>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AdminMenu } from '../admin-menu/admin-menu';
 
 interface AdminProfile {
   id: string;
@@ -16,7 +17,7 @@ interface AdminProfile {
 @Component({
   selector: 'app-profiles',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule, AdminMenu],
   templateUrl: './profiles.html',
   styleUrl: './profiles.css'
 })

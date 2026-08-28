@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AdminMenu } from '../admin-menu/admin-menu';
 
 interface AdminProfile {
   id: string;
@@ -42,6 +43,7 @@ interface AdminProfile {
 @Component({
   selector: 'app-admin-profile-view',
   standalone: true,
+   imports: [AdminMenu],
   templateUrl: './profile-view.html',
   styleUrl: './profile-view.css'
 })

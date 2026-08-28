@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AdminMenu } from '../admin-menu/admin-menu';
 
 interface EditableProfile {
   id: string;
@@ -53,7 +54,7 @@ interface EditableProfile {
 @Component({
   selector: 'app-profile-edit',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, AdminMenu],
   templateUrl: './profile-edit.html',
   styleUrl: './profile-edit.css'
 })

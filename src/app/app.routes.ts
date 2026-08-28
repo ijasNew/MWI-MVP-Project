@@ -153,6 +153,30 @@ export const routes: Routes = [
       .then(m => m.AdminLogin)
 },
 {
+  path: 'admin/dashboard',
+  loadComponent: () =>
+    import('./admin/admin-dashboard/admin-dashboard')
+      .then(m => m.AdminDashboard)
+},
+{
+  path: 'admin/plans',
+  loadComponent: () =>
+    import('./admin/admin-plans/admin-plans')
+      .then(m => m.AdminPlans)
+},
+{
+  path: 'admin/profile-search',
+  loadComponent: () =>
+    import('./admin/admin-profile-search/admin-profile-search')
+      .then(m => m.AdminProfileSearch)
+},
+{
+  path: 'admin/find-match',
+  loadComponent: () =>
+    import('./admin/admin-find-match/admin-find-match')
+      .then(m => m.AdminFindMatch)
+},
+{
   path: 'admin/profiles',
   loadComponent: () =>
     import('./admin/profiles/profiles')
@@ -175,6 +199,12 @@ export const routes: Routes = [
   loadComponent: () =>
     import('./admin/verification/verification')
       .then(m => m.Verification)
+},
+{
+  path: 'admin/verification/start/:memberId',
+  loadComponent: () =>
+    import('./admin/verification-start/verification-start')
+      .then(m => m.VerificationStart)
 },
 {
     path: '**',

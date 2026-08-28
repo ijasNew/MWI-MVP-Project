@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AdminMenu } from '../admin-menu/admin-menu';
 
 
 interface VerificationRequest {
@@ -18,7 +19,7 @@ interface VerificationRequest {
  @Component({
   selector: 'app-verification',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, AdminMenu],
   templateUrl: './verification.html',
   styleUrl: './verification.css'
 })

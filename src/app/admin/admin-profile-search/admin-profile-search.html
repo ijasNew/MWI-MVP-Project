@@ -1,0 +1,836 @@
+<app-admin-menu></app-admin-menu>
+
+<main class="admin-page">
+
+  <!-- PAGE HEADER -->
+
+  <header class="page-header">
+
+    <div>
+      <span class="page-label">
+        ADMIN / SEARCH
+      </span>
+
+      <h1>
+        Profile Search
+      </h1>
+
+      <p>
+        Search and filter registered profiles using profile details.
+      </p>
+    </div>
+
+    <div class="result-count">
+      <strong>{{ filteredProfiles.length }}</strong>
+      <span>Profiles found</span>
+    </div>
+
+  </header>
+
+
+  <!-- SEARCH CARD -->
+
+  <section class="search-card">
+
+    <div class="main-search">
+
+      <i class="fa-solid fa-magnifying-glass"></i>
+
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Search by ID, name, phone, place, education, job..."
+      />
+
+      @if (searchTerm) {
+
+        <button
+          type="button"
+          class="clear-search"
+          (click)="searchTerm = ''"
+          aria-label="Clear search"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+      }
+
+    </div>
+
+
+    <div class="search-help">
+
+      <i class="fa-solid fa-circle-info"></i>
+
+      <span>
+        You can search using Member ID, name, phone, place, religion,
+        education, job title, company and other profile details.
+      </span>
+
+    </div>
+
+
+    <!-- ADVANCED FILTER TOGGLE -->
+
+    <button
+      type="button"
+      class="advanced-toggle"
+      (click)="toggleAdvancedFilters()"
+    >
+
+      <span>
+
+        <i class="fa-solid fa-sliders"></i>
+
+        Advanced Filters
+
+      </span>
+
+      <i
+        class="fa-solid"
+        [class.fa-chevron-up]="showAdvancedFilters"
+        [class.fa-chevron-down]="!showAdvancedFilters"
+      ></i>
+
+    </button>
+
+
+    @if (showAdvancedFilters) {
+
+      <div class="advanced-filters">
+
+
+        <!-- GENDER -->
+
+        <div class="filter-group">
+
+          <label>
+            Gender
+          </label>
+
+          <select [(ngModel)]="gender">
+
+            <option value="All">
+              Any Gender
+            </option>
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- AGE -->
+
+        <div class="filter-group age-group">
+
+          <label>
+            Age
+          </label>
+
+          <div class="age-inputs">
+
+            <input
+              type="number"
+              [(ngModel)]="ageMin"
+              min="18"
+              max="100"
+              placeholder="Min"
+            />
+
+            <span>
+              —
+            </span>
+
+            <input
+              type="number"
+              [(ngModel)]="ageMax"
+              min="18"
+              max="100"
+              placeholder="Max"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- DISTRICT -->
+
+        <div class="filter-group">
+
+          <label>
+            District
+          </label>
+
+          <select [(ngModel)]="district">
+
+            <option value="All">
+              All Districts
+            </option>
+
+            <option value="Malappuram">
+              Malappuram
+            </option>
+
+            <option value="Kozhikode">
+              Kozhikode
+            </option>
+
+            <option value="Kannur">
+              Kannur
+            </option>
+
+            <option value="Palakkad">
+              Palakkad
+            </option>
+
+            <option value="Wayanad">
+              Wayanad
+            </option>
+
+            <option value="Thrissur">
+              Thrissur
+            </option>
+
+            <option value="Ernakulam">
+              Ernakulam
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- RELIGION -->
+
+        <div class="filter-group">
+
+          <label>
+            Religion
+          </label>
+
+          <select [(ngModel)]="religion">
+
+            <option value="All">
+              Any Religion
+            </option>
+
+            <option value="Islam">
+              Islam
+            </option>
+
+            <option value="Hindu">
+              Hindu
+            </option>
+
+            <option value="Christian">
+              Christian
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- MARITAL STATUS -->
+
+        <div class="filter-group">
+
+          <label>
+            Marital Status
+          </label>
+
+          <select [(ngModel)]="maritalStatus">
+
+            <option value="All">
+              Any Status
+            </option>
+
+            <option value="Never Married">
+              Never Married
+            </option>
+
+            <option value="Divorced">
+              Divorced
+            </option>
+
+            <option value="Widowed">
+              Widowed
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- EDUCATION -->
+
+        <div class="filter-group">
+
+          <label>
+            Education
+          </label>
+
+          <select [(ngModel)]="education">
+
+            <option value="All">
+              Any Education
+            </option>
+
+            <option value="SSLC">
+              SSLC
+            </option>
+
+            <option value="Plus Two">
+              Plus Two
+            </option>
+
+            <option value="Diploma">
+              Diploma
+            </option>
+
+            <option value="B.Com">
+              B.Com
+            </option>
+
+            <option value="B.Sc">
+              B.Sc
+            </option>
+
+            <option value="B.Tech">
+              B.Tech
+            </option>
+
+            <option value="M.A">
+              M.A
+            </option>
+
+            <option value="MBA">
+              MBA
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- JOB SECTOR -->
+
+        <div class="filter-group">
+
+          <label>
+            Job Sector
+          </label>
+
+          <select [(ngModel)]="jobSector">
+
+            <option value="All">
+              Any Sector
+            </option>
+
+            <option value="Private">
+              Private
+            </option>
+
+            <option value="IT">
+              IT
+            </option>
+
+            <option value="Education">
+              Education
+            </option>
+
+            <option value="Government">
+              Government
+            </option>
+
+            <option value="Business">
+              Business
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- VERIFICATION -->
+
+        <div class="filter-group">
+
+          <label>
+            Home Verification
+          </label>
+
+          <select [(ngModel)]="verification">
+
+            <option value="All">
+              Any Verification
+            </option>
+
+            <option value="Verified">
+              Verified
+            </option>
+
+            <option value="Pending">
+              Not Verified
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- PROFILE STATUS -->
+
+        <div class="filter-group">
+
+          <label>
+            Profile Status
+          </label>
+
+          <select [(ngModel)]="profileStatus">
+
+            <option value="All">
+              Any Status
+            </option>
+
+            <option value="New">
+              New
+            </option>
+
+            <option value="Pending">
+              Pending
+            </option>
+
+            <option value="Verified">
+              Verified
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- PLAN -->
+
+        <div class="filter-group">
+
+          <label>
+            Plan
+          </label>
+
+          <select [(ngModel)]="plan">
+
+            <option value="All">
+              All Plans
+            </option>
+
+            <option value="Free">
+              Free
+            </option>
+
+            <option value="Basic">
+              Basic
+            </option>
+
+          </select>
+
+        </div>
+
+
+      </div>
+
+
+      <!-- FILTER ACTIONS -->
+
+      <div class="filter-actions">
+
+        <button
+          type="button"
+          class="clear-button"
+          (click)="clearFilters()"
+        >
+
+          <i class="fa-solid fa-rotate-left"></i>
+
+          Clear Filters
+
+        </button>
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- RESULTS -->
+
+  <section class="results-card">
+
+    <div class="results-header">
+
+      <div>
+
+        <span class="section-label">
+          SEARCH RESULTS
+        </span>
+
+        <h2>
+          Profiles
+        </h2>
+
+      </div>
+
+      <span class="results-total">
+
+        {{ filteredProfiles.length }}
+        result{{ filteredProfiles.length === 1 ? '' : 's' }}
+
+      </span>
+
+    </div>
+
+
+    @if (filteredProfiles.length > 0) {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                ID
+              </th>
+
+              <th>
+                Profile
+              </th>
+
+              <th>
+                Age
+              </th>
+
+              <th>
+                Gender
+              </th>
+
+              <th>
+                Location
+              </th>
+
+              <th>
+                Religion
+              </th>
+
+              <th>
+                Education
+              </th>
+
+              <th>
+                Career
+              </th>
+
+              <th>
+                Verification
+              </th>
+
+              <th>
+                Plan
+              </th>
+
+              <th>
+                Action
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              profile of filteredProfiles;
+              track profile.id
+            ) {
+
+              <tr>
+
+                <!-- ID -->
+
+                <td>
+
+                  <span class="profile-id">
+                    {{ profile.id }}
+                  </span>
+
+                </td>
+
+
+                <!-- PROFILE -->
+
+                <td>
+
+                  <div class="profile-cell">
+
+                    <div class="avatar">
+
+                      {{ profile.name.charAt(0) }}
+
+                    </div>
+
+                    <div>
+
+                      <strong>
+                        {{ profile.name }}
+                      </strong>
+
+                      <span>
+                        {{ profile.maritalStatus }}
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+
+                <!-- AGE -->
+
+                <td>
+
+                  <span class="age-value">
+                    {{ profile.age }}
+                  </span>
+
+                </td>
+
+
+                <!-- GENDER -->
+
+                <td>
+                  {{ profile.gender }}
+                </td>
+
+
+                <!-- LOCATION -->
+
+                <td>
+
+                  <div class="location-cell">
+
+                    <strong>
+                      {{ profile.place }}
+                    </strong>
+
+                    <span>
+                      {{ profile.district }}
+                    </span>
+
+                  </div>
+
+                </td>
+
+
+                <!-- RELIGION -->
+
+                <td>
+
+                  <div class="religion-cell">
+
+                    <strong>
+                      {{ profile.religion }}
+                    </strong>
+
+                    <span>
+                      {{ profile.community }}
+                    </span>
+
+                  </div>
+
+                </td>
+
+
+                <!-- EDUCATION -->
+
+                <td>
+
+                  <div class="education-cell">
+
+                    <strong>
+                      {{ profile.highestEducation }}
+                    </strong>
+
+                    <span>
+                      {{ profile.specialization }}
+                    </span>
+
+                  </div>
+
+                </td>
+
+
+                <!-- CAREER -->
+
+                <td>
+
+                  <div class="career-cell">
+
+                    <strong>
+                      {{ profile.jobTitle }}
+                    </strong>
+
+                    <span>
+                      {{ profile.jobSector }}
+                    </span>
+
+                  </div>
+
+                </td>
+
+
+                <!-- VERIFICATION -->
+
+                <td>
+
+                  @if (profile.homeVerified) {
+
+                    <span class="badge verified">
+
+                      <i class="fa-solid fa-circle-check"></i>
+
+                      Verified
+
+                    </span>
+
+                  } @else {
+
+                    <span class="badge not-verified">
+
+                      Not Verified
+
+                    </span>
+
+                  }
+
+                </td>
+
+
+                <!-- PLAN -->
+
+                <td>
+
+                  <span
+                    class="badge plan"
+                    [class.basic]="profile.plan === 'Basic'"
+                  >
+
+                    {{ profile.plan }}
+
+                  </span>
+
+                </td>
+
+
+                <!-- ACTION -->
+
+                <td>
+
+                  <div class="actions">
+
+                    <button
+                      type="button"
+                      class="action-button"
+                      title="View profile"
+                      (click)="viewProfile(profile.id)"
+                    >
+
+                      <i class="fa-regular fa-eye"></i>
+
+                    </button>
+
+
+                    <button
+                      type="button"
+                      class="action-button"
+                      title="Edit profile"
+                      (click)="editProfile(profile.id)"
+                    >
+
+                      <i class="fa-regular fa-pen-to-square"></i>
+
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    } @else {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+
+          <i class="fa-solid fa-user-slash"></i>
+
+        </div>
+
+        <h3>
+          No profiles found
+        </h3>
+
+        <p>
+          Try changing your search or filters.
+        </p>
+
+        <button
+          type="button"
+          (click)="clearFilters()"
+        >
+          Clear Filters
+        </button>
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- NOTE -->
+
+  <div class="page-note">
+
+    <i class="fa-solid fa-circle-info"></i>
+
+    <span>
+      Search is currently using frontend sample data.
+      It will be connected to the profile database during backend integration.
+    </span>
+
+  </div>
+
+</main>

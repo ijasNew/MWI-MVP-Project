@@ -53,3 +53,51 @@ body {
   }
 
 }
+
+/* =========================================
+   ADMIN PANEL GLOBAL LAYOUT
+========================================= */
+
+app-admin-menu {
+  display: block;
+}
+
+
+/* Main content area for every admin page */
+
+.admin-page {
+  box-sizing: border-box;
+
+  margin-left: 230px;
+
+  width: calc(100% - 230px);
+
+  min-height: 100vh;
+
+  padding: 35px 40px 60px;
+}
+
+/* Prevent horizontal overflow */
+
+body {
+  margin: 0;
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================
+   ADMIN MOBILE LAYOUT
+========================================= */
+
+@media (max-width: 800px) {
+
+   .admin-page {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 78px 16px 50px;
+  }
+
+}

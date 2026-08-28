@@ -3,11 +3,18 @@
 }
 
 .admin-profile-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 40px 70px;
-}
+  box-sizing: border-box;
 
+  margin-left: 230px;
+
+  width: calc(100% - 230px);
+
+  min-height: 100vh;
+
+  padding: 32px 40px 70px;
+
+  background: #fafafa;
+}
 
 /* =========================
    HEADER
@@ -455,7 +462,11 @@
 @media (max-width: 800px) {
 
   .admin-profile-page {
-    padding: 25px 16px 50px;
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 78px 16px 50px;
   }
 
   .profile-header {
