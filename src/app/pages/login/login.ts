@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
+import { AuthService } from '../../services/auth';
+
 @Component({
   selector: 'app-login',
   imports: [FormsModule, RouterLink],
@@ -9,10 +11,6 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './login.css'
 })
 export class Login {
-
-  // =========================
-  // LOGIN DATA
-  // =========================
 
   phone = '';
 
@@ -26,8 +24,9 @@ export class Login {
 
 
   constructor(
-    private router: Router
-  ) { }
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
 
   // =========================
@@ -67,7 +66,7 @@ export class Login {
 
 
     // =========================
-    // TEMPORARY UI TEST
+    // TEMPORARY FRONTEND LOGIN
     // =========================
 
     this.loading = true;
@@ -77,27 +76,49 @@ export class Login {
       this.loading = false;
 
       /*
-       * API login will be connected here later.
+       * TEMPORARY LOGIN
        *
-       * Example:
+       * Backend is not connected yet.
        *
-       * this.apiService.login({
-       *   phone: this.phone,
-       *   password: this.password
-       * }).subscribe(...)
-       *
+       * This only creates frontend login state
+       * so we can test AuthGuard.
        */
 
-      // Temporary:
-      // this.router.navigate(['/user-home']);
+      const user = {
+        phone: phone
+      };
+
+      this.authService.loginUser(user);
+
+      // =========================
+      // GO TO USER HOME
+      // =========================
+
+      this.router.navigate(['/user-home']);
 
     }, 700);
-
   }
+
+
+  // =========================
+  // GO TO HOME
+  // =========================
+
   goToHome(): void {
 
     this.router.navigate(['/']);
 
-}
+  }
+
+
+  // =========================
+  // TOGGLE PASSWORD
+  // =========================
+
+  togglePassword(): void {
+
+    this.showPassword = !this.showPassword;
+
+  }
 
 }

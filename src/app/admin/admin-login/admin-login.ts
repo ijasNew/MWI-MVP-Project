@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
+import { AuthService } from '../../services/auth';
+
 @Component({
   selector: 'app-admin-login',
   standalone: true,
@@ -18,43 +20,91 @@ export class AdminLogin {
   isLoading = false;
   errorMessage = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  // =========================
+  // TOGGLE PASSWORD
+  // =========================
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
+
+  // =========================
+  // LOGIN
+  // =========================
+
   login(): void {
 
+    // Clear previous error
     this.errorMessage = '';
 
-    if (!this.username.trim() || !this.password.trim()) {
-      this.errorMessage = 'Please enter your username and password.';
+    const username = this.username.trim();
+    const password = this.password;
+
+
+    // =========================
+    // EMPTY FIELD VALIDATION
+    // =========================
+
+    if (!username || !password) {
+
+      this.errorMessage =
+        'Please enter your username and password.';
+
       return;
     }
 
-    this.isLoading = true;
+
+    // =========================
+    // TEMPORARY ADMIN CREDENTIAL
+    // =========================
 
     /*
-     * TEMPORARY FRONTEND LOGIN
-     * Backend authentication will be connected later.
+     * Backend is not connected yet.
+     *
+     * Temporary testing credentials:
+     *
+     * Username: admin
+     * Password: admin123
      */
+
+    if (
+      username !== 'admin' ||
+      password !== 'admin123'
+    ) {
+
+      this.errorMessage =
+        'Invalid username or password.';
+
+      return;
+    }
+
+
+    // =========================
+    // VALID LOGIN
+    // =========================
+
+    this.isLoading = true;
+
 
     setTimeout(() => {
 
       this.isLoading = false;
 
-      // Temporary demo login
-      if (
-        this.username.trim() === 'admin' &&
-        this.password === 'admin123'
-      ) {
-        sessionStorage.setItem('mwi_admin_logged_in', 'true');
 
-        this.router.navigate(['/admin/dashboard']);
-      } else {
-        this.errorMessage = 'Invalid username or password.';
-      }
+      // Save admin authentication
+      this.authService.loginAdmin({
+        username: username
+      });
+
+
+      // Go to dashboard
+      this.router.navigate(['/admin/dashboard']);
 
     }, 500);
   }

@@ -5,6 +5,8 @@ import {
 } from '@angular/router';
 import { filter } from 'rxjs';
 
+import { AuthService } from '../../services/auth';
+
 @Component({
   selector: 'app-user-menu',
   imports: [],
@@ -21,7 +23,8 @@ export class UserMenu implements OnInit {
 
 
   constructor(
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
 
@@ -55,8 +58,31 @@ export class UserMenu implements OnInit {
   }
 
 
+  // =========================
+  // LOAD USER
+  // =========================
+
   loadUser(): void {
 
+    /*
+     * First try authenticated user data.
+     */
+    const authUser =
+      this.authService.getCurrentUser();
+
+    if (authUser) {
+
+      this.user = authUser;
+
+      return;
+    }
+
+
+    /*
+     * Temporary fallback:
+     * registration data is still used
+     * for the current frontend flow.
+     */
     const savedData =
       sessionStorage.getItem(
         'mwi_registration'
@@ -85,59 +111,49 @@ export class UserMenu implements OnInit {
   }
 
 
+  // =========================
+  // ACTIVE MENU
+  // =========================
+
   setActiveMenu(url: string): void {
 
-    if (
-      url.includes('/user-home')
-    ) {
+    if (url.includes('/user-home')) {
 
       this.activeMenu = 'home';
 
     }
 
-    else if (
-      url.includes('/interests')
-    ) {
+    else if (url.includes('/interests')) {
 
       this.activeMenu = 'interests';
 
     }
 
-    else if (
-      url.includes('/shortlisted')
-    ) {
+    else if (url.includes('/shortlisted')) {
 
       this.activeMenu = 'shortlisted';
 
     }
 
-    else if (
-      url.includes('/my-details')
-    ) {
+    else if (url.includes('/my-details')) {
 
       this.activeMenu = 'details';
 
     }
 
-    else if (
-      url.includes('/help-us-improve')
-    ) {
+    else if (url.includes('/help-us-improve')) {
 
       this.activeMenu = 'help';
 
     }
 
-    else if (
-      url.includes('/upgrade-profile')
-    ) {
+    else if (url.includes('/upgrade-profile')) {
 
       this.activeMenu = 'upgrade';
 
     }
 
-    else if (
-      url.includes('/settings')
-    ) {
+    else if (url.includes('/settings')) {
 
       this.activeMenu = 'settings';
 
@@ -151,6 +167,10 @@ export class UserMenu implements OnInit {
 
   }
 
+
+  // =========================
+  // MENU NAVIGATION
+  // =========================
 
   selectMenu(menu: string): void {
 
@@ -219,12 +239,15 @@ export class UserMenu implements OnInit {
         ]);
 
         break;
-        
 
     }
 
   }
 
+
+  // =========================
+  // TOGGLE MENU
+  // =========================
 
   toggleMenu(): void {
 
@@ -233,6 +256,10 @@ export class UserMenu implements OnInit {
 
   }
 
+
+  // =========================
+  // GET INITIALS
+  // =========================
 
   getInitials(
     name: string | undefined
@@ -260,13 +287,17 @@ export class UserMenu implements OnInit {
   }
 
 
+  // =========================
+  // LOGOUT
+  // =========================
+
   logout(): void {
 
-    sessionStorage.removeItem(
-      'mwi_registration'
-    );
-
-    this.router.navigate(['/']);
+    /*
+     * AuthService is now responsible
+     * for clearing authentication.
+     */
+    this.authService.logoutUser();
 
   }
 

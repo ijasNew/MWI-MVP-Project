@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive
+} from '@angular/router';
+
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-admin-menu',
@@ -37,7 +43,7 @@ export class AdminMenu {
     {
       label: 'Search Profiles',
       icon: 'fa-solid fa-magnifying-glass',
-     route: '/admin/profile-search'
+      route: '/admin/profile-search'
     },
     {
       label: 'Find Match',
@@ -46,15 +52,20 @@ export class AdminMenu {
     }
   ];
 
+
   constructor(
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
+
+
+  // =========================
+  // ADMIN LOGOUT
+  // =========================
 
   logout(): void {
 
-    this.router.navigate([
-      '/admin/login'
-    ]);
+    this.authService.logoutAdmin();
 
   }
 
