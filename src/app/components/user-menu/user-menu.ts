@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import {
   NavigationEnd,
   Router
@@ -26,8 +26,10 @@ export class UserMenu implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private profileService: ProfileService
-  ) {}
+    private profileService: ProfileService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
+  ) { }
 
 
   ngOnInit(): void {
@@ -63,19 +65,73 @@ export class UserMenu implements OnInit {
   // =========================
   // LOAD USER
   // =========================
+  loadUser(): void {
+    console.log('🔥 USER MENU → loadUser()');
+    this.profileService.getCurrentProfileFromApi().subscribe({
 
- loadUser(): void {
+      next: (profile: any) => {
 
-  const profile =
-    this.profileService.getCurrentProfile();
+        console.log(
+          'USER MENU PROFILE:',
+          profile
+        );
 
-  if (!profile) {
-    this.user = null;
-    return;
+        if (profile) {
+
+          this.ngZone.run(() => {
+
+            this.user = {
+              fullName:
+                profile.fullName || 'User',
+
+              memberId:
+                profile.memberId || ''
+            };
+
+            console.log(
+              'USER MENU DISPLAY DATA:',
+              this.user
+            );
+
+            this.cdr.detectChanges();
+
+          });
+
+        } else {
+
+          this.ngZone.run(() => {
+
+            this.user = null;
+
+            this.cdr.detectChanges();
+
+          });
+
+        }
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'USER MENU PROFILE API ERROR:',
+          error
+        );
+
+        this.ngZone.run(() => {
+
+          this.user = null;
+
+          this.cdr.detectChanges();
+
+        });
+
+      }
+
+    });
+
   }
 
-  this.user = profile;
-}
+
 
   // =========================
   // ACTIVE MENU

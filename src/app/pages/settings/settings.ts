@@ -39,7 +39,7 @@ export class Settings implements OnInit {
   ngOnInit(): void {
 
     const profile =
-      this.profileService.getCurrentProfile();
+      this.profileService.getCurrentProfile() 
 
     if (!profile) {
       return;

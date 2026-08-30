@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
 import { ProfileService } from '../../services/profile';
@@ -15,24 +19,62 @@ import { Profile } from '../../models/profile.model';
 export class MyDetails implements OnInit {
 
   constructor(
-  private router: Router,
-  private profileService: ProfileService
-) {}
+    private router: Router,
+    private profileService: ProfileService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   user: Profile | null = null;
   selectedPhoto: string | null = null;
 
   isPhotoViewerOpen = false;
   selectedPhotoIndex = 0;
-touchStartX = 0;
-touchEndX = 0;
- 
+  touchStartX = 0;
+  touchEndX = 0;
+
+
   ngOnInit(): void {
 
-  this.user =
-    this.profileService.getCurrentProfile();
+  console.log('🔥 MY DETAILS → loading profile');
+
+  this.profileService.getCurrentProfileFromApi().subscribe({
+
+    next: (profile: Profile | null) => {
+
+      console.log(
+        'MY DETAILS PROFILE API:',
+        profile
+      );
+
+      this.user = profile;
+
+      console.log(
+        'MY DETAILS USER:',
+        this.user
+      );
+
+      // Force immediate UI update
+      this.cdr.detectChanges();
+
+    },
+
+    error: (error: any) => {
+
+      console.error(
+        'MY DETAILS PROFILE API ERROR:',
+        error
+      );
+
+      this.user = null;
+
+      this.cdr.detectChanges();
+
+    }
+
+  });
 
 }
+
 
   formatHeight(totalInches: number): string {
 
@@ -104,223 +146,223 @@ touchEndX = 0;
   }
   nextPhoto(): void {
 
-  if (!this.user?.photos?.length) {
-    return;
-  }
+    if (!this.user?.photos?.length) {
+      return;
+    }
 
-  if (
-    this.selectedPhotoIndex <
-    this.user.photos.length - 1
-  ) {
+    if (
+      this.selectedPhotoIndex <
+      this.user.photos.length - 1
+    ) {
 
-    this.selectedPhotoIndex++;
+      this.selectedPhotoIndex++;
 
-    this.selectedPhoto =
-      this.user.photos[
+      this.selectedPhoto =
+        this.user.photos[
         this.selectedPhotoIndex
-      ];
+        ];
+
+    }
 
   }
+  previousPhoto(): void {
 
-}
-previousPhoto(): void {
+    if (!this.user?.photos?.length) {
+      return;
+    }
 
-  if (!this.user?.photos?.length) {
-    return;
-  }
+    if (this.selectedPhotoIndex > 0) {
 
-  if (this.selectedPhotoIndex > 0) {
+      this.selectedPhotoIndex--;
 
-    this.selectedPhotoIndex--;
-
-    this.selectedPhoto =
-      this.user.photos[
+      this.selectedPhoto =
+        this.user.photos[
         this.selectedPhotoIndex
-      ];
+        ];
+
+    }
+
+  }
+  handlePhotoTouchStart(event: TouchEvent): void {
+
+    this.touchStartX =
+      event.changedTouches[0].screenX;
+
+  }
+  handlePhotoTouchEnd(event: TouchEvent): void {
+
+    this.touchEndX =
+      event.changedTouches[0].screenX;
+
+    const swipeDistance =
+      this.touchStartX -
+      this.touchEndX;
+
+    const minimumSwipeDistance = 50;
+
+    if (
+      Math.abs(swipeDistance) <
+      minimumSwipeDistance
+    ) {
+      return;
+    }
+
+    if (swipeDistance > 0) {
+
+      // Swipe left → next
+      this.nextPhoto();
+
+    } else {
+
+      // Swipe right → previous
+      this.previousPhoto();
+
+    }
 
   }
 
-}
-handlePhotoTouchStart(event: TouchEvent): void {
+  openPhysicalDetails(): void {
 
-  this.touchStartX =
-    event.changedTouches[0].screenX;
+    sessionStorage.setItem(
+      'mwi_edit_source',
+      'my-details'
+    );
 
-}
-handlePhotoTouchEnd(event: TouchEvent): void {
-
-  this.touchEndX =
-    event.changedTouches[0].screenX;
-
-  const swipeDistance =
-    this.touchStartX -
-    this.touchEndX;
-
-  const minimumSwipeDistance = 50;
-
-  if (
-    Math.abs(swipeDistance) <
-    minimumSwipeDistance
-  ) {
-    return;
-  }
-
-  if (swipeDistance > 0) {
-
-    // Swipe left → next
-    this.nextPhoto();
-
-  } else {
-
-    // Swipe right → previous
-    this.previousPhoto();
+    this.router.navigate([
+      '/physical-details'
+    ]);
 
   }
+  openContactDetails(): void {
 
-}
+    sessionStorage.setItem(
+      'mwi_edit_source',
+      'my-details'
+    );
 
-openPhysicalDetails(): void {
+    this.router.navigate([
+      '/contact-details'
+    ]);
 
-  sessionStorage.setItem(
-    'mwi_edit_source',
-    'my-details'
-  );
+  }
+  openWorkDetails(): void {
 
-  this.router.navigate([
-    '/physical-details'
-  ]);
+    sessionStorage.setItem(
+      'mwi_edit_source',
+      'my-details'
+    );
 
-}
-openContactDetails(): void {
+    this.router.navigate([
+      '/work-details'
+    ]);
 
-  sessionStorage.setItem(
-    'mwi_edit_source',
-    'my-details'
-  );
+  }
+  openFamilyDetails(): void {
 
-  this.router.navigate([
-    '/contact-details'
-  ]);
+    sessionStorage.setItem(
+      'mwi_edit_source',
+      'my-details'
+    );
 
-}
-openWorkDetails(): void {
+    this.router.navigate([
+      '/family-details'
+    ]);
 
-  sessionStorage.setItem(
-    'mwi_edit_source',
-    'my-details'
-  );
+  }
+  openAdditionalPreferences(): void {
 
-  this.router.navigate([
-    '/work-details'
-  ]);
+    sessionStorage.setItem(
+      'mwi_edit_source',
+      'my-details'
+    );
 
-}
-openFamilyDetails(): void {
+    this.router.navigate([
+      '/additional-preferences'
+    ]);
 
-  sessionStorage.setItem(
-    'mwi_edit_source',
-    'my-details'
-  );
+  }
 
-  this.router.navigate([
-    '/family-details'
-  ]);
+  openExpectations(): void {
 
-}
-openAdditionalPreferences(): void {
+    sessionStorage.setItem(
+      'mwi_edit_source',
+      'my-details'
+    );
 
-  sessionStorage.setItem(
-    'mwi_edit_source',
-    'my-details'
-  );
+    this.router.navigate([
+      '/expectations'
+    ]);
 
-  this.router.navigate([
-    '/additional-preferences'
-  ]);
+  }
+  openProfilePhotos(): void {
 
-}
+    sessionStorage.setItem(
+      'mwi_edit_source',
+      'my-details'
+    );
 
-openExpectations(): void {
+    this.router.navigate([
+      '/profile-photos'
+    ]);
 
-  sessionStorage.setItem(
-    'mwi_edit_source',
-    'my-details'
-  );
+  }
+  formatWorkLocation(): string {
 
-  this.router.navigate([
-    '/expectations'
-  ]);
+    if (!this.user?.workLocationType) {
+      return '-';
+    }
 
-}
-openProfilePhotos(): void {
 
-  sessionStorage.setItem(
-    'mwi_edit_source',
-    'my-details'
-  );
+    if (
+      this.user.workLocationType ===
+      'india_same_state'
+    ) {
 
-  this.router.navigate([
-    '/profile-photos'
-  ]);
+      return [
+        'India',
+        this.user.workState,
+        this.user.workDistrict
+      ]
+        .filter(Boolean)
+        .join(' – ');
 
-}
-formatWorkLocation(): string {
+    }
 
-  if (!this.user?.workLocationType) {
+
+    if (
+      this.user.workLocationType ===
+      'india_other_state'
+    ) {
+
+      return [
+        'India',
+        this.user.workState,
+        this.user.workDistrict
+      ]
+        .filter(Boolean)
+        .join(' – ');
+
+    }
+
+
+    if (
+      this.user.workLocationType ===
+      'outside_india'
+    ) {
+
+      return [
+        this.user.workCountry,
+        this.user.workCity
+      ]
+        .filter(Boolean)
+        .join(' – ');
+
+    }
+
+
     return '-';
-  }
-
-
-  if (
-    this.user.workLocationType ===
-    'india_same_state'
-  ) {
-
-    return [
-      'India',
-      this.user.workState,
-      this.user.workDistrict
-    ]
-      .filter(Boolean)
-      .join(' – ');
 
   }
-
-
-  if (
-    this.user.workLocationType ===
-    'india_other_state'
-  ) {
-
-    return [
-      'India',
-      this.user.workState,
-      this.user.workDistrict
-    ]
-      .filter(Boolean)
-      .join(' – ');
-
-  }
-
-
-  if (
-    this.user.workLocationType ===
-    'outside_india'
-  ) {
-
-    return [
-      this.user.workCountry,
-      this.user.workCity
-    ]
-      .filter(Boolean)
-      .join(' – ');
-
-  }
-
-
-  return '-';
-
-}
 
 
 }

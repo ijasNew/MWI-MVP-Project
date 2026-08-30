@@ -123,7 +123,7 @@ export class WorkDetails implements OnInit {
   constructor(
     private router: Router,
     private profileService: ProfileService
-  ) {}
+  ) { }
 
 
   // =========================
@@ -140,40 +140,50 @@ export class WorkDetails implements OnInit {
     }
 
 
-    const profile =
-      this.profileService.getCurrentProfile();
+    this.profileService.getCurrentProfileFromApi().subscribe({
 
-    if (!profile) {
-      return;
-    }
+      next: (profile) => {
 
+        if (!profile) {
+          return;
+        }
 
-    this.collegeUniversity =
-      profile.collegeUniversity || '';
+        this.collegeUniversity =
+          profile.collegeUniversity || '';
 
-    this.companyName =
-      profile.companyName || '';
+        this.companyName =
+          profile.companyName || '';
 
-    this.workLocationType =
-      profile.workLocationType || '';
+        this.workLocationType =
+          profile.workLocationType || '';
 
-    this.workState =
-      profile.workState || '';
+        this.workState =
+          profile.workState || '';
 
-    this.workDistrict =
-      profile.workDistrict || '';
+        this.workDistrict =
+          profile.workDistrict || '';
 
-    this.workCountry =
-      profile.workCountry || '';
+        this.workCountry =
+          profile.workCountry || '';
 
-    this.workCity =
-      profile.workCity || '';
+        this.workCity =
+          profile.workCity || '';
 
-    this.annualIncome =
-      profile.annualIncome || '';
+        this.annualIncome =
+          profile.annualIncome || '';
 
-    this.registeredState =
-      profile.state || '';
+        this.registeredState =
+          profile.state || '';
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'Failed to load profile:',
+          error
+        );
+      }
+    });
   }
 
 
@@ -190,10 +200,8 @@ export class WorkDetails implements OnInit {
       return false;
     }
 
-
     const trimmed =
       value.trim();
-
 
     if (
       trimmed.length === 0 ||
@@ -202,10 +210,8 @@ export class WorkDetails implements OnInit {
       return true;
     }
 
-
     const validPattern =
       /^[A-Za-z0-9À-ÿ₹&.,'()\/\-]+(?:\s+[A-Za-z0-9À-ÿ₹&.,'()\/\-]+)*$/;
-
 
     return !validPattern.test(trimmed);
   }
@@ -223,13 +229,12 @@ export class WorkDetails implements OnInit {
     }
 
 
-    // Must be a valid location type
+    // Validate location type
     const validType =
       this.workLocationTypes.some(
         item =>
           item.value === this.workLocationType
       );
-
 
     if (!validType) {
       return true;
@@ -413,7 +418,7 @@ export class WorkDetails implements OnInit {
 
 
     // =========================
-    // UPDATE PROFILE
+    // TEMPORARY PROFILE UPDATE
     // =========================
 
     const updatedProfile =
@@ -458,6 +463,10 @@ export class WorkDetails implements OnInit {
     }
 
 
+    // =========================
+    // NAVIGATE
+    // =========================
+
     this.router.navigate([
       this.returnTo
     ]);
@@ -484,24 +493,7 @@ export class WorkDetails implements OnInit {
     field: string
   ): string {
 
-    const profile =
-      this.profileService.getCurrentProfile();
-
-
-    if (!profile) {
-      return '-';
-    }
-
-
-    const value =
-      profile[
-        field as keyof typeof profile
-      ];
-
-
-    return value
-      ? String(value)
-      : '-';
+    return '-';
   }
 
 }

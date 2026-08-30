@@ -255,30 +255,7 @@
     font-weight: 400;
     color: #aaa;
 }
-
-
-/* =========================
-   TEST OTP
-========================= */
-
-.test-otp {
-    margin: 15px 0 22px;
-    padding: 10px 14px;
-    background: #fafafa;
-    border: 1px dashed #d8d8d8;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: #777;
-}
-
-.test-otp strong {
-    color: #7c3aed;
-    letter-spacing: 1px;
-}
-
+ 
 
 /* =========================
    BUTTON

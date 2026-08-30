@@ -197,10 +197,7 @@
             <input id="otp" class="otp-input" type="text" maxlength="6" inputmode="numeric" autocomplete="one-time-code"
                 [(ngModel)]="otp" placeholder="Enter 6 digit OTP">
 
-            <div class="test-otp">
-                <span>Test OTP</span>
-                <strong>123456</strong>
-            </div>
+           
 
             @if (errorMessage) {
             <div class="message error-message">
@@ -945,14 +942,10 @@
                     </div>
 
 
-                    <button
-    type="button"
-    class="continue-btn"
-    (click)="confirmMapLocation()"
->
-    Select Location
-    <i class="fa-solid fa-check"></i>
-</button>
+                    <button type="button" class="continue-btn" (click)="confirmMapLocation()">
+                        Select Location
+                        <i class="fa-solid fa-check"></i>
+                    </button>
 
 
                     <button type="button" class="cancel-location-btn" (click)="cancelMap()">
@@ -1342,7 +1335,7 @@
                 Parish / Church Name
             </label>
 
-            <input type="text" [(ngModel)]="churchName" placeholder="Enter parish / church name">
+            <input type="text" [(ngModel)]="otherChristianChurch" placeholder="Enter parish / church name">
 
             }
 
@@ -2047,47 +2040,43 @@
 
             </div>
 
-          <!-- Specific Qualification -->
-@if (preferredEducation.includes('Professional Degree')) {
+            <!-- Specific Qualification -->
+            @if (preferredEducation.includes('Professional Degree')) {
 
-  <div class="preference-subsection">
+            <div class="preference-subsection">
 
-    <div class="preference-subsection-title">
-      <span>Specific Qualification</span>
-    </div>
+                <div class="preference-subsection-title">
+                    <span>Specific Qualification</span>
+                </div>
 
-    <div class="checkbox-grid">
+                <div class="checkbox-grid">
 
-      @for (
-        option of getEducationSpecificOptions();
-        track option
-      ) {
+                    @for (
+                    option of getEducationSpecificOptions();
+                    track option
+                    ) {
 
-        <label class="checkbox-item">
+                    <label class="checkbox-item">
 
-          <input
-            type="checkbox"
-            [checked]="
+                        <input type="checkbox" [checked]="
               preferredEducationSpecific.includes(option)
-            "
-            (change)="
+            " (change)="
   togglePreferredEducationSpecific(option)
-"
-          >
+">
 
-          <span>{{ option }}</span>
+                        <span>{{ option }}</span>
 
-        </label>
+                    </label>
 
-      }
+                    }
 
-    </div>
+                </div>
 
-    
 
-  </div>
 
-}
+            </div>
+
+            }
 
             <!-- =========================
      PREFERRED CAREER
@@ -2283,6 +2272,13 @@
                 <i class="fa-solid fa-arrow-right"></i>
 
             </button>
+
+            <button type="button" class="continue-btn" (click)="goToDbCheck()">
+                Check Saved Registration Data
+
+                <i class="fa-solid fa-database"></i>
+            </button>
+
 
         </div>
 

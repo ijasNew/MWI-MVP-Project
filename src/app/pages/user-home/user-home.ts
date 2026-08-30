@@ -1,13 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
+import { Component, OnInit,ChangeDetectorRef  } from '@angular/core';
+import { Router } from '@angular/router'; 
 import { UserMenu } from '../../components/user-menu/user-menu';
 
 import { ProfileService } from '../../services/profile';
 import { ProfileCompletionService } from '../../services/profile-completion';
 
-import { Profile } from '../../models/profile.model';
-
+import { Profile } from '../../models/profile.model'; 
 @Component({
   selector: 'app-user-home',
   standalone: true,
@@ -27,51 +25,72 @@ export class UserHome implements OnInit {
   constructor(
     private router: Router,
     private profileService: ProfileService,
-    private profileCompletionService: ProfileCompletionService
-  ) {}
+    private profileCompletionService: ProfileCompletionService, 
+    private cdr: ChangeDetectorRef
+  ) { }
 
 
   // =====================================================
   // INIT
   // =====================================================
-
   ngOnInit(): void {
 
-    // -----------------------------------------------------
-    // Get current user's profile
-    // -----------------------------------------------------
+  console.log('🔥 USER HOME → load profile');
 
-    const profile =
-      this.profileService.getCurrentProfile();
+  this.profileService.getCurrentProfileFromApi().subscribe({
 
+    next: (profile: Profile | null) => {
 
-    if (!profile) {
-      return;
-    }
-
-
-    this.user = profile;
-
-
-    // -----------------------------------------------------
-    // Calculate profile completion
-    // -----------------------------------------------------
-
-    this.profileCompletion =
-      this.profileCompletionService.calculate(
+      console.log(
+        'USER HOME PROFILE API:',
         profile
       );
 
+      if (!profile) {
+        this.user = null;
+        return;
+      }
 
-    // -----------------------------------------------------
-    // Show completion popup
-    // -----------------------------------------------------
+      this.user = profile;
 
-    if (this.profileCompletion < 90) {
-      this.showProfilePopup = true;
+      this.profileCompletion =
+        this.profileCompletionService.calculate(
+          profile
+        );
+
+      console.log(
+        'USER HOME USER:',
+        this.user
+      );
+
+      console.log(
+        'PROFILE COMPLETION:',
+        this.profileCompletion
+      );
+
+      if (this.profileCompletion < 90) {
+        this.showProfilePopup = true;
+      }
+       this.cdr.detectChanges();
+
+    },
+
+    error: (error: any) => {
+
+      console.error(
+        'USER HOME PROFILE API ERROR:',
+        error
+      );
+
+      this.user = null;
+
     }
-  }
 
+  });
+
+}
+ 
+  
 
   // =====================================================
   // FORMAT HEIGHT

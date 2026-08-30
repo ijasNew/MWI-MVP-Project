@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { Profile } from '../../models/profile.model'
 import { ApiService } from '../../services/api'
 import { HttpClient } from '@angular/common/http';
@@ -109,7 +109,8 @@ export class Register implements AfterViewChecked {
         this.christianSubDenomination || undefined,
 
       parishName:
-        this.churchName || undefined,
+        this.otherChristianChurch || undefined,
+
 
 
       // =========================
@@ -340,9 +341,8 @@ export class Register implements AfterViewChecked {
 
   christianDenomination = '';
   christianSubDenomination = '';
-  churchName = '';
-
   otherChristianChurch = '';
+
 
   muslimSects = [
     'Sunni',
@@ -729,7 +729,6 @@ export class Register implements AfterViewChecked {
   preferredSunniGroups: string[] = [];
 
   preferredSalafiGroups: string[] = [];
-  preferredDenomination: string[] = [];
 
   preferredLocations: string[] = [];
 
@@ -862,95 +861,372 @@ export class Register implements AfterViewChecked {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private apiService: ApiService,
     private http: HttpClient,
     private authService: AuthService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+
   ) { }
 
+
+  ngOnInit(): void {
+
+    const resume =
+      this.route.snapshot.queryParamMap.get('resume');
+
+    if (resume === 'true') {
+
+      const token =
+        localStorage.getItem('mwi_token');
+
+      // No token → login
+      if (!token) {
+        sessionStorage.removeItem('mwi_registration_draft');
+        this.router.navigate(['/login']);
+        return;
+      }
+
+      // Token exists → verify with backend
+      this.apiService.validateToken().subscribe({
+        next: (response: any) => {
+
+          if (response?.success === true) {
+
+            this.loadRegistrationDraft();
+
+            this.step = 'basic';
+
+            this.cdr.detectChanges();
+
+          } else {
+
+            localStorage.removeItem('mwi_token');
+            sessionStorage.removeItem('mwi_registration_draft');
+
+            this.router.navigate(['/login']);
+          }
+        },
+
+        error: (error: any) => {
+
+          console.error(
+            'Resume registration token validation failed:',
+            error
+          );
+
+          localStorage.removeItem('mwi_token');
+          sessionStorage.removeItem('mwi_registration_draft');
+
+          this.router.navigate(['/login']);
+        }
+      });
+
+    }
+
+  }
+
+  private loadRegistrationDraft(): void {
+
+    const existing =
+      sessionStorage.getItem('mwi_registration_draft');
+
+    if (!existing) {
+      return;
+    }
+
+    try {
+
+      const draft = JSON.parse(existing);
+
+      // =========================
+      // BASIC DETAILS
+      // =========================
+
+      if (draft.profileFor !== undefined) {
+        this.profileFor = draft.profileFor;
+      }
+
+      if (draft.gender !== undefined) {
+        this.gender = draft.gender;
+      }
+
+      if (draft.fullName !== undefined) {
+        this.fullName = draft.fullName;
+      }
+
+      if (draft.maritalStatus !== undefined) {
+        this.maritalStatus = draft.maritalStatus;
+      }
+
+      if (draft.hasKids !== undefined) {
+        this.hasKids = draft.hasKids;
+      }
+
+      if (draft.numberOfKids !== undefined) {
+        this.numberOfKids = draft.numberOfKids;
+      }
+
+      if (draft.kidsLivingStatus !== undefined) {
+        this.kidsLivingStatus =
+          draft.kidsLivingStatus;
+      }
+
+      if (draft.dobDay !== undefined) {
+        this.dobDay = draft.dobDay;
+      }
+
+      if (draft.dobMonth !== undefined) {
+        this.dobMonth = draft.dobMonth;
+      }
+
+      if (draft.dobYear !== undefined) {
+        this.dobYear = draft.dobYear;
+      }
+
+      if (draft.heightInches !== undefined) {
+        this.heightInches = draft.heightInches;
+      }
+
+      // Recalculate age
+      if (
+        this.dobDay &&
+        this.dobMonth &&
+        this.dobYear
+      ) {
+        this.calculateAge();
+      }
+
+
+      // =========================
+      // LOCATION
+      // =========================
+
+      if (draft.location) {
+
+        this.locationMethod =
+          draft.location.locationMethod || '';
+
+        this.latitude =
+          draft.location.latitude ?? null;
+
+        this.longitude =
+          draft.location.longitude ?? null;
+
+        this.district =
+          draft.location.district || '';
+
+        this.state =
+          draft.location.state || 'Kerala';
+
+        this.pincode =
+          draft.location.pincode || '';
+
+        this.place =
+          draft.location.place || '';
+
+        this.houseName =
+          draft.location.houseName || '';
+
+        if (
+          this.district ||
+          this.pincode ||
+          this.place ||
+          this.houseName
+        ) {
+          this.showLocationDetails = true;
+        }
+
+      }
+
+
+      // =========================
+      // RELIGION
+      // =========================
+
+      if (draft.religion) {
+
+        this.religion =
+          draft.religion.religion || '';
+
+        this.muslimSect =
+          draft.religion.muslimSect || '';
+
+        this.sunniGroup =
+          draft.religion.sunniGroup || '';
+
+        this.salafiGroup =
+          draft.religion.salafiGroup || '';
+
+        this.hinduCaste =
+          draft.religion.hinduCaste || '';
+
+        this.hinduSubCaste =
+          draft.religion.hinduSubCaste || '';
+
+        this.nakshatra =
+          draft.religion.nakshatra || '';
+
+        this.rashi =
+          draft.religion.rashi || '';
+
+        this.dosham =
+          draft.religion.dosham || '';
+
+        this.christianDenomination =
+          draft.religion.christianDenomination || '';
+
+        this.christianSubDenomination =
+          draft.religion.christianSubDenomination || '';
+
+        this.otherChristianChurch =
+          draft.religion.otherChristianChurch || '';
+
+      }
+
+
+      // =========================
+      // EDUCATION
+      // =========================
+
+      if (draft.education) {
+
+        this.highestEducation =
+          draft.education.highestEducation || '';
+
+        this.specialization =
+          draft.education.specialization || '';
+
+        this.jobTitle =
+          draft.education.jobTitle || '';
+
+        this.jobSector =
+          draft.education.jobSector || '';
+
+      }
+
+
+      // =========================
+      // PREFERENCES
+      // =========================
+
+      if (draft.preferences) {
+
+        this.preferredAgeMin =
+          draft.preferences.ageMin || '';
+
+        this.preferredAgeMax =
+          draft.preferences.ageMax || '';
+
+        this.preferredHeightMin =
+          draft.preferences.heightMin || '';
+
+        this.preferredHeightMax =
+          draft.preferences.heightMax || '';
+
+        this.preferredMaritalStatuses =
+          Array.isArray(
+            draft.preferences.maritalStatuses
+          )
+            ? [...draft.preferences.maritalStatuses]
+            : [];
+
+        this.acceptanceOfKids =
+          draft.preferences.acceptanceOfKids || '';
+
+        this.preferredReligion =
+          draft.preferences.religion || '';
+
+        this.preferredSects =
+          Array.isArray(
+            draft.preferences.preferredSects
+          )
+            ? [...draft.preferences.preferredSects]
+            : [];
+
+        this.preferredSunniGroups =
+          Array.isArray(
+            draft.preferences.preferredSunniGroups
+          )
+            ? [...draft.preferences.preferredSunniGroups]
+            : [];
+
+        this.preferredSalafiGroups =
+          Array.isArray(
+            draft.preferences.preferredSalafiGroups
+          )
+            ? [...draft.preferences.preferredSalafiGroups]
+            : [];
+
+        this.preferredCastes =
+          Array.isArray(
+            draft.preferences.preferredCastes
+          )
+            ? [...draft.preferences.preferredCastes]
+            : [];
+
+        this.preferredSubCastes =
+          Array.isArray(
+            draft.preferences.preferredSubCastes
+          )
+            ? [...draft.preferences.preferredSubCastes]
+            : [];
+
+        this.preferredEducation =
+          Array.isArray(
+            draft.preferences.preferredEducation
+          )
+            ? [...draft.preferences.preferredEducation]
+            : [];
+
+        this.preferredEducationSpecific =
+          Array.isArray(
+            draft.preferences.preferredEducationSpecific
+          )
+            ? [...draft.preferences.preferredEducationSpecific]
+            : [];
+
+        this.preferredCareerSectors =
+          Array.isArray(
+            draft.preferences.preferredCareerSectors
+          )
+            ? [...draft.preferences.preferredCareerSectors]
+            : [];
+
+        this.preferredLocations =
+          Array.isArray(
+            draft.preferences.preferredLocations
+          )
+            ? [...draft.preferences.preferredLocations]
+            : [];
+
+      }
+
+      console.log(
+        'Registration draft restored:',
+        draft
+      );
+
+    } catch (error) {
+
+      console.error(
+        'Unable to restore registration draft:',
+        error
+      );
+
+      sessionStorage.removeItem(
+        'mwi_registration_draft'
+      );
+
+    }
+
+  }
 
   // =========================
   // MOBILE CHECK
   // =========================
 
-  // continueRegistration(): void {
-
-  //   this.errorMessage = '';
-  //   this.successMessage = '';
-
-  //   const phone = this.phone.trim();
-
-  //   if (!/^[0-9]{10}$/.test(phone)) {
-
-  //     this.errorMessage =
-  //       'Please enter a valid 10 digit mobile number.';
-
-  //     return;
-  //   }
-
-  //   this.loading = true;
-
-  //   this.apiService.checkPhone({
-  //     phone: phone
-  //   }).subscribe({
-
-  //     next: (response) => {
-
-  //       this.loading = false;
-
-  //       if (response.status === 'exists') {
-
-  //         this.errorMessage =
-  //           'You are already registered with us. Please login to continue.';
-
-  //         this.cdr.detectChanges();
-
-
-  //         return;
-  //       }
-
-  //       if (response.status === 'new') {
-
-  //         this.errorMessage = '';
-
-  //         this.successMessage =
-  //           'OTP sent successfully.';
-
-  //         this.step = 'otp';
-
-  //         this.cdr.detectChanges();
-
-  //         return;
-  //       }
-
-  //       this.errorMessage =
-  //         'Unexpected server response.';
-
-  //       this.cdr.detectChanges();
-  //     },
-
-  //     error: (error) => {
-
-  //       console.error('API Error:', error);
-
-  //       this.loading = false;
-
-  //       this.errorMessage =
-  //         'Unable to connect to the server. Please try again.';
-
-  //       this.cdr.detectChanges();
-  //     },
-
-  //     complete: () => {
-
-  //       this.loading = false;
-
-  //       this.cdr.detectChanges();
-  //     }
-
-  //   });
-  // }
   continueRegistration(): void {
 
     this.errorMessage = '';
@@ -959,120 +1235,70 @@ export class Register implements AfterViewChecked {
     const phone = this.phone.trim();
 
     if (!/^[0-9]{10}$/.test(phone)) {
-
       this.errorMessage =
         'Please enter a valid 10 digit mobile number.';
-
       return;
     }
 
-    // TEMPORARY: Backend phone check disabled
     this.loading = true;
 
-    setTimeout(() => {
+    this.apiService.sendOtp({
+      phone: phone,
+      purpose: 'registration'
+    }).subscribe({
 
-      this.loading = false;
+      next: (response: any) => {
 
-      this.successMessage =
-        'OTP sent successfully.';
+        this.loading = false;
 
-      this.step = 'otp';
+        console.log('Send OTP API Response:', response);
 
-      this.cdr.detectChanges();
+        if (response.success === true) {
 
-    }, 500);
+          this.errorMessage = '';
+
+          this.successMessage =
+            'OTP sent successfully.';
+
+          this.step = 'otp';
+
+          this.cdr.detectChanges();
+
+          return;
+        }
+
+        this.errorMessage =
+          response.message ||
+          'Unable to send OTP.';
+
+        this.cdr.detectChanges();
+      },
+
+      error: (error: any) => {
+
+        console.error('Send OTP API Error:', error);
+
+        this.loading = false;
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Unable to connect to the server. Please try again.';
+
+        this.cdr.detectChanges();
+      }
+
+    });
   }
 
   // =========================
   // OTP VERIFY
   // // =========================
-
-  // verifyOtp(): void {
-
-  //   this.errorMessage = '';
-  //   this.successMessage = '';
-
-  //   const phone = this.phone.trim();
-  //   const otp = this.otp.trim();
-
-  //   if (!/^[0-9]{6}$/.test(otp)) {
-
-  //     this.errorMessage =
-  //       'Please enter the 6 digit OTP.';
-
-  //     return;
-  //   }
-
-  //   this.loading = true;
-
-  //   this.apiService.verifyOtp({
-  //     phone: phone,
-  //     otp: otp
-  //   }).subscribe({
-
-  //     next: (response) => {
-
-  //       console.log(
-  //         'OTP PHP Response:',
-  //         response
-  //       );
-
-  //       this.loading = false;
-
-  //       if (response.success === true) {
-
-  //         this.memberId =
-  //           response.member_id;
-
-  //         this.errorMessage = '';
-
-  //         this.successMessage = '';
-
-  //         // Go to Basic Details
-  //         this.step = 'password';
-
-  //         this.cdr.detectChanges();
-
-  //         return;
-  //       }
-
-  //       this.errorMessage =
-  //         response.message ||
-  //         'OTP verification failed.';
-
-  //       this.cdr.detectChanges();
-  //     },
-
-  //     error: (error) => {
-
-  //       console.error(
-  //         'OTP API Error:',
-  //         error
-  //       );
-
-  //       this.loading = false;
-
-  //       this.errorMessage =
-  //         'Unable to connect to the server. Please try again.';
-
-  //       this.cdr.detectChanges();
-  //     },
-
-  //     complete: () => {
-
-  //       this.loading = false;
-
-  //       this.cdr.detectChanges();
-  //     }
-
-  //   });
-  // }
-
   verifyOtp(): void {
 
     this.errorMessage = '';
     this.successMessage = '';
 
+    const phone = this.phone.trim();
     const otp = this.otp.trim();
 
     if (!/^[0-9]{6}$/.test(otp)) {
@@ -1083,36 +1309,61 @@ export class Register implements AfterViewChecked {
       return;
     }
 
-    // TEMPORARY: Backend OTP verification disabled
-    // Test OTP: 123456
-
-    if (otp !== '123456') {
-
-      this.errorMessage =
-        'Invalid OTP. Please enter 123456 for testing.';
-
-      return;
-    }
-
     this.loading = true;
 
-    setTimeout(() => {
+    this.apiService.verifyOtp({
+      phone: phone,
+      otp: otp,
+      purpose: 'registration'
+    }).subscribe({
 
-      this.loading = false;
+      next: (response) => {
 
-      // Temporary member ID for frontend testing
-      this.memberId =
-        'TEST-' + Date.now();
+        this.loading = false;
 
-      this.errorMessage = '';
-      this.successMessage = '';
+        console.log(
+          'Verify OTP API Response:',
+          response
+        );
 
-      this.step = 'password';
+        if (response.success === true) {
 
-      this.cdr.detectChanges();
+          this.errorMessage = '';
+          this.successMessage = '';
 
-    }, 500);
+          this.step = 'password';
+
+          this.cdr.detectChanges();
+
+          return;
+        }
+
+        this.errorMessage =
+          response.message ||
+          'OTP verification failed.';
+
+        this.cdr.detectChanges();
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Verify OTP API Error:',
+          error
+        );
+
+        this.loading = false;
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Unable to connect to the server. Please try again.';
+
+        this.cdr.detectChanges();
+      }
+
+    });
   }
+
   validatePassword(): boolean {
 
     this.errorMessage = '';
@@ -1167,17 +1418,81 @@ export class Register implements AfterViewChecked {
 
     return true;
   }
+
   continueFromPassword(): void {
 
     if (!this.validatePassword()) {
       return;
     }
 
-    this.step = 'basic';
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.loading = true;
 
-    this.cdr.detectChanges();
+    this.apiService.register({
+      phone: this.phone.trim(),
+      password: this.password,
+      otp: this.otp.trim()
+    }).subscribe({
+
+      next: (response: any) => {
+
+        this.loading = false;
+
+        console.log('Register API Response:', response);
+
+        if (response.success === true) {
+
+          // Save token for the upcoming authenticated profile APIs.
+          if (response.data?.token) {
+            localStorage.setItem(
+              'mwi_token',
+              response.data.token
+            );
+          }
+          if (response.data?.user) {
+            this.authService.loginUser(response.data.user);
+          }
+
+
+          // Store the member ID returned by backend.
+          this.memberId =
+            response.data?.user?.member_id || '';
+
+          this.successMessage = '';
+
+          this.step = 'basic';
+
+          this.cdr.detectChanges();
+
+          return;
+        }
+
+        this.errorMessage =
+          response.message ||
+          'Unable to create your account.';
+
+        this.cdr.detectChanges();
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'Register API Error:',
+          error
+        );
+
+        this.loading = false;
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Unable to create your account. Please try again.';
+
+        this.cdr.detectChanges();
+      }
+
+    });
   }
-
   // =========================
   // PROFILE FOR
   // =========================
@@ -1276,7 +1591,11 @@ export class Register implements AfterViewChecked {
 
       return;
     }
-
+    const fullName = this.fullName.trim();
+    if (fullName.length < 2 || fullName.length > 100) {
+      this.errorMessage = 'Full name must be between 2 and 100 characters.';
+      return;
+    }
     if (!this.maritalStatus) {
 
       this.errorMessage =
@@ -1379,14 +1698,77 @@ export class Register implements AfterViewChecked {
     }
 
 
-    /*
-     * Temporary:
-     * Location step will be implemented next.
-     */
+    const basicData = {
+      profileFor: this.profileFor,
+      gender: this.gender,
+      fullName: this.fullName.trim(),
+      maritalStatus: this.maritalStatus,
+      hasKids: this.hasKids || null,
+      numberOfKids: this.numberOfKids || null,
+      kidsLivingStatus: this.kidsLivingStatus || null,
+      dobDay: this.dobDay,
+      dobMonth: this.dobMonth,
+      dobYear: this.dobYear,
+      heightInches: this.heightInches
+    };
 
-    this.step = 'location';
+    this.loading = true;
+    this.errorMessage = '';
 
-    this.cdr.detectChanges();
+    this.apiService.saveBasic(basicData).subscribe({
+      next: (response: any) => {
+
+        this.loading = false;
+
+        if (response?.success === true) {
+          this.step = 'location';
+          this.cdr.detectChanges();
+          return;
+        }
+
+        this.errorMessage =
+          response?.message || 'Unable to save basic details.';
+
+        this.cdr.detectChanges();
+      },
+
+      error: (error: any) => {
+
+        console.error('Basic save error:', error);
+
+        this.loading = false;
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Unable to save basic details.';
+
+        this.cdr.detectChanges();
+      }
+    });
+
+
+  }
+
+  saveRegistrationDraft(): void {
+    const draft = {
+      profileFor: this.profileFor,
+      gender: this.gender,
+      fullName: this.fullName,
+      maritalStatus: this.maritalStatus,
+      hasKids: this.hasKids,
+      numberOfKids: this.numberOfKids,
+      kidsLivingStatus: this.kidsLivingStatus,
+
+      dobDay: this.dobDay,
+      dobMonth: this.dobMonth,
+      dobYear: this.dobYear,
+      heightInches: this.heightInches
+    };
+
+    sessionStorage.setItem(
+      'mwi_registration_draft',
+      JSON.stringify(draft)
+    );
   }
   useCurrentLocation(): void {
 
@@ -1745,6 +2127,10 @@ export class Register implements AfterViewChecked {
     ) {
       age--;
     }
+    if (age > 60) {
+      this.dobError = 'Age must not be more than 60 years.';
+      return;
+    }
 
     this.calculatedAge = age;
 
@@ -2097,6 +2483,33 @@ export class Register implements AfterViewChecked {
 
     this.cdr.detectChanges();
   }
+
+  saveLocationDraft(): void {
+    const existing = sessionStorage.getItem(
+      'mwi_registration_draft'
+    );
+
+    const draft = existing
+      ? JSON.parse(existing)
+      : {};
+
+    draft.location = {
+      locationMethod: this.locationMethod,
+      latitude: this.latitude,
+      longitude: this.longitude,
+      district: this.district,
+      state: this.state,
+      pincode: this.pincode,
+      place: this.place,
+      houseName: this.houseName
+    };
+
+    sessionStorage.setItem(
+      'mwi_registration_draft',
+      JSON.stringify(draft)
+    );
+  }
+
   goToReligion(): void {
 
     this.locationError = '';
@@ -2132,7 +2545,12 @@ export class Register implements AfterViewChecked {
 
       return;
     }
+const houseName = this.houseName.trim();
 
+if (houseName.length < 1 || houseName.length > 150) {
+  this.locationError = 'House name must be between 1 and 150 characters.';
+  return ;
+}
     if (!this.place.trim()) {
 
       this.locationError =
@@ -2140,7 +2558,12 @@ export class Register implements AfterViewChecked {
 
       return;
     }
+    const place = this.place.trim();
 
+if (place.length < 1 || place.length > 100 ) {
+  this.locationError = 'Place must be between 1 and 100 characters.';
+  return ;
+}
     // District must be from allowed list
 
     if (!this.districts.includes(this.district)) {
@@ -2151,9 +2574,51 @@ export class Register implements AfterViewChecked {
       return;
     }
 
-    this.step = 'religion';
+    const locationData = {
+      locationMethod: this.locationMethod,
+      latitude: this.latitude,
+      longitude: this.longitude,
+      district: this.district,
+      state: this.state,
+      pincode: this.pincode,
+      place: this.place,
+      houseName: this.houseName
+    };
 
-    this.cdr.detectChanges();
+    this.loading = true;
+    this.locationError = '';
+
+    this.apiService.saveLocation(locationData).subscribe({
+      next: (response: any) => {
+
+        this.loading = false;
+
+        if (response?.success === true) {
+          this.saveLocationDraft();
+          this.step = 'religion';
+          this.cdr.detectChanges();
+          return;
+        }
+
+        this.locationError =
+          response?.message || 'Unable to save location details.';
+
+        this.cdr.detectChanges();
+      },
+
+      error: (error: any) => {
+
+        console.error('Location save error:', error);
+
+        this.loading = false;
+
+        this.locationError =
+          error?.error?.message ||
+          'Unable to save location details.';
+
+        this.cdr.detectChanges();
+      }
+    });
   }
   onReligionChange(): void {
 
@@ -2191,6 +2656,42 @@ export class Register implements AfterViewChecked {
       default:
         return [];
     }
+  }
+  saveReligionDraft(): void {
+    const existing = sessionStorage.getItem(
+      'mwi_registration_draft'
+    );
+
+    const draft = existing
+      ? JSON.parse(existing)
+      : {};
+
+    draft.religion = {
+      religion: this.religion,
+
+      muslimSect: this.muslimSect,
+      sunniGroup: this.sunniGroup,
+      salafiGroup: this.salafiGroup,
+
+      hinduCaste: this.hinduCaste,
+      hinduSubCaste: this.hinduSubCaste,
+
+      nakshatra: this.nakshatra,
+      rashi: this.rashi,
+      dosham: this.dosham,
+
+      christianDenomination:
+        this.christianDenomination,
+      christianSubDenomination:
+        this.christianSubDenomination,
+      otherChristianChurch:
+        this.otherChristianChurch
+    };
+
+    sessionStorage.setItem(
+      'mwi_registration_draft',
+      JSON.stringify(draft)
+    );
   }
   goToEducation(): void {
 
@@ -2420,10 +2921,59 @@ export class Register implements AfterViewChecked {
 
     }
 
+    const religionData = {
+      religion: this.religion,
 
-    this.step = 'education';
+      muslimSect: this.muslimSect,
+      sunniGroup: this.sunniGroup,
+      salafiGroup: this.salafiGroup,
 
-    this.cdr.detectChanges();
+      hinduCaste: this.hinduCaste,
+      hinduSubCaste: this.hinduSubCaste,
+
+      nakshatra: this.nakshatra,
+      rashi: this.rashi,
+      dosham: this.dosham,
+
+      christianDenomination: this.christianDenomination,
+      christianSubDenomination: this.christianSubDenomination,
+      otherChristianChurch: this.otherChristianChurch
+    };
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.apiService.saveReligion(religionData).subscribe({
+      next: (response: any) => {
+
+        this.loading = false;
+
+        if (response?.success === true) {
+          this.saveReligionDraft();
+          this.step = 'education';
+          this.cdr.detectChanges();
+          return;
+        }
+
+        this.errorMessage =
+          response?.message || 'Unable to save religion details.';
+
+        this.cdr.detectChanges();
+      },
+
+      error: (error: any) => {
+
+        console.error('Religion save error:', error);
+
+        this.loading = false;
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Unable to save religion details.';
+
+        this.cdr.detectChanges();
+      }
+    });
   }
   onEducationChange(): void {
 
@@ -2467,6 +3017,27 @@ export class Register implements AfterViewChecked {
     this.cdr.detectChanges();
 
   }
+  saveEducationDraft(): void {
+    const existing = sessionStorage.getItem(
+      'mwi_registration_draft'
+    );
+
+    const draft = existing
+      ? JSON.parse(existing)
+      : {};
+
+    draft.education = {
+      highestEducation: this.highestEducation,
+      specialization: this.specialization,
+      jobTitle: this.jobTitle,
+      jobSector: this.jobSector
+    };
+
+    sessionStorage.setItem(
+      'mwi_registration_draft',
+      JSON.stringify(draft)
+    );
+  }
   goToPreferences(): void {
 
     this.errorMessage = '';
@@ -2497,6 +3068,12 @@ export class Register implements AfterViewChecked {
 
       return;
     }
+    const jobTitle = this.jobTitle.trim();
+
+if (jobTitle.length < 1 || jobTitle.length > 100) {
+  this.errorMessage = 'Job title must be between 1 and 100 characters.';
+  return ;
+}
 
     if (!this.jobSector) {
 
@@ -2553,10 +3130,47 @@ export class Register implements AfterViewChecked {
     this.preferredReligion =
       this.religion;
 
+    const educationData = {
+      highestEducation: this.highestEducation,
+      specialization: this.specialization,
+      jobTitle: this.jobTitle.trim(),
+      jobSector: this.jobSector
+    };
 
-    this.step = 'preferences';
+    this.loading = true;
+    this.errorMessage = '';
 
-    this.cdr.detectChanges();
+    this.apiService.saveEducation(educationData).subscribe({
+      next: (response: any) => {
+
+        this.loading = false;
+
+        if (response?.success === true) {
+          this.saveEducationDraft();
+          this.step = 'preferences';
+          this.cdr.detectChanges();
+          return;
+        }
+
+        this.errorMessage =
+          response?.message || 'Unable to save education details.';
+
+        this.cdr.detectChanges();
+      },
+
+      error: (error: any) => {
+
+        console.error('Education save error:', error);
+
+        this.loading = false;
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Unable to save education details.';
+
+        this.cdr.detectChanges();
+      }
+    });
 
   }
   setDefaultAgePreference(): void {
@@ -3254,6 +3868,74 @@ export class Register implements AfterViewChecked {
     }
 
   }
+  savePreferencesDraft(): void {
+    const existing = sessionStorage.getItem(
+      'mwi_registration_draft'
+    );
+
+    const draft = existing
+      ? JSON.parse(existing)
+      : {};
+
+    draft.preferences = {
+      ageMin: this.preferredAgeMin,
+      ageMax: this.preferredAgeMax,
+
+      heightMin: this.preferredHeightMin,
+      heightMax: this.preferredHeightMax,
+
+      maritalStatuses: [
+        ...this.preferredMaritalStatuses
+      ],
+
+      acceptanceOfKids:
+        this.acceptanceOfKids,
+
+      religion:
+        this.preferredReligion,
+
+      preferredSects: [
+        ...this.preferredSects
+      ],
+
+      preferredSunniGroups: [
+        ...this.preferredSunniGroups
+      ],
+
+      preferredSalafiGroups: [
+        ...this.preferredSalafiGroups
+      ],
+
+      preferredCastes: [
+        ...this.preferredCastes
+      ],
+
+      preferredSubCastes: [
+        ...this.preferredSubCastes
+      ],
+
+      preferredEducation: [
+        ...this.preferredEducation
+      ],
+
+      preferredEducationSpecific: [
+        ...this.preferredEducationSpecific
+      ],
+
+      preferredCareerSectors: [
+        ...this.preferredCareerSectors
+      ],
+
+      preferredLocations: [
+        ...this.preferredLocations
+      ]
+    };
+
+    sessionStorage.setItem(
+      'mwi_registration_draft',
+      JSON.stringify(draft)
+    );
+  }
   // =========================
   // COMPLETE REGISTRATION
   // =========================
@@ -3756,82 +4438,135 @@ export class Register implements AfterViewChecked {
     }
 
 
-    console.log(
-      'REGISTRATION READY:',
-      {
-        memberId: this.memberId,
-        phone: this.phone,
+    // =========================
+    // SAVE PREFERENCES TO DB
+    // =========================
 
-        ageMin:
-          this.preferredAgeMin,
+    const preferencesData = {
+      ageMin: this.preferredAgeMin,
+      ageMax: this.preferredAgeMax,
 
-        ageMax:
-          this.preferredAgeMax,
+      heightMin: this.preferredHeightMin,
+      heightMax: this.preferredHeightMax,
 
-        heightMin:
-          this.preferredHeightMin,
+      maritalStatuses: [...this.preferredMaritalStatuses],
 
-        heightMax:
-          this.preferredHeightMax,
+      acceptanceOfKids: this.acceptanceOfKids,
 
-        maritalStatuses:
-          this.preferredMaritalStatuses,
+      religion: this.preferredReligion,
 
-        acceptanceOfKids:
-          this.acceptanceOfKids,
+      preferredSects: [...this.preferredSects],
+      preferredSunniGroups: [...this.preferredSunniGroups],
+      preferredSalafiGroups: [...this.preferredSalafiGroups],
 
-        religion:
-          this.preferredReligion,
+      preferredCastes: [...this.preferredCastes],
+      preferredSubCastes: [...this.preferredSubCastes],
 
-        preferredSects:
-          this.preferredSects,
+      preferredEducation: [...this.preferredEducation],
+      preferredEducationSpecific: [...this.preferredEducationSpecific],
 
-        preferredCastes:
-          this.preferredCastes,
+      preferredCareerSectors: [...this.preferredCareerSectors],
 
-        preferredSubCastes:
-          this.preferredSubCastes,
+      preferredLocations: [...this.preferredLocations]
+    };
 
-        preferredLocations:
-          this.preferredLocations,
+    this.loading = true;
+    this.errorMessage = '';
 
-        preferredEducation:
-          this.preferredEducation,
+    this.apiService.savePreferences(preferencesData).subscribe({
+      next: (prefResponse: any) => {
 
-        preferredEducationSpecific:
-          this.preferredEducationSpecific,
+        if (prefResponse?.success !== true) {
 
-        preferredCareerSectors:
-          this.preferredCareerSectors,
+          this.loading = false;
 
+          this.errorMessage =
+            prefResponse?.message || 'Unable to save preferences.';
 
+          this.cdr.detectChanges();
+
+          return;
+        }
+
+        // Preferences saved to DB — persist locally too, then finalize
+        this.savePreferencesDraft();
+
+        // =========================
+        // COMPLETE REGISTRATION
+        // =========================
+
+        this.apiService.completeRegistration().subscribe({
+          next: (response: any) => {
+
+            console.log(
+              'Complete Registration API Response:',
+              response
+            );
+
+            this.loading = false;
+
+            if (response?.success === true) {
+
+              sessionStorage.removeItem(
+                'mwi_registration_draft'
+              );
+
+              this.step = 'success';
+
+              this.cdr.detectChanges();
+
+              return;
+            }
+
+            this.errorMessage =
+              response?.message ||
+              'Unable to complete registration.';
+
+            this.cdr.detectChanges();
+          },
+
+          error: (error: any) => {
+
+            console.error(
+              'Complete Registration API Error:',
+              error
+            );
+
+            this.loading = false;
+
+            this.errorMessage =
+              error?.error?.message ||
+              'Unable to complete registration.';
+
+            this.cdr.detectChanges();
+          }
+        });
+      },
+
+      error: (error: any) => {
+
+        console.error('Preferences save error:', error);
+
+        this.loading = false;
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Unable to save preferences.';
+
+        this.cdr.detectChanges();
       }
-    );
-
-
-    // TEMPORARY
-    const profile = this.buildProfile();
-
-    /*
-     * Save registration profile temporarily.
-     * Backend will replace this later.
-     */
-      this.profileService.saveProfile(profile);
-
-    /*
-     * Mark this user as authenticated.
-     * This allows AuthGuard to recognize the
-     * newly registered user.
-     */
-    this.authService.loginUser({
-      phone: this.phone,
-      memberId: this.memberId,
-      name: this.fullName
     });
 
-    this.step = 'success';
 
-    this.cdr.detectChanges();
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3990,7 +4725,11 @@ export class Register implements AfterViewChecked {
     this.router.navigate(['/user-home']);
 
   }
-
+  goToDbCheck(): void {
+    this.router.navigate([
+      '/registration-db-check'
+    ]);
+  }
 
 
 

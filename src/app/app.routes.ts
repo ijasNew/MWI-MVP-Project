@@ -284,6 +284,15 @@ export const routes: Routes = [
         .then(m => m.VerificationStart)
   },
 
+  {
+  path: 'registration-db-check',
+  loadComponent: () =>
+    import(
+      './pages/registration-db-check/registration-db-check'
+    ).then(
+      m => m.RegistrationDbCheck
+    )
+},
 
   // =====================================================
   // FALLBACK
