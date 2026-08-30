@@ -351,3 +351,63 @@
   }
 
 }
+
+.matching-empty {
+  width: 100%;
+  max-width: 520px;
+  margin: 50px auto;
+  padding: 40px 30px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 18px;
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #f5f5f5;
+
+  font-size: 26px;
+}
+
+.matching-empty h3 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.matching-empty p {
+  margin: 0 auto 8px;
+  max-width: 420px;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.matching-empty > span {
+  display: block;
+  margin-bottom: 24px;
+
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
+.empty-action {
+  border: 0;
+  padding: 11px 18px;
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}

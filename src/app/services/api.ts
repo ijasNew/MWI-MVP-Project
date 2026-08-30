@@ -114,6 +114,31 @@ validateToken() {
     }
   );
 }
+
+changePassword(data: {
+  current_password: string;
+  new_password: string;
+}) {
+  return this.http.post<any>(
+    `${this.apiUrl}/auth/change-password`,
+    data,
+    {
+      headers: this.authHeaders()
+    }
+  );
+}
+submitFeedback(data: {
+  feedback_type: string;
+  message: string;
+}) {
+  return this.http.post<any>(
+    `${this.apiUrl}/feedback/submit`,
+    data,
+    {
+      headers: this.authHeaders()
+    }
+  );
+}
   completeRegistration() {
     return this.http.post<any>(
       `${this.apiUrl}/profile/complete`,
@@ -132,7 +157,27 @@ validateToken() {
     }
   );
 }
-  
+  resetPassword(data: {
+  phone: string;
+  otp: string;
+  password: string;
+}) {
+  return this.http.post<any>(
+    `${this.apiUrl}/auth/reset-password`,
+    data
+  );
+}
+
+getMatchingProfiles() {
+  return this.http.get<any>(
+    `${this.apiUrl}/matching-profiles`,
+    {
+      headers: this.authHeaders()
+    }
+  );
+}
+
+
   // delete when work finish getprofiel()
   getProfile() {
   return this.http.get<any>(

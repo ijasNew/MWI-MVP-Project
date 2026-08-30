@@ -182,18 +182,31 @@
     <!-- =========================
          SUBMIT
     ========================== -->
-
     <button
-      type="button"
-      class="submit-feedback"
-      (click)="submitFeedback()"
-    >
+  type="button"
+  class="submit-feedback"
+  (click)="submitFeedback()"
+  [disabled]="loading"
+>
 
+  @if (loading) {
+
+    <span>
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Submitting...
+    </span>
+
+  } @else {
+
+    <span>
       <i class="fa-solid fa-paper-plane"></i>
-
       Submit Feedback
+    </span>
 
-    </button>
+  }
+
+</button>
+ 
 
 
   </section>

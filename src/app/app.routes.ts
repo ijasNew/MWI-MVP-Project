@@ -15,10 +15,14 @@ export const routes: Routes = [
   // PUBLIC ROUTES
   // =====================================================
 
-  {
-    path: '',
-    component: Home
+{
+  path: '',
+  canActivate: [AuthGuard],
+  data: {
+    guestOnly: true
   },
+  component: Home
+},
 
   {
     path: 'privacy',
@@ -40,12 +44,16 @@ export const routes: Routes = [
     component: Register
   },
 
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./pages/login/login')
-        .then(m => m.Login)
+{
+  path: 'login',
+  canActivate: [AuthGuard],
+  data: {
+    guestOnly: true
   },
+  loadComponent: () =>
+    import('./pages/login/login')
+      .then(m => m.Login)
+},
 
   {
     path: 'forgot-password',
