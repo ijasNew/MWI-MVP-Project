@@ -1,6 +1,6 @@
 <div class="dashboard">
 
-   
+
   <!-- =========================
        SIDEBAR
   ========================== -->
@@ -8,7 +8,7 @@
   <app-user-menu></app-user-menu>
 
 
-   
+
 
 
   <!-- =========================
@@ -83,14 +83,10 @@
 
       </div>
 
-      <button
-  type="button"
-  class="primary-btn"
-  (click)="openVerification()"
->
-  Continue
-  <i class="fa-solid fa-arrow-right"></i>
-</button>
+      <button type="button" class="primary-btn" (click)="openVerification()">
+        Continue
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
 
     </section>
 
@@ -103,10 +99,7 @@
 
       <div>
 
-        <span>
-          MATCHES FOR YOU
-        </span>
-
+ 
         <h2>
           Matching Profiles
         </h2>
@@ -123,17 +116,50 @@
 
     <section class="matching-grid">
 
-      <!-- PROFILE 1 -->
+      <!-- LOADING -->
+      <div class="matching-state" *ngIf="matchingProfilesLoading">
+        <i class="fa-solid fa-spinner fa-spin"></i>
 
-      <article class="match-card">
+        <span>
+          Finding matching profiles...
+        </span>
+      </div>
 
+
+      <!-- NO MATCHES -->
+      <div class="matching-empty" *ngIf="
+    !matchingProfilesLoading &&
+    matchingProfiles.length === 0
+  ">
+        <div class="matching-empty-icon">
+          <i class="fa-solid fa-user-group"></i>
+        </div>
+
+        <div class="matching-empty-content">
+          <h3>No matching profiles right now</h3>
+
+          <p>
+            We couldn't find a suitable match at the moment.
+          </p>
+
+          <span>
+            New profiles may be added soon. Please check back later.
+          </span>
+        </div>
+      </div>
+
+
+      <!-- MATCHING PROFILES -->
+      <article class="match-card" *ngFor="let profile of matchingProfiles" (click)="openProfile(profile.memberId)">
+
+        <!-- PHOTO -->
         <div class="profile-photo">
 
           <div class="photo-placeholder">
             <i class="fa-solid fa-user"></i>
           </div>
 
-          <span class="verified-badge">
+          <span class="verified-badge" *ngIf="profile.verified">
             <i class="fa-solid fa-check"></i>
             Verified
           </span>
@@ -141,6 +167,7 @@
         </div>
 
 
+        <!-- CONTENT -->
         <div class="match-content">
 
           <div class="profile-heading">
@@ -148,16 +175,17 @@
             <div>
 
               <h3>
-                Ayesha
+                {{ profile.name }}
               </h3>
 
               <span>
-                Profile ID: F1024
+                Profile ID: {{ profile.memberId }}
               </span>
 
             </div>
 
-            <button type="button" class="shortlist-btn" title="Shortlist">
+
+            <button type="button" class="shortlist-btn" title="Shortlist" (click)="$event.stopPropagation()">
               <i class="fa-regular fa-star"></i>
             </button>
 
@@ -166,181 +194,44 @@
 
           <div class="profile-details">
 
+            <!-- AGE -->
+            <span>
+              <i class="fa-solid fa-cake-candles"></i>
+              {{ profile.age }} Years
+            </span>
+
+
+            <!-- EDUCATION -->
             <span>
               <i class="fa-solid fa-graduation-cap"></i>
-              Master's Degree
+              {{ profile.education }}
             </span>
 
+
+            <!-- MARITAL STATUS -->
             <span>
               <i class="fa-solid fa-ring"></i>
-              Never Married
+              {{ profile.maritalStatus }}
             </span>
 
-            <span>
-              <i class="fa-solid fa-ruler-vertical"></i>
-              5'4"
-            </span>
 
+            <!-- DISTRICT -->
             <span>
               <i class="fa-solid fa-location-dot"></i>
-              Malappuram
+              {{ profile.district }}
+            </span>
+
+
+            <!-- RELIGION -->
+            <span>
+              <i class="fa-solid fa-moon"></i>
+              {{ profile.religion }}
             </span>
 
           </div>
 
 
           <button type="button" class="interest-btn" (click)="$event.stopPropagation()">
-            <i class="fa-solid fa-heart"></i>
-            Send Interest
-          </button>
-
-        </div>
-
-      </article>
-
-
-      <!-- PROFILE 2 -->
-
-      <article class="match-card">
-
-        <div class="profile-photo">
-
-          <div class="photo-placeholder">
-            <i class="fa-solid fa-user"></i>
-          </div>
-
-          <span class="verified-badge">
-            <i class="fa-solid fa-check"></i>
-            Verified
-          </span>
-
-        </div>
-
-
-        <div class="match-content">
-
-          <div class="profile-heading">
-
-            <div>
-
-              <h3>
-                Fathima
-              </h3>
-
-              <span>
-                Profile ID: F1098
-              </span>
-
-            </div>
-
-            <button type="button" class="shortlist-btn" title="Shortlist" (click)="$event.stopPropagation()">
-              <i class="fa-regular fa-star"></i>
-            </button>
-
-          </div>
-
-
-          <div class="profile-details">
-
-            <span>
-              <i class="fa-solid fa-graduation-cap"></i>
-              General Degree
-            </span>
-
-            <span>
-              <i class="fa-solid fa-ring"></i>
-              Never Married
-            </span>
-
-            <span>
-              <i class="fa-solid fa-ruler-vertical"></i>
-              5'3"
-            </span>
-
-            <span>
-              <i class="fa-solid fa-location-dot"></i>
-              Kozhikode
-            </span>
-
-          </div>
-
-
-          <button type="button" class="interest-btn">
-            <i class="fa-solid fa-heart"></i>
-            Send Interest
-          </button>
-
-        </div>
-
-      </article>
-
-
-      <!-- PROFILE 3 -->
-
-      <article class="match-card">
-
-        <div class="profile-photo">
-
-          <div class="photo-placeholder">
-            <i class="fa-solid fa-user"></i>
-          </div>
-
-          <span class="verified-badge">
-            <i class="fa-solid fa-check"></i>
-            Verified
-          </span>
-
-        </div>
-
-
-        <div class="match-content">
-
-          <div class="profile-heading">
-
-            <div>
-
-              <h3>
-                Safa
-              </h3>
-
-              <span>
-                Profile ID: F1156
-              </span>
-
-            </div>
-
-            <button type="button" class="shortlist-btn" title="Shortlist" (click)="$event.stopPropagation()">
-              <i class="fa-regular fa-star"></i>
-            </button>
-          </div>
-
-
-          <div class="profile-details">
-
-            <span>
-              <i class="fa-solid fa-graduation-cap"></i>
-              Professional Degree
-            </span>
-
-            <span>
-              <i class="fa-solid fa-ring"></i>
-              Divorced
-            </span>
-
-            <span>
-              <i class="fa-solid fa-ruler-vertical"></i>
-              5'5"
-            </span>
-
-            <span>
-              <i class="fa-solid fa-location-dot"></i>
-              Palakkad
-            </span>
-
-          </div>
-
-
-          <button type="button" class="interest-btn">
             <i class="fa-solid fa-heart"></i>
             Send Interest
           </button>
@@ -379,7 +270,7 @@
       </button>
 
 
-      <button type="button" >
+      <button type="button">
 
         <i class="fa-solid fa-star"></i>
 
@@ -408,61 +299,50 @@
 </div>
 @if (showProfilePopup) {
 
-  <div class="profile-popup-overlay">
+<div class="profile-popup-overlay">
 
-    <div class="profile-popup">
+  <div class="profile-popup">
 
-      <button
-        type="button"
-        class="popup-close"
-        (click)="closeProfilePopup()"
-      >
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+    <button type="button" class="popup-close" (click)="closeProfilePopup()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
 
-      <div class="popup-icon">
-        <i class="fa-solid fa-user-check"></i>
-      </div>
+    <div class="popup-icon">
+      <i class="fa-solid fa-user-check"></i>
+    </div>
 
-      <span class="popup-label">
-        PROFILE COMPLETION
-      </span>
+    <span class="popup-label">
+      PROFILE COMPLETION
+    </span>
 
-      <h2>
-        Complete Your Profile
-      </h2>
+    <h2>
+      Complete Your Profile
+    </h2>
 
-      <p>
-        Your profile is
-        <strong>{{ profileCompletion }}%</strong>
-        complete.
-      </p>
+    <p>
+      Your profile is
+      <strong>{{ profileCompletion }}%</strong>
+      complete.
+    </p>
 
-      <p>
-        Complete your profile to get better
-        and more suitable matches.
-      </p>
+    <p>
+      Complete your profile to get better
+      and more suitable matches.
+    </p>
 
-      <div class="popup-progress">
+    <div class="popup-progress">
 
-        <div
-          class="popup-progress-bar"
-          [style.width.%]="profileCompletion"
-        ></div>
-
-      </div>
-
-      <button
-        type="button"
-        class="complete-profile-btn"
-        (click)="completeProfile()"
-      >
-        Complete Profile
-        <i class="fa-solid fa-arrow-right"></i>
-      </button>
+      <div class="popup-progress-bar" [style.width.%]="profileCompletion"></div>
 
     </div>
 
+    <button type="button" class="complete-profile-btn" (click)="completeProfile()">
+      Complete Profile
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+
   </div>
+
+</div>
 
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import {
   CanActivate,
   ActivatedRouteSnapshot,
@@ -6,10 +7,20 @@ import {
   Router
 } from '@angular/router';
 
-import { AuthService } from '../services/auth';
-import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-import { ApiService } from '../services/api';
+import {
+  Observable,
+  of
+} from 'rxjs';
+
+import {
+  map,
+  catchError
+} from 'rxjs/operators';
+
+import {
+  ApiService
+} from '../services/api';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,108 +28,157 @@ import { ApiService } from '../services/api';
 export class AuthGuard implements CanActivate {
 
   constructor(
-    private authService: AuthService,
     private router: Router,
     private apiService: ApiService
   ) {}
+
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> {
 
-    const token = localStorage.getItem('mwi_token');
-
-    // =====================================================
-    // GUEST ONLY ROUTE
-    // Used for: / and /login
-    // =====================================================
-
-    if (route.data?.['guestOnly'] === true) {
-
-      // No token → normal guest can enter
-      if (!token) {
-        return of(true);
-      }
-
-      // Token exists → validate it
-      return this.apiService.validateToken().pipe(
-
-        map((response: any) => {
-
-          // Valid logged-in user
-          if (response?.success === true) {
-
-            this.router.navigate([
-              '/user-home'
-            ]);
-
-            return false;
-          }
-
-          // Invalid token
-          localStorage.removeItem('mwi_token');
-          sessionStorage.removeItem('mwi_user_auth');
-
-          return true;
-        }),
-
-        catchError(() => {
-
-          // Invalid / expired token
-          localStorage.removeItem('mwi_token');
-          sessionStorage.removeItem('mwi_user_auth');
-
-          return of(true);
-        })
-
-      );
-    }
+    const token =
+      localStorage.getItem('mwi_token');
 
 
     // =====================================================
-    // PROTECTED ROUTES
+    // NO TOKEN
     // =====================================================
 
     if (!token) {
 
-      this.router.navigate(['/login'], {
-        queryParams: {
-          returnUrl: state.url
+      this.router.navigate(
+        ['/login'],
+        {
+          queryParams: {
+            returnUrl: state.url
+          }
         }
-      });
+      );
 
       return of(false);
     }
 
 
     // =====================================================
-    // VALIDATE TOKEN
+    // CHECK TOKEN + USER STATUS
     // =====================================================
 
-    return this.apiService.validateToken().pipe(
+    return this.apiService
+      .validateToken()
+      .pipe(
 
-      map((response: any) => {
+        map((response: any) => {
 
-        return response?.success === true;
+          // -----------------------------------------------
+          // INVALID TOKEN
+          // -----------------------------------------------
 
-      }),
+          if (
+            response?.success !== true
+          ) {
 
-      catchError(() => {
+            this.clearSession();
 
-        localStorage.removeItem('mwi_token');
-        sessionStorage.removeItem('mwi_user_auth');
+            this.router.navigate(
+              ['/login'],
+              {
+                queryParams: {
+                  returnUrl: state.url
+                }
+              }
+            );
 
-        this.router.navigate(['/login'], {
-          queryParams: {
-            returnUrl: state.url
+            return false;
           }
-        });
 
-        return of(false);
 
-      })
+          const user =
+            response?.data;
 
+
+          // -----------------------------------------------
+          // REGISTRATION INCOMPLETE
+          // -----------------------------------------------
+
+          if (
+            user?.registration_completed !== true
+          ) {
+
+            // Already on register
+            // → allow it
+
+            if (
+              state.url.startsWith('/register')
+            ) {
+              return true;
+            }
+
+
+            // Any other protected page
+            // → force registration
+
+            this.router.navigate(
+              ['/register'],
+              {
+                queryParams: {
+                  resume: 'true'
+                }
+              }
+            );
+
+            return false;
+          }
+
+
+          // -----------------------------------------------
+          // REGISTRATION COMPLETE
+          // -----------------------------------------------
+
+          return true;
+
+        }),
+
+
+        // =================================================
+        // API ERROR
+        // =================================================
+
+        catchError(() => {
+
+          this.clearSession();
+
+          this.router.navigate(
+            ['/login'],
+            {
+              queryParams: {
+                returnUrl: state.url
+              }
+            }
+          );
+
+          return of(false);
+
+        })
+
+      );
+
+  }
+
+
+  // =====================================================
+  // CLEAR SESSION
+  // =====================================================
+
+  private clearSession(): void {
+
+    localStorage.removeItem(
+      'mwi_token'
+    );
+
+    sessionStorage.removeItem(
+      'mwi_user_auth'
     );
 
   }

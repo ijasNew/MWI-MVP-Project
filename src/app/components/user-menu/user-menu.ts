@@ -315,6 +315,13 @@ export class UserMenu implements OnInit {
 
   logout(): void {
 
+  const confirmed = confirm(
+    'Are you sure you want to logout?'
+  );
+
+  if (!confirmed) {
+    return;
+  }
     /*
      * AuthService is now responsible
      * for clearing authentication.

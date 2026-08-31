@@ -4,12 +4,25 @@ import { UserMenu } from '../../components/user-menu/user-menu';
 
 import { ProfileService } from '../../services/profile';
 import { ProfileCompletionService } from '../../services/profile-completion';
-
+import { ApiService } from '../../services/api';
 import { Profile } from '../../models/profile.model'; 
+import { CommonModule } from '@angular/common';
+interface MatchingProfile {
+  memberId: string;
+  name: string;
+  age: number | null;
+  maritalStatus: string;
+  district: string;
+  religion: string;
+  education: string;
+  photoUrl: string | null;
+  verified: boolean;
+}
+
 @Component({
   selector: 'app-user-home',
   standalone: true,
-  imports: [UserMenu],
+  imports: [UserMenu,CommonModule],
   templateUrl: './user-home.html',
   styleUrl: './user-home.css'
 })
@@ -20,13 +33,16 @@ export class UserHome implements OnInit {
   profileCompletion = 0;
 
   showProfilePopup = false;
+  matchingProfiles: MatchingProfile[] = [];
 
+matchingProfilesLoading = true;
 
   constructor(
     private router: Router,
     private profileService: ProfileService,
     private profileCompletionService: ProfileCompletionService, 
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private apiService: ApiService,
   ) { }
 
 
@@ -87,10 +103,67 @@ export class UserHome implements OnInit {
     }
 
   });
+  this.loadMatchingProfiles();
 
 }
  
-  
+  loadMatchingProfiles(): void {
+
+  this.matchingProfilesLoading = true;
+
+  this.apiService.getMatchingProfiles().subscribe({
+
+    next: (response: any) => {
+
+      console.log(
+        'USER HOME MATCHING PROFILES:',
+        response
+      );
+
+      if (!response?.success) {
+
+        this.matchingProfiles = [];
+
+        this.matchingProfilesLoading = false;
+
+        this.cdr.detectChanges();
+
+        return;
+      }
+
+      const profiles =
+        Array.isArray(response?.data?.profiles)
+          ? response.data.profiles
+          : [];
+
+      // Home page → maximum 3 profiles
+      this.matchingProfiles =
+        profiles.slice(0, 3);
+
+      this.matchingProfilesLoading = false;
+
+      this.cdr.detectChanges();
+
+    },
+
+    error: (error: any) => {
+
+      console.error(
+        'USER HOME MATCHING API ERROR:',
+        error
+      );
+
+      this.matchingProfiles = [];
+
+      this.matchingProfilesLoading = false;
+
+      this.cdr.detectChanges();
+
+    }
+
+  });
+
+}
 
   // =====================================================
   // FORMAT HEIGHT
