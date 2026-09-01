@@ -1,415 +1,486 @@
 <app-user-menu></app-user-menu>
 
-<main class="dashboard-main"> 
+<main class="dashboard-main">
 
 
-<div class="upgrade-page">
+  <div class="upgrade-page">
 
-  <!-- HEADER -->
+    <!-- HEADER -->
 
-  <header class="upgrade-header">
-
-    <span class="page-label">
-      HOME VERIFICATION
-    </span>
-
-    <h1>
-      Complete Your Home Verification
-    </h1>
-
-    <p>
-      Every MatchWithIjas profile is personally verified
-      through a home visit. This helps us ensure genuine
-      profiles and provide you quality matches.
-    </p>
-
-  </header>
-
-
-  <!-- MAIN PLAN CARD -->
-
-  <section class="verification-card">
-
-    <div class="verification-badge">
-      VERIFIED ACCESS
-    </div>
-
-    <h2>
-      Home Verification
-    </h2>
-
-    <p class="card-description">
-      Complete your home verification to unlock
-      full access to verified matchmaking.
-    </p>
-
-
-    <!-- BENEFITS -->
-
-    <div class="benefits-list">
-
-      <div class="benefit-item">
-
-        <i class="fa-solid fa-check"></i>
-
-        <span>
-          Unlimited Interest & View Contact Details
-        </span>
-
-      </div>
-
-
-      <div class="benefit-item">
-
-        <i class="fa-solid fa-check"></i>
-
-        <span>Full profile access</span>
-
-      </div>
-
-
-      <div class="benefit-item">
-
-        <i class="fa-solid fa-check"></i>
-
-        <span>
-          Access Verified Profiles
-        </span>
-
-      </div>
-
-
-      <div class="benefit-item">
-
-        <i class="fa-solid fa-check"></i>
-
-        <span>
-          Valid for 1 Year
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <!-- PRICING -->
-
-    <div class="pricing-box">
-
-      <div class="regular-price">
-
-        <span>
-          Regular Plan Value
-        </span>
-
-        <strong>
-          ₹1,499
-        </strong>
-
-      </div>
-
-
-      <div class="current-plan">
-
-        <span>
-          Current Plan
-        </span>
-
-        <strong>
-          FREE
-        </strong>
-
-      </div>
-
-
-      <div class="verification-charge">
-
-        <span>
-          Home Verification Support Charge
-        </span>
-
-        <strong>
-          ₹399
-        </strong>
-
-        <small>
-          One-time payment • No recurring charges
-        </small>
-
-      </div>
-
-    </div>
-
-
-    <!-- CTA -->
-
-    <button
-      type="button"
-      class="primary-action"
-      (click)="continueVerification()"
-    >
-
-      <i class="fa-solid fa-shield-halved"></i>
-
-      Continue Verification
-
-    </button>
-
-
-    <p class="payment-note">
-      Pay ₹399 to continue your home verification.
-    </p>
-
-  </section>
-
-
-  <!-- WHY VERIFICATION -->
-
-  <section class="benefits-section">
-
-    <div class="section-heading">
+    <header class="upgrade-header">
 
       <span class="page-label">
-        WHY VERIFY?
+        HOME VERIFICATION
       </span>
 
-      <h2>
-        Why Home Verification?
-      </h2>
-
-    </div>
-
-
-    <div class="reason-grid">
-
-
-      <article class="reason-card">
-
-        <div class="reason-icon">
-          <i class="fa-solid fa-house"></i>
-        </div>
-
-        <h3>
-          Home Visit Verification
-        </h3>
-
-        <p>
-          Our team will visit your home and
-          verify your profile details.
-        </p>
-
-      </article>
-
-
-      <article class="reason-card">
-
-        <div class="reason-icon">
-          <i class="fa-solid fa-people-roof"></i>
-        </div>
-
-        <h3>
-          Family Details
-        </h3>
-
-        <p>
-          We verify family information for
-          authenticity and trust.
-        </p>
-
-      </article>
-
-
-      <article class="reason-card">
-
-        <div class="reason-icon">
-          <i class="fa-solid fa-circle-check"></i>
-        </div>
-
-        <h3>
-          Verified & Trusted Profiles
-        </h3>
-
-        <p>
-          Access genuine profiles that have
-          completed our verification process.
-        </p>
-
-      </article>
-
-
-      <article class="reason-card">
-
-        <div class="reason-icon">
-          <i class="fa-solid fa-heart"></i>
-        </div>
-
-        <h3>
-          Better Quality Matches
-        </h3>
-
-        <p>
-          We focus on quality over quantity
-          for better compatibility.
-        </p>
-
-      </article>
-
-
-    </div>
-
-  </section>
-
-
-  <!-- VERIFICATION JOURNEY -->
-
-  <section class="journey-section">
-
-    <div class="section-heading">
-
-      <span class="page-label">
-        YOUR VERIFICATION JOURNEY
-      </span>
-
-      <h2>
-        Three Simple Steps
-      </h2>
-
-    </div>
-
-
-    <div class="journey-list">
-
-
-      <div class="journey-step completed">
-
-        <div class="step-number">
-          01
-        </div>
-
-        <div class="step-content">
-
-          <h3>
-            Registration
-          </h3>
-
-          <span class="step-status">
-            Completed
-          </span>
-
-          <p>
-            Profile registration successful.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div class="journey-step current">
-
-        <div class="step-number">
-          02
-        </div>
-
-        <div class="step-content">
-
-          <h3>
-            Home Verification
-          </h3>
-
-          <span class="step-status">
-            Current Step
-          </span>
-
-          <p>
-            Make a one-time payment and
-            schedule your home verification.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div class="journey-step">
-
-        <div class="step-number">
-          03
-        </div>
-
-        <div class="step-content">
-
-          <h3>
-            Unlock Verified Matches
-          </h3>
-
-          <p>
-            Access full profiles, photos
-            and contact details.
-          </p>
-
-        </div>
-
-      </div>
-
-
-    </div>
-
-  </section>
-
-
-  <!-- SUPPORT -->
-
-  <section class="support-card">
-
-    <div class="support-icon">
-
-      <i class="fa-brands fa-whatsapp"></i>
-
-    </div>
-
-    <div class="support-content">
-
-      <h3>
-        Need Help?
-      </h3>
+      <h1>
+        Complete Your Home Verification
+      </h1>
 
       <p>
-        Our support team is available to help
-        you with the verification process.
+        Every MatchWithIjas profile is personally verified
+        through a home visit. This helps us ensure genuine
+        profiles and provide you quality matches.
+      </p>
+
+    </header>
+
+
+    <!-- MAIN PLAN CARD -->
+
+    <section class="verification-card">
+
+      <div class="verification-badge">
+        VERIFIED ACCESS
+      </div>
+
+      <h2>
+        Home Verification
+      </h2>
+
+      <p class="card-description">
+        Complete your home verification to unlock
+        full access to verified matchmaking.
+      </p>
+
+
+      <!-- BENEFITS -->
+
+      <div class="benefits-list">
+
+        <div class="benefit-item">
+
+          <i class="fa-solid fa-check"></i>
+
+          <span>
+            Unlimited Interest & View Contact Details
+          </span>
+
+        </div>
+
+
+        <div class="benefit-item">
+
+          <i class="fa-solid fa-check"></i>
+
+          <span>Full profile access</span>
+
+        </div>
+
+
+        <div class="benefit-item">
+
+          <i class="fa-solid fa-check"></i>
+
+          <span>
+            Access Verified Profiles
+          </span>
+
+        </div>
+
+
+        <div class="benefit-item">
+
+          <i class="fa-solid fa-check"></i>
+
+          <span>
+            Valid for 1 Year
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- PRICING -->
+
+      <div class="pricing-box">
+
+        <div class="regular-price">
+
+          <span>
+            Regular Plan Value
+          </span>
+
+          <strong>
+            ₹1,499
+          </strong>
+
+        </div>
+
+
+        <div class="current-plan">
+
+          <span>
+            Current Plan
+          </span>
+
+          <strong>
+            FREE
+          </strong>
+
+        </div>
+
+
+        <div class="verification-charge">
+
+          <span>
+            Home Verification Support Charge
+          </span>
+
+          <strong>
+            ₹399
+          </strong>
+
+          <small>
+            One-time payment • No recurring charges
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- CTA -->
+
+      <button
+  type="button"
+  class="primary-action"
+  (click)="continueVerification()"
+  [disabled]="isCheckingLocation"
+>
+  @if (isCheckingLocation) {
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    Checking Location...
+  } @else {
+    <i class="fa-solid fa-shield-halved"></i>
+    Continue Verification
+  }
+</button> 
+
+
+      <p class="payment-note">
+        Pay ₹399 to continue your home verification.
+      </p>
+
+    </section>
+
+
+    <!-- WHY VERIFICATION -->
+
+    <section class="benefits-section">
+
+      <div class="section-heading">
+
+        <span class="page-label">
+          WHY VERIFY?
+        </span>
+
+        <h2>
+          Why Home Verification?
+        </h2>
+
+      </div>
+
+
+      <div class="reason-grid">
+
+
+        <article class="reason-card">
+
+          <div class="reason-icon">
+            <i class="fa-solid fa-house"></i>
+          </div>
+
+          <h3>
+            Home Visit Verification
+          </h3>
+
+          <p>
+            Our team will visit your home and
+            verify your profile details.
+          </p>
+
+        </article>
+
+
+        <article class="reason-card">
+
+          <div class="reason-icon">
+            <i class="fa-solid fa-people-roof"></i>
+          </div>
+
+          <h3>
+            Family Details
+          </h3>
+
+          <p>
+            We verify family information for
+            authenticity and trust.
+          </p>
+
+        </article>
+
+
+        <article class="reason-card">
+
+          <div class="reason-icon">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+
+          <h3>
+            Verified & Trusted Profiles
+          </h3>
+
+          <p>
+            Access genuine profiles that have
+            completed our verification process.
+          </p>
+
+        </article>
+
+
+        <article class="reason-card">
+
+          <div class="reason-icon">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+
+          <h3>
+            Better Quality Matches
+          </h3>
+
+          <p>
+            We focus on quality over quantity
+            for better compatibility.
+          </p>
+
+        </article>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- VERIFICATION JOURNEY -->
+
+    <section class="journey-section">
+
+      <div class="section-heading">
+
+        <span class="page-label">
+          YOUR VERIFICATION JOURNEY
+        </span>
+
+        <h2>
+          Three Simple Steps
+        </h2>
+
+      </div>
+
+
+      <div class="journey-list">
+
+
+        <div class="journey-step completed">
+
+          <div class="step-number">
+            01
+          </div>
+
+          <div class="step-content">
+
+            <h3>
+              Registration
+            </h3>
+
+            <span class="step-status">
+              Completed
+            </span>
+
+            <p>
+              Profile registration successful.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="journey-step current">
+
+          <div class="step-number">
+            02
+          </div>
+
+          <div class="step-content">
+
+            <h3>
+              Home Verification
+            </h3>
+
+            <span class="step-status">
+              Current Step
+            </span>
+
+            <p>
+              Make a one-time payment and
+              schedule your home verification.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="journey-step">
+
+          <div class="step-number">
+            03
+          </div>
+
+          <div class="step-content">
+
+            <h3>
+              Unlock Verified Matches
+            </h3>
+
+            <p>
+              Access full profiles, photos
+              and contact details.
+            </p>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- SUPPORT -->
+
+    <section class="support-card">
+
+      <div class="support-icon">
+
+        <i class="fa-brands fa-whatsapp"></i>
+
+      </div>
+
+      <div class="support-content">
+
+        <h3>
+          Need Help?
+        </h3>
+
+        <p>
+          Our support team is available to help
+          you with the verification process.
+        </p>
+
+      </div>
+
+      <button type="button" class="support-button" (click)="openWhatsAppSupport()">
+
+        <i class="fa-brands fa-whatsapp"></i>
+
+        Chat on WhatsApp
+
+      </button>
+
+    </section>
+
+
+    <!-- FOOTER NOTE -->
+
+    <div class="security-note">
+
+      <i class="fa-solid fa-lock"></i>
+
+      <p>
+        Your information is kept private and confidential.
+        Your profile will be reviewed after successful payment
+        and home verification.
       </p>
 
     </div>
 
-    <button
-      type="button"
-      class="support-button"
-      (click)="openWhatsAppSupport()"
-    >
-
-      <i class="fa-brands fa-whatsapp"></i>
-
-      Chat on WhatsApp
-
-    </button>
-
-  </section>
-
-
-  <!-- FOOTER NOTE -->
-
-  <div class="security-note">
-
-    <i class="fa-solid fa-lock"></i>
-
-    <p>
-      Your information is kept private and confidential.
-      Your profile will be reviewed after successful payment
-      and home verification.
-    </p>
-
   </div>
 
 
-</div>
+
+
+
+  <!-- SERVICE NOT AVAILABLE MODAL -->
+
+@if (showServiceUnavailable) {
+
+  <div
+    class="service-modal-overlay"
+    (click)="closeServiceUnavailable()"
+  >
+
+    <div
+      class="service-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="service-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- CLOSE -->
+      <button
+        type="button"
+        class="service-modal-close"
+        aria-label="Close"
+        (click)="closeServiceUnavailable()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+
+      <!-- ICON -->
+      <div class="service-modal-icon">
+        <i class="fa-solid fa-location-dot"></i>
+      </div>
+
+
+      <!-- TITLE -->
+      <h2 id="service-modal-title">
+        Home Verification Service
+      </h2>
+
+
+      <!-- MESSAGE -->
+      <p>
+        Our Home Verification Service is currently
+        not available in your location.
+      </p>
+
+
+      <p class="service-modal-subtext">
+        We are expanding our service areas and will
+        inform you as soon as home verification becomes
+        available in your location.
+      </p>
+
+
+      <!-- BUTTON -->
+      <button
+        type="button"
+        class="service-modal-button"
+        (click)="closeServiceUnavailable()"
+      >
+        Okay
+      </button>
+
+    </div>
+
+  </div>
+
+}
 </main>
