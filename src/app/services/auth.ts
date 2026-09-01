@@ -101,78 +101,139 @@ export class AuthService {
   // =========================
   // ADMIN AUTH
   // =========================
+  // ADMIN AUTH
 
-  loginAdmin(admin: any = null): void {
+private readonly ADMIN_TOKEN_KEY = 'mwi_admin_token';
 
-    sessionStorage.setItem(
-      this.ADMIN_AUTH_KEY,
-      JSON.stringify({
-        isLoggedIn: true,
-        admin: admin
-      })
+loginAdmin(username: string, password: string) {
+  return this.http.post<any>(
+    `${environment.apiUrl}/admin/login`,
+    {
+      username,
+      password
+    }
+  );
+}
+
+saveAdminSession(response: any): void {
+  const token = response?.data?.token;
+  const admin = response?.data?.admin ?? null;
+
+  if (token) {
+    localStorage.setItem(
+      this.ADMIN_TOKEN_KEY,
+      token
     );
   }
 
-  isAdminLoggedIn(): boolean {
+  sessionStorage.setItem(
+    this.ADMIN_AUTH_KEY,
+    JSON.stringify({
+      isLoggedIn: true,
+      admin
+    })
+  );
+}
 
-    const auth =
-      sessionStorage.getItem(this.ADMIN_AUTH_KEY);
+validateAdminToken() {
+  const token =
+    localStorage.getItem(
+      this.ADMIN_TOKEN_KEY
+    );
 
-    if (!auth) {
-      return false;
-    }
-
-    try {
-
-      const data = JSON.parse(auth);
-
-      return data?.isLoggedIn === true;
-
-    } catch {
-
-      sessionStorage.removeItem(
-        this.ADMIN_AUTH_KEY
-      );
-
-      return false;
-    }
+  if (!token) {
+    return null;
   }
 
-  getCurrentAdmin(): any | null {
-
-    const auth =
-      sessionStorage.getItem(this.ADMIN_AUTH_KEY);
-
-    if (!auth) {
-      return null;
-    }
-
-    try {
-
-      const data = JSON.parse(auth);
-
-      if (data?.isLoggedIn !== true) {
-        return null;
+  return this.http.get<any>(
+    `${environment.apiUrl}/admin/me`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-
-      return data.admin ?? null;
-
-    } catch {
-
-      return null;
     }
+  );
+}
+
+isAdminLoggedIn(): boolean {
+  return !!localStorage.getItem(
+    this.ADMIN_TOKEN_KEY
+  );
+}
+
+getCurrentAdmin(): any | null {
+  const auth =
+    sessionStorage.getItem(
+      this.ADMIN_AUTH_KEY
+    );
+
+  if (!auth) {
+    return null;
   }
 
-  logoutAdmin(): void {
+  try {
+    const data = JSON.parse(auth);
 
+    if (data?.isLoggedIn !== true) {
+      return null;
+    }
+
+    return data.admin ?? null;
+
+  } catch {
     sessionStorage.removeItem(
       this.ADMIN_AUTH_KEY
     );
 
-    this.router.navigate([
-      '/admin/login'
-    ]);
+    return null;
   }
+}
+
+logoutAdmin(): void {
+  const token =
+    localStorage.getItem(
+      this.ADMIN_TOKEN_KEY
+    );
+
+  if (token) {
+    this.http.post(
+      `${environment.apiUrl}/admin/logout`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    ).subscribe({
+      next: () => this.clearAdminSession(),
+      error: () => this.clearAdminSession()
+    });
+
+    return;
+  }
+
+  this.clearAdminSession();
+}
+
+private clearAdminSession(): void {
+  sessionStorage.removeItem(
+    this.ADMIN_AUTH_KEY
+  );
+
+  localStorage.removeItem(
+    this.ADMIN_TOKEN_KEY
+  );
+
+  this.router.navigate([
+    '/admin/login'
+  ]);
+}
+ 
+
+   
+
+ 
+  
 
 
   // =========================

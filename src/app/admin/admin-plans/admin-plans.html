@@ -3,7 +3,10 @@
 
 <main class="admin-page">
 
-  <!-- HEADER -->
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
 
   <header class="page-header">
 
@@ -18,13 +21,17 @@
       </h1>
 
       <p>
-        Manage user plans and upgrade profiles from Free to Basic.
+        Manage user plans and payment status.
       </p>
 
     </div>
 
 
-    <button type="button" class="back-button" (click)="openDashboard()">
+    <button
+      type="button"
+      class="back-button"
+      (click)="openDashboard()"
+    >
 
       <i class="fa-solid fa-arrow-left"></i>
 
@@ -35,9 +42,13 @@
   </header>
 
 
-  <!-- SUMMARY -->
+
+  <!-- =====================================================
+       SUMMARY
+  ====================================================== -->
 
   <section class="summary-grid">
+
 
     <div class="summary-card">
 
@@ -77,33 +88,96 @@
 
     </div>
 
+
   </section>
 
 
-  <!-- FILTER BAR -->
+
+  <!-- =====================================================
+       SUCCESS
+  ====================================================== -->
+
+  @if (successMessage) {
+
+    <div class="page-note">
+
+      <i class="fa-solid fa-circle-check"></i>
+
+      <span>
+        {{ successMessage }}
+      </span>
+
+    </div>
+
+  }
+
+
+
+  <!-- =====================================================
+       ERROR
+  ====================================================== -->
+
+  @if (errorMessage) {
+
+    <div class="page-note">
+
+      <i class="fa-solid fa-circle-exclamation"></i>
+
+      <span>
+        {{ errorMessage }}
+      </span>
+
+    </div>
+
+  }
+
+
+
+  <!-- =====================================================
+       FILTER BAR
+  ====================================================== -->
 
   <section class="filter-bar">
+
 
     <div class="search-box">
 
       <i class="fa-solid fa-magnifying-glass"></i>
 
-      <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name, ID, place or phone" />
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Search by name, ID, place or phone"
+      />
 
     </div>
 
 
     <div class="plan-filter">
 
-      <button type="button" [class.active]="selectedPlan === 'All'" (click)="selectedPlan = 'All'">
+      <button
+        type="button"
+        [class.active]="selectedPlan === 'All'"
+        (click)="selectedPlan = 'All'"
+      >
         All
       </button>
 
-      <button type="button" [class.active]="selectedPlan === 'Free'" (click)="selectedPlan = 'Free'">
+
+      <button
+        type="button"
+        [class.active]="selectedPlan === 'Free'"
+        (click)="selectedPlan = 'Free'"
+      >
         Free
       </button>
 
-      <button type="button" [class.active]="selectedPlan === 'Basic'" (click)="selectedPlan = 'Basic'">
+
+      <button
+        type="button"
+        [class.active]="selectedPlan === 'Basic'"
+        (click)="selectedPlan = 'Basic'"
+      >
         Basic
       </button>
 
@@ -112,9 +186,13 @@
   </section>
 
 
-  <!-- TABLE -->
+
+  <!-- =====================================================
+       TABLE
+  ====================================================== -->
 
   <section class="table-card">
+
 
     <div class="table-header">
 
@@ -130,6 +208,7 @@
 
       </div>
 
+
       <span class="result-count">
         {{ filteredUsers.length }} users
       </span>
@@ -137,315 +216,582 @@
     </div>
 
 
+
     <div class="table-wrapper">
 
-      <table>
 
-        <thead>
+      @if (isLoading) {
 
-          <tr>
+        <div class="empty-state">
 
-            <th>
-              Profile
-            </th>
+          <i class="fa-solid fa-spinner fa-spin"></i>
 
-            <th>
-              Location
-            </th>
+          <strong>
+            Loading users...
+          </strong>
 
-            <th>
-              Phone
-            </th>
+          <span>
+            Please wait while registered users are loaded.
+          </span>
 
-            <th>
-              Registered
-            </th>
+        </div>
 
-            <th>
-              Plan
-            </th>
-
-            <th>
-              Status
-            </th>
-
-            <th>
-              Action
-            </th>
-
-          </tr>
-
-        </thead>
+      }
 
 
-        <tbody>
+      @else if (!isLoading && filteredUsers.length > 0) {
 
-          @for (
-          user of filteredUsers;
-          track user.id
-          ) {
 
-          <tr>
+        <table>
 
-            <td>
 
-              <div class="profile-cell">
+          <thead>
 
-                <div class="avatar">
-                  {{ user.name.charAt(0) }}
-                </div>
+            <tr>
 
-                <div>
+              <th>
+                Profile
+              </th>
 
-                  <strong>
-                    {{ user.name }}
-                  </strong>
+              <th>
+                Location
+              </th>
 
-                  <span>
-                    {{ user.id }}
-                    ·
-                    {{ user.gender }}
+              <th>
+                Phone
+              </th>
+
+              <th>
+                Registered
+              </th>
+
+              <th>
+                Plan
+              </th>
+
+              <th>
+                Payment
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Action
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+
+          <tbody>
+
+
+            @for (
+              user of filteredUsers;
+              track user.id
+            ) {
+
+
+              <tr>
+
+
+                <!-- PROFILE -->
+
+                <td>
+
+                  <div class="profile-cell">
+
+                    <div class="avatar">
+
+                      {{ user.name.charAt(0) }}
+
+                    </div>
+
+
+                    <div>
+
+                      <strong>
+                        {{ user.name }}
+                      </strong>
+
+                      <span>
+
+                        {{ user.id }}
+
+                        ·
+
+                        {{ user.gender }}
+
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+
+
+                <!-- LOCATION -->
+
+                <td>
+
+                  {{ user.place }}
+
+                </td>
+
+
+
+                <!-- PHONE -->
+
+                <td>
+
+                  {{ user.phone }}
+
+                </td>
+
+
+
+                <!-- REGISTERED -->
+
+                <td>
+
+                  {{ user.registeredDate | date:'dd MMM yyyy' }}
+
+                </td>
+
+
+
+                <!-- PLAN -->
+
+                <td>
+
+                  <span
+                    class="plan-badge"
+                    [class.basic]="user.plan === 'Basic'"
+                  >
+
+                    {{ user.plan }}
+
                   </span>
 
-                </div>
-
-              </div>
-
-            </td>
+                </td>
 
 
-            <td>
-              {{ user.place }}
-            </td>
+
+                <!-- PAYMENT -->
+
+                <td>
+
+                  <span
+                    class="status-badge"
+                    [class]="
+                      getPaymentStatusClass(
+                        user.paymentStatus
+                      )
+                    "
+                  >
+
+                    {{ user.paymentStatus }}
+
+                  </span>
+
+                </td>
 
 
-            <td>
-              {{ user.phone }}
-            </td>
+
+                <!-- STATUS -->
+
+                <td>
+
+                  <span
+                    class="status-badge"
+                    [class]="
+                      getStatusClass(
+                        user.status
+                      )
+                    "
+                  >
+
+                    {{ user.status }}
+
+                  </span>
+
+                </td>
 
 
-            <td>
-              {{ user.registeredDate }}
-            </td>
+
+                <!-- ACTION -->
+
+                <td>
+
+                  <div class="actions">
 
 
-            <td>
+                    <button
+                      type="button"
+                      class="icon-button"
+                      title="View Profile"
+                      (click)="viewProfile(user.id)"
+                    >
 
-              <span class="plan-badge" [class.basic]="user.plan === 'Basic'">
+                      <i
+                        class="fa-regular fa-eye"
+                      ></i>
 
-                {{ user.plan }}
-
-              </span>
-
-            </td>
-
-
-            <td>
-
-              <span class="status-badge">
-
-                {{ user.status }}
-
-              </span>
-
-            </td>
+                    </button>
 
 
-            <td>
+                    <button
+                      type="button"
+                      class="change-button"
+                      [disabled]="isSaving"
+                      (click)="openPlanPopup(user)"
+                    >
 
-              <div class="actions">
+                      Change Plan
 
-                <button type="button" class="icon-button" title="View Profile" (click)="viewProfile(user.id)">
-
-                  <i class="fa-regular fa-eye"></i>
-
-                </button>
-
-                <button type="button" class="change-button" (click)="openPlanPopup(user)">
-                  Change Plan
-                </button>
-
-              </div>
-
-            </td>
-
-          </tr>
-
-          }
+                    </button>
 
 
-          @if (filteredUsers.length === 0) {
+                  </div>
 
-          <tr>
+                </td>
 
-            <td colspan="7" class="empty-state">
 
-              <i class="fa-solid fa-user-slash"></i>
+              </tr>
 
-              <strong>
-                No users found
-              </strong>
 
-              <span>
-                Try another name, ID, place or plan filter.
-              </span>
+            }
 
-            </td>
 
-          </tr>
+          </tbody>
 
-          }
 
-        </tbody>
+        </table>
 
-      </table>
+      }
+
+
+      @else {
+
+        <div class="empty-state">
+
+          <i class="fa-solid fa-user-slash"></i>
+
+          <strong>
+            No users found
+          </strong>
+
+          <span>
+            Try another name, ID, place or plan filter.
+          </span>
+
+        </div>
+
+      }
+
 
     </div>
 
   </section>
 
-  <!-- =========================================
-     CHANGE PLAN POPUP
-========================================= -->
 
-  @if (showPlanPopup && selectedUser) {
 
-  <div class="modal-backdrop" (click)="closePlanPopup()">
+  <!-- =====================================================
+       CHANGE PLAN POPUP
+  ====================================================== -->
 
-    <div class="plan-modal" (click)="$event.stopPropagation()">
+  @if (
+    showPlanPopup &&
+    selectedUser
+  ) {
 
-      <!-- HEADER -->
 
-      <div class="modal-header">
+    <div
+      class="modal-backdrop"
+      (click)="closePlanPopup()"
+    >
 
-        <div>
 
-          <span class="modal-label">
-            ADMIN / PLAN
-          </span>
+      <div
+        class="plan-modal"
+        (click)="$event.stopPropagation()"
+      >
 
-          <h2>
-            Change Plan
-          </h2>
+
+        <!-- HEADER -->
+
+        <div class="modal-header">
+
+          <div>
+
+            <span class="modal-label">
+              ADMIN / PLAN
+            </span>
+
+            <h2>
+              Change Plan
+            </h2>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="modal-close"
+            [disabled]="isSaving"
+            (click)="closePlanPopup()"
+            aria-label="Close"
+          >
+
+            <i
+              class="fa-solid fa-xmark"
+            ></i>
+
+          </button>
 
         </div>
 
-        <button type="button" class="modal-close" (click)="closePlanPopup()" aria-label="Close">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-
-      </div>
 
 
-      <!-- USER -->
+        <!-- USER -->
 
-      <div class="modal-user">
+        <div class="modal-user">
 
-        <div class="modal-avatar">
-          {{ selectedUser.name.charAt(0) }}
+
+          <div class="modal-avatar">
+
+            {{ selectedUser.name.charAt(0) }}
+
+          </div>
+
+
+          <div>
+
+            <strong>
+
+              {{ selectedUser.name }}
+
+            </strong>
+
+            <span>
+
+              {{ selectedUser.id }}
+
+              ·
+
+              {{ selectedUser.place }}
+
+            </span>
+
+          </div>
+
+
         </div>
 
-        <div>
 
-          <strong>
-            {{ selectedUser.name }}
-          </strong>
+
+        <!-- CURRENT PLAN -->
+
+        <div class="current-plan">
 
           <span>
-            {{ selectedUser.id }}
-            ·
-            {{ selectedUser.place }}
+            Current Plan
           </span>
+
+          <strong>
+            {{ selectedUser.plan }}
+          </strong>
 
         </div>
 
-      </div>
 
 
-      <!-- CURRENT PLAN -->
+        <!-- CURRENT PAYMENT -->
 
-      <div class="current-plan">
+        <div class="current-plan">
 
-        <span>
-          Current Plan
-        </span>
+          <span>
+            Current Payment Status
+          </span>
 
-        <strong>
-          {{ selectedUser.plan }}
-        </strong>
+          <strong>
+            {{ selectedUser.paymentStatus }}
+          </strong>
 
-      </div>
-
-
-      <!-- NEW PLAN -->
-
-      <div class="modal-field">
-
-        <label for="newPlan">
-          Select Plan
-        </label>
-
-        <select id="newPlan" [(ngModel)]="selectedPlanValue">
-
-          <option value="Free">
-            Free
-          </option>
-
-          <option value="Basic">
-            Basic
-          </option>
-
-        </select>
-
-      </div>
+        </div>
 
 
-      <!-- INFO -->
 
-      <div class="modal-note">
+        <!-- NEW PLAN -->
 
-        <i class="fa-solid fa-circle-info"></i>
+        <div class="modal-field">
 
-        <span>
-          The selected plan will be applied to this profile
-          after you confirm.
-        </span>
-
-      </div>
+          <label for="newPlan">
+            Select Plan
+          </label>
 
 
-      <!-- ACTIONS -->
+          <select
+            id="newPlan"
+            [(ngModel)]="selectedPlanValue"
+          >
 
-      <div class="modal-actions">
+            <option value="Free">
+              Free
+            </option>
 
-        <button type="button" class="modal-cancel" (click)="closePlanPopup()">
-          Cancel
-        </button>
+            <option value="Basic">
+              Basic
+            </option>
 
-        <button type="button" class="modal-confirm" (click)="confirmPlanChange()">
-          <i class="fa-solid fa-check"></i>
-          OK
-        </button>
+          </select>
+
+        </div>
+
+
+
+        <!-- PAYMENT STATUS -->
+
+        <div
+          class="modal-field"
+          [style.display]="
+            selectedPlanValue === 'Free'
+              ? 'none'
+              : 'block'
+          "
+        >
+
+          <label for="paymentStatus">
+            Payment Status
+          </label>
+
+
+          <select
+            id="paymentStatus"
+            [(ngModel)]="selectedPaymentStatus"
+          >
+
+            <option value="pending">
+              Pending
+            </option>
+
+            <option value="success">
+              Success
+            </option>
+
+            <option value="failed">
+              Failed
+            </option>
+
+            <option value="refunded">
+              Refunded
+            </option>
+
+          </select>
+
+        </div>
+
+
+
+        <!-- INFO -->
+
+        <div class="modal-note">
+
+          <i
+            class="fa-solid fa-circle-info"
+          ></i>
+
+
+          @if (
+            selectedPlanValue === 'Basic'
+          ) {
+
+            <span>
+
+              Basic plan will become active
+              only when payment status is
+              Success.
+
+            </span>
+
+          }
+
+          @else {
+
+            <span>
+
+              Free plan does not require a
+              payment.
+
+            </span>
+
+          }
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="modal-actions">
+
+
+          <button
+            type="button"
+            class="modal-cancel"
+            [disabled]="isSaving"
+            (click)="closePlanPopup()"
+          >
+
+            Cancel
+
+          </button>
+
+
+          <button
+            type="button"
+            class="modal-confirm"
+            [disabled]="isSaving"
+            (click)="confirmPlanChange()"
+          >
+
+            @if (isSaving) {
+
+              <i
+                class="fa-solid fa-spinner fa-spin"
+              ></i>
+
+              Saving...
+
+            }
+
+            @else {
+
+              <i
+                class="fa-solid fa-check"
+              ></i>
+
+              Save Plan
+
+            }
+
+          </button>
+
+
+        </div>
+
 
       </div>
 
     </div>
 
-  </div>
-
   }
 
-  <!-- INFO -->
-
-  <div class="page-note">
-
-    <i class="fa-solid fa-circle-info"></i>
-
-    <span>
-      Plan changes are currently frontend-only.
-      User plan status will be connected to the backend database later.
-    </span>
-
-  </div>
 
 </main>

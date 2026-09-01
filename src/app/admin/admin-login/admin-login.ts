@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,ChangeDetectorRef  } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -22,6 +22,7 @@ export class AdminLogin {
 
   constructor(
     private router: Router,
+    private cdr: ChangeDetectorRef,
     private authService: AuthService
   ) {}
 
@@ -39,74 +40,43 @@ export class AdminLogin {
   // =========================
 
   login(): void {
+  this.errorMessage = '';
 
-    // Clear previous error
-    this.errorMessage = '';
+  const username = this.username.trim();
+  const password = this.password;
 
-    const username = this.username.trim();
-    const password = this.password;
-
-
-    // =========================
-    // EMPTY FIELD VALIDATION
-    // =========================
-
-    if (!username || !password) {
-
-      this.errorMessage =
-        'Please enter your username and password.';
-
-      return;
-    }
-
-
-    // =========================
-    // TEMPORARY ADMIN CREDENTIAL
-    // =========================
-
-    /*
-     * Backend is not connected yet.
-     *
-     * Temporary testing credentials:
-     *
-     * Username: admin
-     * Password: admin123
-     */
-
-    if (
-      username !== 'admin' ||
-      password !== 'admin123'
-    ) {
-
-      this.errorMessage =
-        'Invalid username or password.';
-
-      return;
-    }
-
-
-    // =========================
-    // VALID LOGIN
-    // =========================
-
-    this.isLoading = true;
-
-
-    setTimeout(() => {
-
-      this.isLoading = false;
-
-
-      // Save admin authentication
-      this.authService.loginAdmin({
-        username: username
-      });
-
-
-      // Go to dashboard
-      this.router.navigate(['/admin/dashboard']);
-
-    }, 500);
+  if (!username || !password) {
+    this.errorMessage =
+      'Please enter your username and password.';
+    return;
   }
+
+  this.isLoading = true;
+
+  this.authService
+    .loginAdmin(username, password)
+    .subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+        this.authService.saveAdminSession(
+          response
+        );
+
+        this.router.navigate([
+          '/admin/dashboard'
+        ]);
+      },
+
+      error: (error) => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Invalid username or password.';
+      }
+    });
+}
 
 }

@@ -4,22 +4,18 @@ import {
   CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  Router
+  Router,
+  UrlTree
 } from '@angular/router';
 
-import {
-  Observable,
-  of
-} from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import {
   map,
   catchError
 } from 'rxjs/operators';
 
-import {
-  ApiService
-} from '../services/api';
+import { ApiService } from '../services/api';
 
 
 @Injectable({
@@ -36,28 +32,76 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> {
+  ): Observable<boolean | UrlTree> {
 
-    const token =
-      localStorage.getItem('mwi_token');
+    const token = localStorage.getItem('mwi_token');
+
+    const guestOnly =
+      route.data?.['guestOnly'] === true;
 
 
     // =====================================================
-    // NO TOKEN
+    // GUEST-ONLY ROUTES
+    // =====================================================
+
+    if (guestOnly) {
+
+      // No token → allow login/home/register guest page
+      if (!token) {
+        return of(true);
+      }
+
+      // Token exists → check whether it is valid
+      return this.apiService
+        .validateToken()
+        .pipe(
+
+          map((response: any) => {
+
+            // Valid logged-in user
+            if (response?.success === true) {
+
+              // Already authenticated → don't allow guest pages
+              return this.router.createUrlTree(['/user-home']);
+            }
+
+            // Invalid token
+            this.clearSession();
+
+            // Allow guest page
+            return true;
+          }),
+
+          catchError(() => {
+
+            this.clearSession();
+
+            // Important:
+            // Do NOT navigate to /login here.
+            // Allow the guest route to load.
+            return of(true);
+          })
+
+        );
+    }
+
+
+    // =====================================================
+    // PROTECTED ROUTES
     // =====================================================
 
     if (!token) {
 
-      this.router.navigate(
-        ['/login'],
-        {
-          queryParams: {
-            returnUrl: state.url
+      return of(
+        this.router.createUrlTree(
+          ['/login'],
+          {
+            queryParams: {
+              returnUrl: state.url
+            }
           }
-        }
+        )
       );
-
-      return of(false);
     }
 
 
@@ -75,13 +119,11 @@ export class AuthGuard implements CanActivate {
           // INVALID TOKEN
           // -----------------------------------------------
 
-          if (
-            response?.success !== true
-          ) {
+          if (response?.success !== true) {
 
             this.clearSession();
 
-            this.router.navigate(
+            return this.router.createUrlTree(
               ['/login'],
               {
                 queryParams: {
@@ -89,8 +131,6 @@ export class AuthGuard implements CanActivate {
                 }
               }
             );
-
-            return false;
           }
 
 
@@ -107,8 +147,6 @@ export class AuthGuard implements CanActivate {
           ) {
 
             // Already on register
-            // → allow it
-
             if (
               state.url.startsWith('/register')
             ) {
@@ -116,10 +154,7 @@ export class AuthGuard implements CanActivate {
             }
 
 
-            // Any other protected page
-            // → force registration
-
-            this.router.navigate(
+            return this.router.createUrlTree(
               ['/register'],
               {
                 queryParams: {
@@ -127,8 +162,6 @@ export class AuthGuard implements CanActivate {
                 }
               }
             );
-
-            return false;
           }
 
 
@@ -149,16 +182,16 @@ export class AuthGuard implements CanActivate {
 
           this.clearSession();
 
-          this.router.navigate(
-            ['/login'],
-            {
-              queryParams: {
-                returnUrl: state.url
+          return of(
+            this.router.createUrlTree(
+              ['/login'],
+              {
+                queryParams: {
+                  returnUrl: state.url
+                }
               }
-            }
+            )
           );
-
-          return of(false);
 
         })
 
@@ -173,13 +206,9 @@ export class AuthGuard implements CanActivate {
 
   private clearSession(): void {
 
-    localStorage.removeItem(
-      'mwi_token'
-    );
+    localStorage.removeItem('mwi_token');
 
-    sessionStorage.removeItem(
-      'mwi_user_auth'
-    );
+    sessionStorage.removeItem('mwi_user_auth');
 
   }
 

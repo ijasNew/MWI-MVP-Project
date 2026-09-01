@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AdminMenu } from '../admin-menu/admin-menu';
+import { AuthService } from '../../services/auth';
 
 interface StatCard {
   title: string;
@@ -169,7 +170,8 @@ export class AdminDashboard {
 
 
   constructor(
-    private router: Router
+    private router: Router,
+     private authService: AuthService
   ) {}
 
 
@@ -233,19 +235,9 @@ export class AdminDashboard {
   }
 
 
-  logout(): void {
-
-    /*
-     * Backend authentication will be connected later.
-     * For now this only returns to admin login.
-     */
-
-    this.router.navigate([
-      '/admin/login'
-    ]);
-
-  }
-
+ logout(): void {
+  this.authService.logoutAdmin();
+}
 
   getStatusClass(status: string): string {
 

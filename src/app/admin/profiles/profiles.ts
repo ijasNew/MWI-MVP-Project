@@ -1,146 +1,261 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminMenu } from '../admin-menu/admin-menu';
+import { ApiService } from '../../services/api';
 
 interface AdminProfile {
   id: string;
   name: string;
   gender: string;
   place: string;
+  district: string;
   phone: string;
-  status: 'Verified' | 'Pending' | 'New';
-  plan: 'Free' | 'Basic';
+  status: string;
+  plan: string;
+  created_at: string;
 }
 
 @Component({
   selector: 'app-profiles',
   standalone: true,
-  imports: [CommonModule,FormsModule, AdminMenu],
+  imports: [
+    CommonModule,
+    FormsModule,
+    AdminMenu
+  ],
   templateUrl: './profiles.html',
   styleUrl: './profiles.css'
 })
-export class Profiles {
+export class Profiles implements OnInit {
 
   searchTerm = '';
+
   selectedStatus = 'All';
+
   selectedPlan = 'All';
+
   selectedGender = 'All';
+
   selectedDistrict = 'All';
 
-  profiles: AdminProfile[] = [
-    {
-      id: 'F1024',
-      name: 'Ayesha Fathima',
-      gender: 'Female',
-      place: 'Kozhikode',
-      phone: '98XXXXXX21',
-      status: 'Verified',
-      plan: 'Free'
-    },
-    {
-      id: 'M1025',
-      name: 'Mohammed Shamil',
-      gender: 'Male',
-      place: 'Malappuram',
-      phone: '97XXXXXX45',
-      status: 'Pending',
-      plan: 'Basic'
-    },
-    {
-      id: 'F1026',
-      name: 'Hiba Nazeera',
-      gender: 'Female',
-      place: 'Malappuram',
-      phone: '96XXXXXX78',
-      status: 'New',
-      plan: 'Free'
-    },
-    {
-      id: 'M1027',
-      name: 'Faris Rahman',
-      gender: 'Male',
-      place: 'Kozhikode',
-      phone: '95XXXXXX34',
-      status: 'Verified',
-      plan: 'Basic'
-    },
-    {
-      id: 'F1028',
-      name: 'Raniya Fathima',
-      gender: 'Female',
-      place: 'Kannur',
-      phone: '94XXXXXX89',
-      status: 'Pending',
-      plan: 'Free'
-    }
-  ];
 
-  constructor(private router: Router) {}
+  profiles: AdminProfile[] = [];
+
+
+  isLoading = false;
+
+  errorMessage = '';
+
+
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+     private cdr: ChangeDetectorRef
+  ) {}
+
+
+  // =========================================================
+  // INIT
+  // =========================================================
+
+  ngOnInit(): void {
+
+    this.loadProfiles();
+
+  }
+
+
+  // =========================================================
+  // LOAD PROFILES
+  // =========================================================
+  loadProfiles(): void {
+  this.isLoading = true;
+  this.errorMessage = '';
+
+  this.apiService.getAdminProfiles().subscribe({
+    next: (response: any) => {
+      this.profiles = response?.data?.profiles ?? [];
+
+      // IMPORTANT: API response received
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+
+    error: (error: any) => {
+      console.error('Failed to load admin profiles:', error);
+
+      this.profiles = [];
+
+      this.errorMessage =
+        error?.error?.message ||
+        'Unable to load profiles. Please try again.';
+
+      // IMPORTANT: stop loading even when API fails
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    }
+  });
+}
+  
+
+
+  // =========================================================
+  // FILTERED PROFILES
+  // =========================================================
 
   get filteredProfiles(): AdminProfile[] {
 
-    const search = this.searchTerm.trim().toLowerCase();
+    const search =
+      this.searchTerm
+        .trim()
+        .toLowerCase();
 
-    return this.profiles.filter(profile => {
 
-      const matchesSearch =
-        !search ||
-        profile.id.toLowerCase().includes(search) ||
-        profile.name.toLowerCase().includes(search) ||
-        profile.phone.toLowerCase().includes(search);
+    return this.profiles.filter(
+      profile => {
 
-      const matchesStatus =
-        this.selectedStatus === 'All' ||
-        profile.status === this.selectedStatus;
+        const matchesSearch =
+          !search ||
+          profile.id
+            .toLowerCase()
+            .includes(search) ||
+          profile.name
+            .toLowerCase()
+            .includes(search) ||
+          profile.phone
+            .toLowerCase()
+            .includes(search);
 
-      const matchesPlan =
-        this.selectedPlan === 'All' ||
-        profile.plan === this.selectedPlan;
 
-      const matchesGender =
-        this.selectedGender === 'All' ||
-        profile.gender === this.selectedGender;
+        const matchesStatus =
+          this.selectedStatus === 'All' ||
+          profile.status ===
+            this.selectedStatus;
 
-      const matchesDistrict =
-        this.selectedDistrict === 'All' ||
-        profile.place === this.selectedDistrict;
 
-      return (
-        matchesSearch &&
-        matchesStatus &&
-        matchesPlan &&
-        matchesGender &&
-        matchesDistrict
-      );
-    });
+        const matchesPlan =
+          this.selectedPlan === 'All' ||
+          profile.plan ===
+            this.selectedPlan;
+
+
+        const matchesGender =
+          this.selectedGender === 'All' ||
+          profile.gender ===
+            this.selectedGender;
+
+
+        const matchesDistrict =
+          this.selectedDistrict === 'All' ||
+          profile.district ===
+            this.selectedDistrict;
+
+
+        return (
+          matchesSearch &&
+          matchesStatus &&
+          matchesPlan &&
+          matchesGender &&
+          matchesDistrict
+        );
+
+      }
+    );
+
   }
+
+
+  // =========================================================
+  // CLEAR FILTERS
+  // =========================================================
 
   clearFilters(): void {
+
     this.searchTerm = '';
+
     this.selectedStatus = 'All';
+
     this.selectedPlan = 'All';
+
     this.selectedGender = 'All';
+
     this.selectedDistrict = 'All';
+
   }
 
-  viewProfile(profile: AdminProfile): void {
-  this.router.navigate([
-    '/admin/profile-view',
-    profile.id
-  ]);
-}
-  editProfile(profile: AdminProfile): void {
-    console.log('Admin edit profile:', profile.id);
+
+  // =========================================================
+  // VIEW PROFILE
+  // =========================================================
+
+  viewProfile(
+    profile: AdminProfile
+  ): void {
+
+    this.router.navigate([
+      '/admin/profile-view',
+      profile.id
+    ]);
+
   }
 
-  getStatusClass(status: string): string {
-    return status.toLowerCase();
+
+  // =========================================================
+  // EDIT PROFILE
+  // =========================================================
+
+  editProfile(
+    profile: AdminProfile
+  ): void {
+
+    console.log(
+      'Admin edit profile:',
+      profile.id
+    );
+
   }
 
-  getPlanClass(plan: string): string {
-    return plan.toLowerCase();
+
+  // =========================================================
+  // STATUS CLASS
+  // =========================================================
+
+  getStatusClass(
+    status: string
+  ): string {
+
+    return status
+      .toLowerCase()
+      .replace(/\s+/g, '-');
+
+  }
+
+
+  // =========================================================
+  // PLAN CLASS
+  // =========================================================
+
+  getPlanClass(
+    plan: string
+  ): string {
+
+    return plan
+      .toLowerCase()
+      .replace(/\s+/g, '-');
+
+  }
+
+
+  // =========================================================
+  // RETRY
+  // =========================================================
+
+  retryLoad(): void {
+
+    this.loadProfiles();
+
   }
 
 }

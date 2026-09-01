@@ -1,32 +1,40 @@
 <app-admin-menu></app-admin-menu>
+
 <div class="admin-page">
 
   <!-- PAGE HEADER -->
-
   <header class="page-header">
 
     <div>
+
       <span class="page-label">
         ADMIN / PROFILES
       </span>
 
-      <h1>Registered Profiles</h1>
+      <h1>
+        Registered Profiles
+      </h1>
 
       <p>
         Manage profiles registered through Match With Ijas.
       </p>
+
     </div>
 
     <div class="profile-count">
+
       {{ filteredProfiles.length }}
-      <span>Profiles</span>
+
+      <span>
+        Profiles
+      </span>
+
     </div>
 
   </header>
 
 
   <!-- FILTER CARD -->
-
   <section class="filter-card">
 
     <div class="search-box">
@@ -62,6 +70,14 @@
 
         <option value="Verified">
           Verified
+        </option>
+
+        <option value="Rejected">
+          Rejected
+        </option>
+
+        <option value="Blocked">
+          Blocked
         </option>
 
       </select>
@@ -135,18 +151,20 @@
   </section>
 
 
-  <!-- TABLE -->
-
+  <!-- TABLE CARD -->
   <section class="table-card">
 
     <div class="table-header">
 
       <div>
 
-        <h2>All Registered Profiles</h2>
+        <h2>
+          All Registered Profiles
+        </h2>
 
         <span>
-          {{ filteredProfiles.length }} profiles found
+          {{ filteredProfiles.length }}
+          profiles found
         </span>
 
       </div>
@@ -154,7 +172,57 @@
     </div>
 
 
-    @if (filteredProfiles.length > 0) {
+    <!-- LOADING -->
+    @if (isLoading) {
+
+      <div class="loading-state">
+
+        <div class="loading-spinner">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        </div>
+
+        <h3>
+          Loading profiles...
+        </h3>
+
+        <p>
+          Please wait while registered profiles are being loaded.
+        </p>
+
+      </div>
+
+    }
+
+    <!-- ERROR -->
+    @else if (errorMessage) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <h3>
+          Unable to load profiles
+        </h3>
+
+        <p>
+          {{ errorMessage }}
+        </p>
+
+        <button
+          type="button"
+          (click)="loadProfiles()"
+        >
+          Try Again
+        </button>
+
+      </div>
+
+    }
+
+    <!-- PROFILES -->
+    @else if (filteredProfiles.length > 0) {
 
       <div class="table-wrapper">
 
@@ -164,21 +232,37 @@
 
             <tr>
 
-              <th>ID</th>
+              <th>
+                ID
+              </th>
 
-              <th>Profile</th>
+              <th>
+                Profile
+              </th>
 
-              <th>Gender</th>
+              <th>
+                Gender
+              </th>
 
-              <th>Place</th>
+              <th>
+                Place
+              </th>
 
-              <th>Phone</th>
+              <th>
+                Phone
+              </th>
 
-              <th>Status</th>
+              <th>
+                Status
+              </th>
 
-              <th>Plan</th>
+              <th>
+                Plan
+              </th>
 
-              <th>Action</th>
+              <th>
+                Action
+              </th>
 
             </tr>
 
@@ -192,9 +276,11 @@
               <tr>
 
                 <td>
+
                   <span class="profile-id">
                     {{ profile.id }}
                   </span>
+
                 </td>
 
 
@@ -232,6 +318,7 @@
 
                 <td>
 
+                  
                   <span
                     class="status-badge"
                     [class]="getStatusClass(profile.status)"
@@ -291,7 +378,10 @@
 
       </div>
 
-    } @else {
+    }
+
+    <!-- NO PROFILES -->
+    @else {
 
       <div class="empty-state">
 
@@ -304,7 +394,7 @@
         </h3>
 
         <p>
-          Try changing your search or filters.
+          No completed registrations are available.
         </p>
 
         <button

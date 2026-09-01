@@ -2,10 +2,11 @@
 
 <main class="dashboard-main">
 
-
   <div class="upgrade-page">
 
-    <!-- HEADER -->
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <header class="upgrade-header">
 
@@ -26,147 +27,545 @@
     </header>
 
 
-    <!-- MAIN PLAN CARD -->
+    <!-- =====================================================
+         VERIFICATION STATUS
+    ====================================================== -->
 
-    <section class="verification-card">
+    <!-- LOADING -->
 
-      <div class="verification-badge">
-        VERIFIED ACCESS
-      </div>
+    @if (isLoadingStatus) {
 
-      <h2>
-        Home Verification
-      </h2>
+      <section class="verification-card">
 
-      <p class="card-description">
-        Complete your home verification to unlock
-        full access to verified matchmaking.
-      </p>
+        <div class="verification-badge">
+          CHECKING STATUS
+        </div>
+
+        <h2>
+          Checking Your Verification Status
+        </h2>
+
+        <p class="card-description">
+          Please wait while we check your payment and
+          verification status.
+        </p>
+
+        <div class="status-loading">
+
+          <i class="fa-solid fa-spinner fa-spin"></i>
+
+          <span>
+            Please wait...
+          </span>
+
+        </div>
+
+      </section>
+
+    }
 
 
-      <!-- BENEFITS -->
+    <!-- =====================================================
+         PAYMENT RECEIVED + VERIFICATION UNDER REVIEW
+    ====================================================== -->
 
-      <div class="benefits-list">
+    @else if (isPaymentUnderReview) {
 
-        <div class="benefit-item">
+      <section class="verification-status-card">
+
+        <!-- STATUS ICON -->
+
+        <div class="status-success-icon">
 
           <i class="fa-solid fa-check"></i>
 
-          <span>
-            Unlimited Interest & View Contact Details
-          </span>
+        </div>
+
+
+        <!-- STATUS BADGE -->
+
+        <div class="status-pill">
+
+          <span class="status-dot"></span>
+
+          PAYMENT RECEIVED
 
         </div>
 
 
-        <div class="benefit-item">
+        <!-- TITLE -->
 
-          <i class="fa-solid fa-check"></i>
+        <h2>
+          Payment Received &amp; Under Review
+        </h2>
 
-          <span>Full profile access</span>
+
+        <!-- MESSAGE -->
+
+        <p class="status-description">
+
+          Your home verification payment has been
+          received successfully.
+
+          Our team is now reviewing your profile
+          for home verification.
+
+        </p>
+
+
+        <!-- STATUS DETAILS -->
+
+        <div class="status-details">
+
+          <!-- PAYMENT -->
+
+          <div class="status-detail-row">
+
+            <span>
+              Payment Status
+            </span>
+
+            <strong class="paid-text">
+
+              <i class="fa-solid fa-circle-check"></i>
+
+              Paid
+
+            </strong>
+
+          </div>
+
+
+          <!-- VERIFICATION -->
+
+          <div class="status-detail-row">
+
+            <span>
+              Verification Status
+            </span>
+
+            <strong class="pending-text">
+
+              <i class="fa-solid fa-clock"></i>
+
+              Pending
+
+            </strong>
+
+          </div>
+
+
+          <!-- CURRENT PLAN -->
+
+          <div class="status-detail-row">
+
+            <span>
+              Current Plan
+            </span>
+
+            <strong>
+              {{ verificationStatus?.current_plan || 'Basic' }}
+            </strong>
+
+          </div>
+
+
+          <!-- AMOUNT -->
+
+          @if (verificationStatus?.payment?.amount !== null &&
+               verificationStatus?.payment?.amount !== undefined) {
+
+            <div class="status-detail-row">
+
+              <span>
+                Amount Paid
+              </span>
+
+              <strong>
+                ₹{{ verificationStatus?.payment?.amount }}
+              </strong>
+
+            </div>
+
+          }
 
         </div>
 
 
-        <div class="benefit-item">
+        <!-- NEXT STEP -->
 
-          <i class="fa-solid fa-check"></i>
+        <div class="next-step-box">
 
-          <span>
-            Access Verified Profiles
-          </span>
+          <div class="next-step-icon">
 
-        </div>
+            <i class="fa-solid fa-house-circle-check"></i>
 
+          </div>
 
-        <div class="benefit-item">
+          <div>
 
-          <i class="fa-solid fa-check"></i>
+            <strong>
+              What happens next?
+            </strong>
 
-          <span>
-            Valid for 1 Year
-          </span>
+            <p>
+              Our team will review your details
+              and contact you regarding the
+              home verification visit.
+            </p>
 
-        </div>
-
-      </div>
-
-
-      <!-- PRICING -->
-
-      <div class="pricing-box">
-
-        <div class="regular-price">
-
-          <span>
-            Regular Plan Value
-          </span>
-
-          <strong>
-            ₹1,499
-          </strong>
+          </div>
 
         </div>
 
 
-        <div class="current-plan">
+        <!-- SUPPORT -->
 
-          <span>
-            Current Plan
-          </span>
+        <button
+          type="button"
+          class="whatsapp-support-button"
+          (click)="openWhatsAppSupport()"
+        >
 
-          <strong>
-            FREE
-          </strong>
+          <i class="fa-brands fa-whatsapp"></i>
+
+          Chat with WhatsApp Support
+
+        </button>
+
+
+        <!-- FOOTNOTE -->
+
+        <p class="status-note">
+
+          <i class="fa-solid fa-shield-halved"></i>
+
+          No additional payment is required
+          while your verification is under review.
+
+        </p>
+
+      </section>
+
+    }
+
+
+    <!-- =====================================================
+         ALREADY VERIFIED
+    ====================================================== -->
+
+    @else if (isVerificationCompleted) {
+
+      <section class="verification-status-card verified-card">
+
+        <!-- STATUS ICON -->
+
+        <div class="status-success-icon">
+
+          <i class="fa-solid fa-shield-check"></i>
 
         </div>
 
 
-        <div class="verification-charge">
+        <!-- STATUS BADGE -->
 
-          <span>
-            Home Verification Support Charge
-          </span>
+        <div class="status-pill verified-pill">
 
-          <strong>
-            ₹399
-          </strong>
+          <span class="status-dot"></span>
 
-          <small>
-            One-time payment • No recurring charges
-          </small>
+          VERIFIED
 
         </div>
 
-      </div>
+
+        <!-- TITLE -->
+
+        <h2>
+          Home Verification Completed
+        </h2>
 
 
-      <!-- CTA -->
+        <!-- MESSAGE -->
 
-      <button
-  type="button"
-  class="primary-action"
-  (click)="continueVerification()"
-  [disabled]="isCheckingLocation"
->
-  @if (isCheckingLocation) {
-    <i class="fa-solid fa-spinner fa-spin"></i>
-    Checking Location...
-  } @else {
-    <i class="fa-solid fa-shield-halved"></i>
-    Continue Verification
-  }
-</button> 
+        <p class="status-description">
+
+          Your profile has successfully completed
+          our home verification process.
+
+        </p>
 
 
-      <p class="payment-note">
-        Pay ₹399 to continue your home verification.
-      </p>
+        <!-- NEXT STEP -->
 
-    </section>
+        <div class="next-step-box">
+
+          <div class="next-step-icon">
+
+            <i class="fa-solid fa-heart"></i>
+
+          </div>
+
+          <div>
+
+            <strong>
+              You're all set!
+            </strong>
+
+            <p>
+              You can now enjoy access to
+              verified matchmaking features.
+            </p>
+
+          </div>
+
+        </div>
 
 
-    <!-- WHY VERIFICATION -->
+        <!-- SUPPORT -->
+
+        <button
+          type="button"
+          class="whatsapp-support-button"
+          (click)="openWhatsAppSupport()"
+        >
+
+          <i class="fa-brands fa-whatsapp"></i>
+
+          Contact Support
+
+        </button>
+
+      </section>
+
+    }
+
+
+    <!-- =====================================================
+         STATUS ERROR
+    ====================================================== -->
+
+    @else if (statusError) {
+
+      <section class="verification-card">
+
+        <div class="status-loading">
+
+          <i class="fa-solid fa-triangle-exclamation"></i>
+
+          <h2>
+            Unable to Check Status
+          </h2>
+
+          <p>
+            We couldn't check your verification status.
+            Please try again.
+          </p>
+
+          <button
+            type="button"
+            class="primary-action"
+            (click)="loadVerificationStatus()"
+          >
+
+            <i class="fa-solid fa-rotate"></i>
+
+            Try Again
+
+          </button>
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- =====================================================
+         PAYMENT / VERIFICATION NOT COMPLETED
+    ====================================================== -->
+
+    @else {
+
+      <!-- =====================================================
+           MAIN PLAN CARD
+      ====================================================== -->
+
+      <section class="verification-card">
+
+        <div class="verification-badge">
+          VERIFIED ACCESS
+        </div>
+
+
+        <h2>
+          Home Verification
+        </h2>
+
+
+        <p class="card-description">
+          Complete your home verification to unlock
+          full access to verified matchmaking.
+        </p>
+
+
+        <!-- =================================================
+             BENEFITS
+        ================================================== -->
+
+        <div class="benefits-list">
+
+
+          <div class="benefit-item">
+
+            <i class="fa-solid fa-check"></i>
+
+            <span>
+              Unlimited Interest &amp; View Contact Details
+            </span>
+
+          </div>
+
+
+          <div class="benefit-item">
+
+            <i class="fa-solid fa-check"></i>
+
+            <span>
+              Full profile access
+            </span>
+
+          </div>
+
+
+          <div class="benefit-item">
+
+            <i class="fa-solid fa-check"></i>
+
+            <span>
+              Access Verified Profiles
+            </span>
+
+          </div>
+
+
+          <div class="benefit-item">
+
+            <i class="fa-solid fa-check"></i>
+
+            <span>
+              Valid for 1 Year
+            </span>
+
+          </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             PRICING
+        ================================================== -->
+
+        <div class="pricing-box">
+
+
+          <!-- REGULAR VALUE -->
+
+          <div class="regular-price">
+
+            <span>
+              Regular Plan Value
+            </span>
+
+            <strong>
+              ₹1,499
+            </strong>
+
+          </div>
+
+
+          <!-- CURRENT PLAN -->
+
+          <div class="current-plan">
+
+            <span>
+              Current Plan
+            </span>
+
+            <strong>
+              {{ verificationStatus?.current_plan || 'Free' }}
+            </strong>
+
+          </div>
+
+
+          <!-- HOME VERIFICATION CHARGE -->
+
+          <div class="verification-charge">
+
+            <span>
+              Home Verification Support Charge
+            </span>
+
+            <strong>
+              ₹399
+            </strong>
+
+            <small>
+              One-time payment • No recurring charges
+            </small>
+
+          </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             CTA
+        ================================================== -->
+
+        <button
+          type="button"
+          class="primary-action"
+          (click)="continueVerification()"
+          [disabled]="isCheckingLocation"
+        >
+
+          @if (isCheckingLocation) {
+
+            <i class="fa-solid fa-spinner fa-spin"></i>
+
+            Checking Location...
+
+          }
+
+          @else {
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+            Continue Verification
+
+          }
+
+        </button>
+
+
+        <p class="payment-note">
+
+          Pay ₹399 to continue your home verification.
+
+        </p>
+
+
+      </section>
+
+    }
+
+
+    <!-- =====================================================
+         WHY VERIFICATION
+    ====================================================== -->
 
     <section class="benefits-section">
 
@@ -186,10 +585,14 @@
       <div class="reason-grid">
 
 
+        <!-- HOME VISIT -->
+
         <article class="reason-card">
 
           <div class="reason-icon">
+
             <i class="fa-solid fa-house"></i>
+
           </div>
 
           <h3>
@@ -204,10 +607,14 @@
         </article>
 
 
+        <!-- FAMILY -->
+
         <article class="reason-card">
 
           <div class="reason-icon">
+
             <i class="fa-solid fa-people-roof"></i>
+
           </div>
 
           <h3>
@@ -222,14 +629,18 @@
         </article>
 
 
+        <!-- VERIFIED -->
+
         <article class="reason-card">
 
           <div class="reason-icon">
+
             <i class="fa-solid fa-circle-check"></i>
+
           </div>
 
           <h3>
-            Verified & Trusted Profiles
+            Verified &amp; Trusted Profiles
           </h3>
 
           <p>
@@ -240,10 +651,14 @@
         </article>
 
 
+        <!-- MATCHES -->
+
         <article class="reason-card">
 
           <div class="reason-icon">
+
             <i class="fa-solid fa-heart"></i>
+
           </div>
 
           <h3>
@@ -263,7 +678,9 @@
     </section>
 
 
-    <!-- VERIFICATION JOURNEY -->
+    <!-- =====================================================
+         VERIFICATION JOURNEY
+    ====================================================== -->
 
     <section class="journey-section">
 
@@ -282,6 +699,8 @@
 
       <div class="journey-list">
 
+
+        <!-- STEP 01 -->
 
         <div class="journey-step completed">
 
@@ -308,7 +727,13 @@
         </div>
 
 
-        <div class="journey-step current">
+        <!-- STEP 02 -->
+
+        <div
+          class="journey-step"
+          [class.current]="!isVerificationCompleted"
+          [class.completed]="isVerificationCompleted"
+        >
 
           <div class="step-number">
             02
@@ -320,13 +745,53 @@
               Home Verification
             </h3>
 
-            <span class="step-status">
-              Current Step
-            </span>
+            @if (isVerificationCompleted) {
+
+              <span class="step-status">
+                Completed
+              </span>
+
+            }
+
+            @else if (isPaymentUnderReview) {
+
+              <span class="step-status">
+                Under Review
+              </span>
+
+            }
+
+            @else {
+
+              <span class="step-status">
+                Current Step
+              </span>
+
+            }
 
             <p>
-              Make a one-time payment and
-              schedule your home verification.
+
+              @if (isVerificationCompleted) {
+
+                Your home verification has been completed.
+
+              }
+
+              @else if (isPaymentUnderReview) {
+
+                Your payment has been received.
+                Our team will contact you for the
+                home verification visit.
+
+              }
+
+              @else {
+
+                Complete the one-time payment and
+                proceed with your home verification.
+
+              }
+
             </p>
 
           </div>
@@ -334,7 +799,13 @@
         </div>
 
 
-        <div class="journey-step">
+        <!-- STEP 03 -->
+
+        <div
+          class="journey-step"
+          [class.current]="isVerificationCompleted"
+          [class.completed]="isVerificationCompleted"
+        >
 
           <div class="step-number">
             03
@@ -345,6 +816,14 @@
             <h3>
               Unlock Verified Matches
             </h3>
+
+            @if (isVerificationCompleted) {
+
+              <span class="step-status">
+                Available
+              </span>
+
+            }
 
             <p>
               Access full profiles, photos
@@ -361,7 +840,9 @@
     </section>
 
 
-    <!-- SUPPORT -->
+    <!-- =====================================================
+         SUPPORT
+    ====================================================== -->
 
     <section class="support-card">
 
@@ -370,6 +851,7 @@
         <i class="fa-brands fa-whatsapp"></i>
 
       </div>
+
 
       <div class="support-content">
 
@@ -384,7 +866,12 @@
 
       </div>
 
-      <button type="button" class="support-button" (click)="openWhatsAppSupport()">
+
+      <button
+        type="button"
+        class="support-button"
+        (click)="openWhatsAppSupport()"
+      >
 
         <i class="fa-brands fa-whatsapp"></i>
 
@@ -395,7 +882,9 @@
     </section>
 
 
-    <!-- FOOTER NOTE -->
+    <!-- =====================================================
+         FOOTER NOTE
+    ====================================================== -->
 
     <div class="security-note">
 
@@ -403,84 +892,93 @@
 
       <p>
         Your information is kept private and confidential.
-        Your profile will be reviewed after successful payment
-        and home verification.
+
+        Your profile will be reviewed after successful
+        payment and home verification.
       </p>
 
     </div>
 
+
   </div>
 
 
+  <!-- =====================================================
+       SERVICE NOT AVAILABLE MODAL
+  ====================================================== -->
 
-
-
-  <!-- SERVICE NOT AVAILABLE MODAL -->
-
-@if (showServiceUnavailable) {
-
-  <div
-    class="service-modal-overlay"
-    (click)="closeServiceUnavailable()"
-  >
+  @if (showServiceUnavailable) {
 
     <div
-      class="service-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="service-modal-title"
-      (click)="$event.stopPropagation()"
+      class="service-modal-overlay"
+      (click)="closeServiceUnavailable()"
     >
 
-      <!-- CLOSE -->
-      <button
-        type="button"
-        class="service-modal-close"
-        aria-label="Close"
-        (click)="closeServiceUnavailable()"
+      <div
+        class="service-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="service-modal-title"
+        (click)="$event.stopPropagation()"
       >
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+
+        <!-- CLOSE -->
+
+        <button
+          type="button"
+          class="service-modal-close"
+          aria-label="Close"
+          (click)="closeServiceUnavailable()"
+        >
+
+          <i class="fa-solid fa-xmark"></i>
+
+        </button>
 
 
-      <!-- ICON -->
-      <div class="service-modal-icon">
-        <i class="fa-solid fa-location-dot"></i>
+        <!-- ICON -->
+
+        <div class="service-modal-icon">
+
+          <i class="fa-solid fa-location-dot"></i>
+
+        </div>
+
+
+        <h2 id="service-modal-title">
+          Home Verification Service
+        </h2>
+
+
+        <p>
+          Our Home Verification Service is currently
+          not available in your location.
+        </p>
+
+
+        <p class="service-modal-subtext">
+          We are expanding our service areas and will
+          inform you as soon as home verification becomes
+          available in your location.
+        </p>
+
+
+        <button
+          type="button"
+          class="service-modal-button"
+          (click)="closeServiceUnavailable()"
+        >
+
+          Okay
+
+        </button>
+
+
       </div>
-
-
-      <!-- TITLE -->
-      <h2 id="service-modal-title">
-        Home Verification Service
-      </h2>
-
-
-      <!-- MESSAGE -->
-      <p>
-        Our Home Verification Service is currently
-        not available in your location.
-      </p>
-
-
-      <p class="service-modal-subtext">
-        We are expanding our service areas and will
-        inform you as soon as home verification becomes
-        available in your location.
-      </p>
-
-
-      <!-- BUTTON -->
-      <button
-        type="button"
-        class="service-modal-button"
-        (click)="closeServiceUnavailable()"
-      >
-        Okay
-      </button>
 
     </div>
 
-  </div>
+  }
 
-}
+
 </main>

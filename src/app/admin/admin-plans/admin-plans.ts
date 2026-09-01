@@ -1,106 +1,196 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AdminMenu } from '../admin-menu/admin-menu';
-import { FormsModule } from '@angular/forms';
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  Router
+} from '@angular/router';
+
+import {
+  AdminMenu
+} from '../admin-menu/admin-menu';
+
+import {
+  FormsModule
+} from '@angular/forms';
+
+import {
+  ApiService
+} from '../../services/api';
+
 
 interface PlanUser {
+
   id: string;
+
+  user_id: number;
+
   name: string;
+
   gender: string;
+
   place: string;
+
   phone: string;
+
   registeredDate: string;
+
   plan: 'Free' | 'Basic';
+
   status: 'Active' | 'Pending';
+
+  paymentStatus:
+    | 'Not Required'
+    | 'Pending'
+    | 'Success'
+    | 'Failed'
+    | 'Refunded';
+
 }
+
 
 @Component({
   selector: 'app-admin-plans',
+
   standalone: true,
+
   imports: [
-    CommonModule,FormsModule,
+    CommonModule,
+    FormsModule,
     AdminMenu
   ],
+
   templateUrl: './admin-plans.html',
+
   styleUrl: './admin-plans.css'
 })
-export class AdminPlans {
+
+
+export class AdminPlans implements OnInit {
+
 
   searchTerm = '';
 
-  showPlanPopup = false;
-
-selectedUser: PlanUser | null = null;
-
-selectedPlanValue: 'Free' | 'Basic' = 'Free';
-
   selectedPlan = 'All';
 
-  users: PlanUser[] = [
 
-    {
-      id: 'F1032',
-      name: 'Rasiya Fathima',
-      gender: 'Female',
-      place: 'Malappuram',
-      phone: '9746900055',
-      registeredDate: '27 Aug 2026',
-      plan: 'Free',
-      status: 'Active'
-    },
+  showPlanPopup = false;
 
-    {
-      id: 'M1031',
-      name: 'Faris Rahman',
-      gender: 'Male',
-      place: 'Kondotty',
-      phone: '9876543210',
-      registeredDate: '26 Aug 2026',
-      plan: 'Free',
-      status: 'Active'
-    },
+  selectedUser: PlanUser | null = null;
 
-    {
-      id: 'F1028',
-      name: 'Raniya Fathima',
-      gender: 'Female',
-      place: 'Kannur',
-      phone: '9847001122',
-      registeredDate: '25 Aug 2026',
-      plan: 'Basic',
-      status: 'Active'
-    },
 
-    {
-      id: 'M1025',
-      name: 'Mohammed Shamil',
-      gender: 'Male',
-      place: 'Perinthalmanna',
-      phone: '9567002233',
-      registeredDate: '26 Aug 2026',
-      plan: 'Free',
-      status: 'Pending'
-    },
+  selectedPlanValue:
+    'Free' | 'Basic' = 'Free';
 
-    {
-      id: 'F1024',
-      name: 'Ayesha Fathima',
-      gender: 'Female',
-      place: 'Kozhikode',
-      phone: '9495003344',
-      registeredDate: '24 Aug 2026',
-      plan: 'Free',
-      status: 'Active'
-    }
 
-  ];
+  selectedPaymentStatus:
+    | 'pending'
+    | 'success'
+    | 'failed'
+    | 'refunded' = 'success';
+
+
+  users: PlanUser[] = [];
+
+
+  isLoading = false;
+
+  isSaving = false;
+
+
+  errorMessage = '';
+
+  successMessage = '';
 
 
   constructor(
-    private router: Router
+    private router: Router,
+
+    private apiService: ApiService,
+
+    private cdr: ChangeDetectorRef
   ) {}
 
+
+  // =========================================================
+  // INIT
+  // =========================================================
+
+  ngOnInit(): void {
+
+    this.loadUsers();
+
+  }
+
+
+  // =========================================================
+  // LOAD USERS
+  // =========================================================
+
+  loadUsers(): void {
+
+    this.isLoading = true;
+
+    this.errorMessage = '';
+
+    this.successMessage = '';
+
+
+    this.apiService
+      .getAdminPlanUsers()
+      .subscribe({
+
+        next: (response: any) => {
+
+          this.users =
+            response?.data?.users ?? [];
+
+
+          this.isLoading = false;
+
+
+          this.cdr.detectChanges();
+
+        },
+
+
+        error: (error: any) => {
+
+          console.error(
+            'Failed to load admin plan users:',
+            error
+          );
+
+
+          this.users = [];
+
+
+          this.errorMessage =
+            error?.error?.message ||
+            'Unable to load users. Please try again.';
+
+
+          this.isLoading = false;
+
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
+
+  }
+
+
+  // =========================================================
+  // FILTERED USERS
+  // =========================================================
 
   get filteredUsers(): PlanUser[] {
 
@@ -109,25 +199,48 @@ selectedPlanValue: 'Free' | 'Basic' = 'Free';
         .trim()
         .toLowerCase();
 
+
     return this.users.filter(user => {
+
 
       const matchesSearch =
         !search ||
-        user.id.toLowerCase().includes(search) ||
-        user.name.toLowerCase().includes(search) ||
-        user.place.toLowerCase().includes(search) ||
-        user.phone.includes(search);
+
+        user.id
+          .toLowerCase()
+          .includes(search) ||
+
+        user.name
+          .toLowerCase()
+          .includes(search) ||
+
+        user.place
+          .toLowerCase()
+          .includes(search) ||
+
+        user.phone
+          .includes(search);
+
 
       const matchesPlan =
         this.selectedPlan === 'All' ||
+
         user.plan === this.selectedPlan;
 
-      return matchesSearch && matchesPlan;
+
+      return (
+        matchesSearch &&
+        matchesPlan
+      );
 
     });
 
   }
 
+
+  // =========================================================
+  // SUMMARY
+  // =========================================================
 
   get totalUsers(): number {
 
@@ -154,22 +267,13 @@ selectedPlanValue: 'Free' | 'Basic' = 'Free';
   }
 
 
-  changePlan(user: PlanUser): void {
+  // =========================================================
+  // VIEW PROFILE
+  // =========================================================
 
-    if (user.plan === 'Free') {
-
-      user.plan = 'Basic';
-
-      return;
-
-    }
-
-    user.plan = 'Free';
-
-  }
-
-
-  viewProfile(memberId: string): void {
+  viewProfile(
+    memberId: string
+  ): void {
 
     this.router.navigate([
       '/admin/profile-view',
@@ -177,54 +281,325 @@ selectedPlanValue: 'Free' | 'Basic' = 'Free';
     ]);
 
   }
-/* =========================================
-   OPEN PLAN POPUP
-========================================= */
-
-openPlanPopup(user: PlanUser): void {
-
-  this.selectedUser = user;
-
-  this.selectedPlanValue = user.plan;
-
-  this.showPlanPopup = true;
-
-}
 
 
-/* =========================================
-   CLOSE PLAN POPUP
-========================================= */
+  // =========================================================
+  // OPEN PLAN POPUP
+  // =========================================================
 
-closePlanPopup(): void {
+  openPlanPopup(
+    user: PlanUser
+  ): void {
 
-  this.showPlanPopup = false;
-
-  this.selectedUser = null;
-
-}
+    this.selectedUser = user;
 
 
+    this.selectedPlanValue =
+      user.plan;
 
-/* =========================================
-   CONFIRM PLAN CHANGE
-========================================= */
 
-confirmPlanChange(): void {
+    /*
+     * When current plan is Free,
+     * default payment status to Success.
+     *
+     * For Basic, use latest payment status
+     * when possible.
+     */
 
-  if (!this.selectedUser) {
-    return;
+    if (user.plan === 'Free') {
+
+      this.selectedPaymentStatus =
+        'success';
+
+    } else {
+
+      switch (user.paymentStatus) {
+
+        case 'Pending':
+
+          this.selectedPaymentStatus =
+            'pending';
+
+          break;
+
+
+        case 'Failed':
+
+          this.selectedPaymentStatus =
+            'failed';
+
+          break;
+
+
+        case 'Refunded':
+
+          this.selectedPaymentStatus =
+            'refunded';
+
+          break;
+
+
+        default:
+
+          this.selectedPaymentStatus =
+            'success';
+
+      }
+
+    }
+
+
+    this.errorMessage = '';
+
+    this.successMessage = '';
+
+
+    this.showPlanPopup = true;
+
+
+    this.cdr.detectChanges();
+
   }
 
 
-  this.selectedUser.plan =
-    this.selectedPlanValue;
+  // =========================================================
+  // CLOSE PLAN POPUP
+  // =========================================================
+
+  closePlanPopup(): void {
+
+    if (this.isSaving) {
+      return;
+    }
 
 
-  this.closePlanPopup();
+    this.showPlanPopup = false;
 
-}
-   
+    this.selectedUser = null;
+
+
+    this.cdr.detectChanges();
+
+  }
+
+
+  // =========================================================
+  // CONFIRM PLAN CHANGE
+  // =========================================================
+
+  confirmPlanChange(): void {
+
+    if (!this.selectedUser) {
+
+      return;
+
+    }
+
+
+    /*
+     * Nothing changed
+     */
+
+    if (
+      this.selectedPlanValue ===
+        this.selectedUser.plan
+      &&
+      (
+        this.selectedPlanValue === 'Free'
+        ||
+        this.selectedPaymentStatus ===
+          this.getPaymentStatusValue(
+            this.selectedUser.paymentStatus
+          )
+      )
+    ) {
+
+      this.closePlanPopup();
+
+      return;
+
+    }
+
+
+    this.isSaving = true;
+
+    this.errorMessage = '';
+
+    this.successMessage = '';
+
+
+    /*
+     * Free plan does not need a real payment.
+     * Backend also forces Free -> success internally.
+     */
+
+    const paymentStatus =
+      this.selectedPlanValue === 'Free'
+        ? 'success'
+        : this.selectedPaymentStatus;
+
+
+    this.apiService
+      .changeAdminUserPlan({
+
+        member_id:
+          this.selectedUser.id,
+
+        plan:
+          this.selectedPlanValue,
+
+        payment_status:
+          paymentStatus
+
+      })
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log(
+            'Plan change successful:',
+            response
+          );
+
+
+          this.isSaving = false;
+
+
+          this.showPlanPopup = false;
+
+          this.selectedUser = null;
+
+
+          this.successMessage =
+            response?.message ||
+            'User plan updated successfully.';
+
+
+          /*
+           * Reload from database.
+           *
+           * This ensures the screen shows the
+           * actual backend state, not local data.
+           */
+
+          this.loadUsers();
+
+
+          this.cdr.detectChanges();
+
+        },
+
+
+        error: (error: any) => {
+
+          console.error(
+            'Failed to change user plan:',
+            error
+          );
+
+
+          this.isSaving = false;
+
+
+          this.errorMessage =
+            error?.error?.message ||
+            'Unable to update user plan. Please try again.';
+
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
+
+  }
+
+
+  // =========================================================
+  // PAYMENT STATUS VALUE
+  // =========================================================
+
+  private getPaymentStatusValue(
+    status:
+      | 'Not Required'
+      | 'Pending'
+      | 'Success'
+      | 'Failed'
+      | 'Refunded'
+  ):
+    | 'pending'
+    | 'success'
+    | 'failed'
+    | 'refunded'
+  {
+
+    switch (status) {
+
+      case 'Pending':
+        return 'pending';
+
+      case 'Failed':
+        return 'failed';
+
+      case 'Refunded':
+        return 'refunded';
+
+      default:
+        return 'success';
+
+    }
+
+  }
+
+
+  // =========================================================
+  // PAYMENT STATUS CLASS
+  // =========================================================
+
+  getPaymentStatusClass(
+    status: string
+  ): string {
+
+    return status
+      .toLowerCase()
+      .replace(/\s+/g, '-');
+
+  }
+
+
+  // =========================================================
+  // PLAN CLASS
+  // =========================================================
+
+  getPlanClass(
+    plan: string
+  ): string {
+
+    return plan
+      .toLowerCase()
+      .replace(/\s+/g, '-');
+
+  }
+
+
+  // =========================================================
+  // STATUS CLASS
+  // =========================================================
+
+  getStatusClass(
+    status: string
+  ): string {
+
+    return status
+      .toLowerCase()
+      .replace(/\s+/g, '-');
+
+  }
+
+
+  // =========================================================
+  // DASHBOARD
+  // =========================================================
 
   openDashboard(): void {
 
