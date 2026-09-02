@@ -150,6 +150,21 @@ export class ApiService {
   }
 
 
+  private multipartUserHeaders(): HttpHeaders {
+    const token = localStorage.getItem('mwi_token');
+
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set(
+        'Authorization',
+        `Bearer ${token}`
+      );
+    }
+
+    return headers;
+  }
+
   // =========================================================
   // USER PROFILE
   // =========================================================
@@ -258,6 +273,60 @@ export class ApiService {
     );
   }
 
+
+  // =========================================================
+  // USER PROFILE SECTION EDITING
+  // =========================================================
+
+  updateProfileSection(section: string, data: Record<string, unknown>) {
+    return this.http.post<any>(
+      `${this.apiUrl}/profile/update-section`,
+      {
+        section,
+        ...data
+      },
+      {
+        headers: this.authHeaders()
+      }
+    );
+  }
+
+
+  // =========================================================
+  // USER PROFILE PHOTOS
+  // =========================================================
+
+  getProfilePhotos() {
+    return this.http.get<any>(
+      `${this.apiUrl}/profile/photos`,
+      {
+        headers: this.authHeaders()
+      }
+    );
+  }
+
+  saveProfilePhotos(
+    retainedIds: number[],
+    files: File[]
+  ) {
+    const formData = new FormData();
+
+    retainedIds.forEach(id => {
+      formData.append('retained_ids[]', String(id));
+    });
+
+    files.forEach(file => {
+      formData.append('photos[]', file, file.name);
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}/profile/photos`,
+      formData,
+      {
+        headers: this.multipartUserHeaders()
+      }
+    );
+  }
 
   completeRegistration() {
 
@@ -432,5 +501,9 @@ getVerificationStatus() {
       }
     );
   }
+  
+  getApiRoot(): string {
+  return String(this.apiUrl || '').replace(/\/$/, '');
+}
 
 }

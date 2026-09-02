@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ProfileService } from '../../services/profile';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from '../../services/api';
 
 @Component({
   selector: 'app-physical-details',
@@ -18,46 +19,74 @@ export class PhysicalDetails implements OnInit {
   returnTo: string = '/complete-profile';
   constructor(
     private router: Router,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private apiService: ApiService,
+    private route: ActivatedRoute,
+     private cdr: ChangeDetectorRef
   ) { }
-
   ngOnInit(): void {
-    
 
-     
-     
+    // Return page
+    this.returnTo =
+      this.route.snapshot.queryParamMap.get('returnUrl') ||
+      '/complete-profile';
 
-    
 
-    try {
+    // Load latest profile directly from database API
+    this.profileService.getCurrentProfileFromApi().subscribe({
 
-      const profile =
-        this.profileService.getCurrentProfile();
+      next: (profile) => {
 
-      if (!profile) {
-        return;
+        if (!profile) {
+
+          console.error(
+            'Unable to load current profile'
+          );
+
+          return;
+        }
+
+
+        // =========================
+        // PHYSICAL DETAILS
+        // =========================
+
+        this.weight =
+          profile.weight ?? null;
+
+        this.bodyType =
+          profile.bodyType ?? '';
+
+        this.complexion =
+          profile.complexion ?? '';
+
+        this.physicalStatus =
+          profile.physicalStatus ?? '';
+
+
+        console.log(
+          'PHYSICAL DETAILS LOADED FROM API:',
+          {
+            weight: this.weight,
+            bodyType: this.bodyType,
+            complexion: this.complexion,
+            physicalStatus: this.physicalStatus
+          }
+        );
+        this.cdr.detectChanges();
+
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Unable to load physical details from API',
+          error
+        );
+
       }
 
-      this.weight =
-        profile.weight ?? null;
-
-      this.bodyType =
-        profile.bodyType ?? '';
-
-      this.complexion =
-        profile.complexion ?? '';
-
-      this.physicalStatus =
-        profile.physicalStatus ?? '';
-
-    } catch (error) {
-
-      console.error(
-        'Unable to load physical details',
-        error
-      );
-
-    }
+    });
 
   }
   saveDetails(): void {
@@ -156,32 +185,69 @@ export class PhysicalDetails implements OnInit {
     // =========================
     // LOAD PROFILE
     // =========================
+    const payload: Record<string, unknown> = {
+      bodyType: this.bodyType,
+      complexion: this.complexion,
+      physicalStatus: this.physicalStatus
+    };
 
-    const updatedProfile =
-  this.profileService.updateProfile({
-    ...(this.weight !== null
-      ? { weight: this.weight }
-      : {}),
-
-    bodyType: this.bodyType,
-    complexion: this.complexion,
-    physicalStatus: this.physicalStatus,
-    physicalDetailsCompleted: true
-  });
-
-    if (!updatedProfile) {
-      console.error(
-        'Unable to update profile'
-      );
-      return;
+    if (this.weight !== null && this.weight !== undefined) {
+      payload['weight'] = this.weight;
     }
-    this.router.navigate([
-      this.returnTo
-    ]);
 
+    this.apiService.updateProfileSection(
+      'physical',
+      payload
+    ).subscribe({
+
+      next: (response: any) => {
+
+        if (!response?.success) {
+
+          console.error(
+            'Unable to update physical details',
+            response
+          );
+
+          return;
+        }
+
+        // Update local profile cache
+        this.profileService.updateProfile({
+
+          ...(this.weight !== null
+            ? { weight: this.weight }
+            : {}),
+
+          bodyType: this.bodyType,
+          complexion: this.complexion,
+          physicalStatus: this.physicalStatus,
+          physicalDetailsCompleted: true
+
+        });
+
+        // Return to the page that opened this editor
+        this.router.navigateByUrl(
+          this.returnTo
+        );
+
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Unable to update physical details',
+          error
+        );
+
+      }
+
+    });
 
 
   }
+
+
   isWeightInvalid(): boolean {
 
     if (

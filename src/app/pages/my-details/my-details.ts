@@ -222,90 +222,104 @@ export class MyDetails implements OnInit {
   }
 
   openPhysicalDetails(): void {
+  this.router.navigate(
+    ['/physical-details'],
+    {
+      queryParams: {
+        returnUrl: '/my-details',
+        section: 'physical'
+      }
+    }
+  );
+}
 
-    sessionStorage.setItem(
-      'mwi_edit_source',
-      'my-details'
-    );
+openContactDetails(): void {
+  this.router.navigate(
+    ['/contact-details'],
+    {
+      queryParams: {
+        returnUrl: '/my-details',
+        section: 'contact'
+      }
+    }
+  );
+}
 
-    this.router.navigate([
-      '/physical-details'
-    ]);
+openWorkDetails(): void {
+  this.router.navigate(
+    ['/work-details'],
+    {
+      queryParams: {
+        returnUrl: '/my-details',
+        section: 'work'
+      }
+    }
+  );
+}
 
-  }
-  openContactDetails(): void {
+openFamilyDetails(): void {
+  this.router.navigate(
+    ['/family-details'],
+    {
+      queryParams: {
+        returnUrl: '/my-details',
+        section: 'family'
+      }
+    }
+  );
+}
 
-    sessionStorage.setItem(
-      'mwi_edit_source',
-      'my-details'
-    );
+openAdditionalPreferences(): void {
+  this.router.navigate(
+    ['/additional-preferences'],
+    {
+      queryParams: {
+        returnUrl: '/my-details',
+        section: 'additional-preferences'
+      }
+    }
+  );
+}
 
-    this.router.navigate([
-      '/contact-details'
-    ]);
+openExpectations(): void {
+  this.router.navigate(
+    ['/expectations'],
+    {
+      queryParams: {
+        returnUrl: '/my-details',
+        section: 'expectations'
+      }
+    }
+  );
+}
 
-  }
-  openWorkDetails(): void {
+openProfilePhotos(): void {
+  this.router.navigate(
+    ['/profile-photos'],
+    {
+      queryParams: {
+        returnUrl: '/my-details',
+        section: 'photos'
+      }
+    }
+  );
+}
+ 
+  // openProfilePhotos(): void {
 
-    sessionStorage.setItem(
-      'mwi_edit_source',
-      'my-details'
-    );
+  //   sessionStorage.setItem(
+  //     'mwi_edit_source',
+  //     'my-details'
+  //   );
 
-    this.router.navigate([
-      '/work-details'
-    ]);
+  //   this.router.navigate([
+  //     '/profile-photos'
+  //   ]);
 
-  }
-  openFamilyDetails(): void {
+  // }
 
-    sessionStorage.setItem(
-      'mwi_edit_source',
-      'my-details'
-    );
 
-    this.router.navigate([
-      '/family-details'
-    ]);
 
-  }
-  openAdditionalPreferences(): void {
-
-    sessionStorage.setItem(
-      'mwi_edit_source',
-      'my-details'
-    );
-
-    this.router.navigate([
-      '/additional-preferences'
-    ]);
-
-  }
-
-  openExpectations(): void {
-
-    sessionStorage.setItem(
-      'mwi_edit_source',
-      'my-details'
-    );
-
-    this.router.navigate([
-      '/expectations'
-    ]);
-
-  }
-  openProfilePhotos(): void {
-
-    sessionStorage.setItem(
-      'mwi_edit_source',
-      'my-details'
-    );
-
-    this.router.navigate([
-      '/profile-photos'
-    ]);
-
-  }
   formatWorkLocation(): string {
 
     if (!this.user?.workLocationType) {

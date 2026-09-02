@@ -13,12 +13,7 @@
 
     <header class="details-header">
 
-      <div>
-
-        <span class="page-label">
-          MY PROFILE
-        </span>
-
+      <div> 
         <h1>
           My Details
         </h1>
@@ -41,7 +36,11 @@
           </span>
 
           <strong>
+            @if (user.homeVerified === true) {
+            Home Verified
+            } @else {
             Registration Completed
+            }
           </strong>
 
         </div>
@@ -49,53 +48,33 @@
       </div>
 
     </header>
-<!-- PROFILE UPDATE POLICY -->
-<section
-  class="profile-update-policy"
-  role="note"
-  aria-label="Profile editing information"
->
-  <div class="policy-content">
 
-    <span class="policy-label">
-      PROFILE UPDATE POLICY
-    </span>
+    <!-- PROFILE SUMMARY -->
+    <section class="profile-summary-card">
+      <div class="summary-photo">
+        @if (user.photos?.length) {
+        <img [src]="user.photos[0]" alt="Profile photo" />
+        } @else {
+        <i class="fa-solid fa-user"></i>
+        }
+      </div>
+      <div class="summary-main">
+        <div class="summary-name-row">
+          <h2>{{ user.fullName }}</h2>
+          @if (user.homeVerified === true) {
+          <span class="summary-verified"><i class="fa-solid fa-check"></i> Verified</span>
+          }
+        </div>
+        <p class="summary-meta">{{ user.age }} <span>•</span> {{ user.religion || '-' }} <span>•</span> {{ user.district
+          || '-' }}</p>
+        <p class="summary-role">{{ user.jobTitle || 'Profile details' }}</p>
+      </div>
+    </section>
 
-    <h2>
-      Home Verification
-    </h2>
 
-    <p>
-      You can update your additional profile details before
-      Home Verification.
-    </p>
 
-    <p>
-      Once your profile is Home Verified, editing will be disabled
-      to protect the accuracy and trust of your verified information.
-    </p>
-
-    <p>
-      Need to update something after verification?
-      Please contact our Match With Ijas service team.
-      We will assist you with the required changes.
-    </p>
-
-    <a
-      href="https://wa.me/919746900055?text=Hi%20Match%20With%20Ijas%2C%20I%20need%20help%20updating%20my%20profile."
-      target="_blank"
-      rel="noopener noreferrer"
-      class="whatsapp-support-btn"
-    >
-      <i class="fa-brands fa-whatsapp"></i>
-      Contact Support on WhatsApp
-    </a>
-
-  </div>
-</section>
     <!-- =========================================
-         01 BASIC DETAILS
-         ========================================= -->
+         01 BASIC DETAILS========================================= -->
 
     <section class="details-card">
 
@@ -117,6 +96,9 @@
 
         </div>
 
+        <span class="section-status section-status-completed">
+          <i class="fa-solid fa-circle-check"></i> Completed
+        </span>
       </div>
 
 
@@ -272,8 +254,7 @@
 
 
     <!-- =========================================
-         02 PHYSICAL DETAILS
-         ========================================= -->
+         02 PHYSICAL DETAILS========================================= -->
 
     <section class="details-card">
 
@@ -295,15 +276,10 @@
 
         </div>
 
-
         <button type="button" class="edit-btn" (click)="openPhysicalDetails()">
-
           <i class="fa-solid fa-pen"></i>
-
           Edit
-
         </button>
-
       </div>
 
 
@@ -366,8 +342,7 @@
 
 
     <!-- =========================================
-         03 EDUCATION & CAREER
-         ========================================= -->
+         03 EDUCATION & CAREER========================================= -->
 
     <section class="details-card">
 
@@ -389,6 +364,9 @@
 
         </div>
 
+        <span class="section-status section-status-completed">
+          <i class="fa-solid fa-circle-check"></i> Completed
+        </span>
       </div>
 
 
@@ -455,8 +433,7 @@
 
 
     <!-- =========================================
-         04 WORK & EDUCATION DETAILS
-         ========================================= -->
+         04 WORK & EDUCATION DETAILS========================================= -->
 
     <section class="details-card">
 
@@ -469,7 +446,7 @@
         <div class="section-title">
 
           <h2>
-            Work & Education Details
+            Work Details
           </h2>
 
           <p>
@@ -478,15 +455,10 @@
 
         </div>
 
-
         <button type="button" class="edit-btn" (click)="openWorkDetails()">
-
           <i class="fa-solid fa-pen"></i>
-
           Edit
-
         </button>
-
       </div>
 
 
@@ -549,8 +521,7 @@
 
 
     <!-- =========================================
-         05 CONTACT INFORMATION
-         ========================================= -->
+         05 LOCATION========================================= -->
 
     <section class="details-card">
 
@@ -558,87 +529,6 @@
 
         <div class="section-number">
           05
-        </div>
-
-        <div class="section-title">
-
-          <h2>
-            Contact Information
-          </h2>
-
-          <p>
-            Additional contact information
-          </p>
-
-        </div>
-
-
-        <button type="button" class="edit-btn" (click)="openContactDetails()">
-
-          <i class="fa-solid fa-pen"></i>
-
-          Edit
-
-        </button>
-
-      </div>
-
-
-      <div class="details-grid">
-
-        <div>
-
-          <span>
-            Secondary Mobile
-          </span>
-
-          <strong>
-            {{ user.secondaryMobile || '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            WhatsApp Number
-          </span>
-
-          <strong>
-            {{ user.whatsappNumber || '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Email
-          </span>
-
-          <strong>
-            {{ user.email || '-' }}
-          </strong>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================================
-         06 LOCATION
-         ========================================= -->
-
-    <section class="details-card">
-
-      <div class="card-header">
-
-        <div class="section-number">
-          06
         </div>
 
         <div class="section-title">
@@ -653,6 +543,9 @@
 
         </div>
 
+        <span class="section-status section-status-completed">
+          <i class="fa-solid fa-circle-check"></i> Completed
+        </span>
       </div>
 
 
@@ -727,466 +620,17 @@
     </section>
 
 
+
+    <div class="details-group-heading"><span>Matchmaking Preferences</span></div>
     <!-- =========================================
-         07 RELIGION & COMMUNITY
-         ========================================= -->
+         06 PARTNER PREFERENCE========================================= -->
 
     <section class="details-card">
 
       <div class="card-header">
 
         <div class="section-number">
-          07
-        </div>
-
-        <div class="section-title">
-
-          <h2>
-            Religion & Community
-          </h2>
-
-          <p>
-            Religion and community information
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div class="details-grid">
-
-
-        <!-- COMMON -->
-
-        <div>
-
-          <span>
-            Religion
-          </span>
-
-          <strong>
-            {{ user.religion || '-' }}
-          </strong>
-
-        </div>
-
-
-        <!-- MUSLIM -->
-
-        @if (user.religion === 'Muslim') {
-
-        @if (user.sect) {
-
-        <div>
-
-          <span>
-            Sect
-          </span>
-
-          <strong>
-            {{ user.sect }}
-          </strong>
-
-        </div>
-
-        }
-
-
-        @if (user.muslimGroup) {
-
-        <div>
-
-          <span>
-            Sunni Group
-          </span>
-
-          <strong>
-            {{ user.muslimGroup }}
-          </strong>
-
-        </div>
-
-        }
-
-
-        @if (user.salafiGroup) {
-
-        <div>
-
-          <span>
-            Salafi Group
-          </span>
-
-          <strong>
-            {{ user.salafiGroup }}
-          </strong>
-
-        </div>
-
-        }
-
-        }
-
-
-        <!-- HINDU -->
-
-        @if (
-        user.religion?.toLowerCase() === 'hindu'
-        ) {
-
-        <div>
-
-          <span>
-            Caste
-          </span>
-
-          <strong>
-            {{ user.caste || '-' }}
-          </strong>
-
-        </div>
-
-
-        @if (user.subCaste) {
-
-        <div>
-
-          <span>
-            Sub Caste
-          </span>
-
-          <strong>
-            {{ user.subCaste }}
-          </strong>
-
-        </div>
-
-        }
-
-
-        @if (user.nakshatra) {
-
-        <div>
-
-          <span>
-            Nakshatra
-          </span>
-
-          <strong>
-            {{ user.nakshatra }}
-          </strong>
-
-        </div>
-
-        }
-
-
-        @if (user.rashi) {
-
-        <div>
-
-          <span>
-            Rashi
-          </span>
-
-          <strong>
-            {{ user.rashi }}
-          </strong>
-
-        </div>
-
-        }
-
-
-        @if (user.dosham) {
-
-        <div>
-
-          <span>
-            Dosham
-          </span>
-
-          <strong>
-            {{ formatValue(user.dosham) }}
-          </strong>
-
-        </div>
-
-        }
-
-        }
-
-
-        <!-- CHRISTIAN -->
-
-        @if (user.religion === 'Christian') {
-
-        @if (user.denomination) {
-
-        <div>
-
-          <span>
-            Denomination
-          </span>
-
-          <strong>
-            {{ user.denomination }}
-          </strong>
-
-        </div>
-
-        }
-
-
-        @if (user.christianSubGroup) {
-
-        <div>
-
-          <span>
-            Sub Denomination
-          </span>
-
-          <strong>
-            {{ user.christianSubGroup }}
-          </strong>
-
-        </div>
-
-        }
-
-
-        @if (user.parishName) {
-
-        <div>
-
-          <span>
-            Parish / Church
-          </span>
-
-          <strong>
-            {{ user.parishName }}
-          </strong>
-
-        </div>
-
-        }
-
-        }
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================================
-         08 FAMILY DETAILS
-         ========================================= -->
-
-    <section class="details-card">
-
-      <div class="card-header">
-
-        <div class="section-number">
-          08
-        </div>
-
-        <div class="section-title">
-
-          <h2>
-            Family Details
-          </h2>
-
-          <p>
-            Parent, sibling and family information
-          </p>
-
-        </div>
-
-
-        <button type="button" class="edit-btn" (click)="openFamilyDetails()">
-
-          <i class="fa-solid fa-pen"></i>
-
-          Edit
-
-        </button>
-
-      </div>
-
-
-      <div class="details-grid">
-
-        <div>
-
-          <span>
-            Father Name
-          </span>
-
-          <strong>
-            {{ user.fatherName || '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Father Occupation
-          </span>
-
-          <strong>
-            {{ user.fatherOccupation || '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Father Status
-          </span>
-
-          <strong>
-            {{ user.fatherStatus || '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Mother Name
-          </span>
-
-          <strong>
-            {{ user.motherName || '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Mother Occupation
-          </span>
-
-          <strong>
-            {{ user.motherOccupation || '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Mother Status
-          </span>
-
-          <strong>
-            {{ user.motherStatus || '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Brothers
-          </span>
-
-          <strong>
-            {{ user.brothers ?? '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Sisters
-          </span>
-
-          <strong>
-            {{ user.sisters ?? '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Married Brothers
-          </span>
-
-          <strong>
-            {{ user.marriedBrothers ?? '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Married Sisters
-          </span>
-
-          <strong>
-            {{ user.marriedSisters ?? '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Family Status
-          </span>
-
-          <strong>
-            {{ user.familyStatus || '-' }}
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Home Type
-          </span>
-
-          <strong>
-            {{ user.homeType || '-' }}
-          </strong>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================================
-         09 PARTNER PREFERENCE
-         ========================================= -->
-
-    <section class="details-card">
-
-      <div class="card-header">
-
-        <div class="section-number">
-          09
+          06
         </div>
 
         <div class="section-title">
@@ -1201,6 +645,9 @@
 
         </div>
 
+        <span class="section-status section-status-completed">
+          <i class="fa-solid fa-circle-check"></i> Completed
+        </span>
       </div>
 
 
@@ -1544,15 +991,14 @@
 
 
     <!-- =========================================
-         10 ADDITIONAL PREFERENCES
-         ========================================= -->
+         07 ADDITIONAL PREFERENCES========================================= -->
 
     <section class="details-card">
 
       <div class="card-header">
 
         <div class="section-number">
-          10
+          07
         </div>
 
         <div class="section-title">
@@ -1567,15 +1013,10 @@
 
         </div>
 
-
         <button type="button" class="edit-btn" (click)="openAdditionalPreferences()">
-
           <i class="fa-solid fa-pen"></i>
-
           Edit
-
         </button>
-
       </div>
 
 
@@ -1740,21 +1181,20 @@
 
 
     <!-- =========================================
-         11 EXPECTATIONS
-         ========================================= -->
+         08 EXPECTATIONS========================================= -->
 
     <section class="details-card">
 
       <div class="card-header">
 
         <div class="section-number">
-          11
+          08
         </div>
 
         <div class="section-title">
 
           <h2>
-            Your Expectations
+            Expectations
           </h2>
 
           <p>
@@ -1763,15 +1203,11 @@
 
         </div>
 
-
+         
         <button type="button" class="edit-btn" (click)="openExpectations()">
-
           <i class="fa-solid fa-pen"></i>
-
           Edit
-
         </button>
-
       </div>
 
 
@@ -1794,9 +1230,533 @@
     </section>
 
 
+
+    <div class="details-group-heading"><span>Personal &amp; Family</span></div>
     <!-- =========================================
-         12 PROFILE PHOTOS
-         ========================================= -->
+         09 RELIGION & COMMUNITY========================================= -->
+
+    <section class="details-card">
+
+      <div class="card-header">
+
+        <div class="section-number">
+          09
+        </div>
+
+        <div class="section-title">
+
+          <h2>
+            Religion & Community
+          </h2>
+
+          <p>
+            Religion and community information
+          </p>
+
+        </div>
+
+        <span class="section-status section-status-completed">
+          <i class="fa-solid fa-circle-check"></i> Completed
+        </span>
+      </div>
+
+
+      <div class="details-grid">
+
+
+        <!-- COMMON -->
+
+        <div>
+
+          <span>
+            Religion
+          </span>
+
+          <strong>
+            {{ user.religion || '-' }}
+          </strong>
+
+        </div>
+
+
+        <!-- MUSLIM -->
+
+        @if (user.religion === 'Muslim') {
+
+        @if (user.sect) {
+
+        <div>
+
+          <span>
+            Sect
+          </span>
+
+          <strong>
+            {{ user.sect }}
+          </strong>
+
+        </div>
+
+        }
+
+
+        @if (user.muslimGroup) {
+
+        <div>
+
+          <span>
+            Sunni Group
+          </span>
+
+          <strong>
+            {{ user.muslimGroup }}
+          </strong>
+
+        </div>
+
+        }
+
+
+        @if (user.salafiGroup) {
+
+        <div>
+
+          <span>
+            Salafi Group
+          </span>
+
+          <strong>
+            {{ user.salafiGroup }}
+          </strong>
+
+        </div>
+
+        }
+
+        }
+
+
+        <!-- HINDU -->
+
+        @if (
+        user.religion?.toLowerCase() === 'hindu'
+        ) {
+
+        <div>
+
+          <span>
+            Caste
+          </span>
+
+          <strong>
+            {{ user.caste || '-' }}
+          </strong>
+
+        </div>
+
+
+        @if (user.subCaste) {
+
+        <div>
+
+          <span>
+            Sub Caste
+          </span>
+
+          <strong>
+            {{ user.subCaste }}
+          </strong>
+
+        </div>
+
+        }
+
+
+        @if (user.nakshatra) {
+
+        <div>
+
+          <span>
+            Nakshatra
+          </span>
+
+          <strong>
+            {{ user.nakshatra }}
+          </strong>
+
+        </div>
+
+        }
+
+
+        @if (user.rashi) {
+
+        <div>
+
+          <span>
+            Rashi
+          </span>
+
+          <strong>
+            {{ user.rashi }}
+          </strong>
+
+        </div>
+
+        }
+
+
+        @if (user.dosham) {
+
+        <div>
+
+          <span>
+            Dosham
+          </span>
+
+          <strong>
+            {{ formatValue(user.dosham) }}
+          </strong>
+
+        </div>
+
+        }
+
+        }
+
+
+        <!-- CHRISTIAN -->
+
+        @if (user.religion === 'Christian') {
+
+        @if (user.denomination) {
+
+        <div>
+
+          <span>
+            Denomination
+          </span>
+
+          <strong>
+            {{ user.denomination }}
+          </strong>
+
+        </div>
+
+        }
+
+
+        @if (user.christianSubGroup) {
+
+        <div>
+
+          <span>
+            Sub Denomination
+          </span>
+
+          <strong>
+            {{ user.christianSubGroup }}
+          </strong>
+
+        </div>
+
+        }
+
+
+        @if (user.parishName) {
+
+        <div>
+
+          <span>
+            Parish / Church
+          </span>
+
+          <strong>
+            {{ user.parishName }}
+          </strong>
+
+        </div>
+
+        }
+
+        }
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================================
+         10 FAMILY DETAILS========================================= -->
+
+    <section class="details-card">
+
+      <div class="card-header">
+
+        <div class="section-number">
+          10
+        </div>
+
+        <div class="section-title">
+
+          <h2>
+            Family Details
+          </h2>
+
+          <p>
+            Parent, sibling and family information
+          </p>
+
+        </div>
+
+         
+        <button type="button" class="edit-btn" (click)="openFamilyDetails()">
+          <i class="fa-solid fa-pen"></i>
+          Edit
+        </button>
+      </div>
+
+
+      <div class="details-grid">
+
+        <div>
+
+          <span>
+            Father Name
+          </span>
+
+          <strong>
+            {{ user.fatherName || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Father Occupation
+          </span>
+
+          <strong>
+            {{ user.fatherOccupation || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Father Status
+          </span>
+
+          <strong>
+            {{ user.fatherStatus || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Mother Name
+          </span>
+
+          <strong>
+            {{ user.motherName || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Mother Occupation
+          </span>
+
+          <strong>
+            {{ user.motherOccupation || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Mother Status
+          </span>
+
+          <strong>
+            {{ user.motherStatus || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Brothers
+          </span>
+
+          <strong>
+            {{ user.brothers ?? '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Sisters
+          </span>
+
+          <strong>
+            {{ user.sisters ?? '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Married Brothers
+          </span>
+
+          <strong>
+            {{ user.marriedBrothers ?? '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Married Sisters
+          </span>
+
+          <strong>
+            {{ user.marriedSisters ?? '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Family Status
+          </span>
+
+          <strong>
+            {{ user.familyStatus || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Home Type
+          </span>
+
+          <strong>
+            {{ user.homeType || '-' }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================================
+         11 CONTACT INFORMATION========================================= -->
+
+    <section class="details-card">
+
+      <div class="card-header">
+
+        <div class="section-number">
+          11
+        </div>
+
+        <div class="section-title">
+
+          <h2>
+            Contact Information
+          </h2>
+
+          <p>
+            Additional contact information
+          </p>
+
+        </div>
+
+         
+        <button type="button" class="edit-btn" (click)="openContactDetails()">
+          <i class="fa-solid fa-pen"></i>
+          Edit
+        </button>
+      </div>
+
+
+      <div class="details-grid">
+
+        <div>
+
+          <span>
+            Secondary Mobile
+          </span>
+
+          <strong>
+            {{ user.secondaryMobile || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            WhatsApp Number
+          </span>
+
+          <strong>
+            {{ user.whatsappNumber || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Email
+          </span>
+
+          <strong>
+            {{ user.email || '-' }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================================
+         12 PROFILE PHOTOS========================================= -->
 
     <section class="details-card photo-section">
 
@@ -1818,15 +1778,10 @@
 
         </div>
 
-
         <button type="button" class="edit-btn" (click)="openProfilePhotos()">
-
           <i class="fa-solid fa-pen"></i>
-
           Edit
-
         </button>
-
       </div>
 
 
@@ -1877,6 +1832,28 @@
 
       }
 
+    </section>
+
+    <!-- PROFILE UPDATE POLICY -->
+    <section class="profile-update-policy" role="note" aria-label="Profile editing information">
+      <div class="policy-content">
+
+        <span class="policy-label">
+          PROFILE UPDATE POLICY
+        </span>
+
+
+
+        <p>You can update additional profile details before Home Verification. After verification, contact our service
+          team for changes.</p>
+
+        <a href="https://wa.me/919746900055?text=Hi%20Match%20With%20Ijas%2C%20I%20need%20help%20updating%20my%20profile."
+          target="_blank" rel="noopener noreferrer" class="whatsapp-support-btn">
+          <i class="fa-brands fa-whatsapp"></i>
+          Contact Support on WhatsApp
+        </a>
+
+      </div>
     </section>
 
 

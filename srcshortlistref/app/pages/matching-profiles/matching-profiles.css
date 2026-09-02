@@ -1,0 +1,425 @@
+/* =========================
+   PAGE
+========================= */
+
+.matching-page {
+  min-height: 100vh;
+
+  background: #f7f7f9;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.dashboard-main {
+  margin-left: 250px;
+
+  min-height: 100vh;
+
+  padding: 38px 45px 70px;
+}
+
+.dashboard-main > * {
+  max-width: 1120px;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* =========================
+   PAGE HEADER
+========================= */
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-label {
+  font-size: 10px;
+
+  font-weight: 750;
+
+  letter-spacing: 1.3px;
+
+  color: #88888f;
+}
+
+.page-header h1 {
+  margin: 5px 0 6px;
+
+  font-size: clamp(28px, 3vw, 38px);
+
+  line-height: 1.15;
+
+  letter-spacing: -1px;
+}
+
+.page-header p {
+  margin: 0;
+
+  color: #77777e;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   MATCHING GRID
+========================= */
+
+.matching-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 16px;
+
+  margin-bottom: 25px;
+}
+
+
+/* =========================
+   PROFILE CARD
+========================= */
+
+.match-card {
+  overflow: hidden;
+
+  background: #fff;
+
+  border: 1px solid #e5e5e9;
+
+  border-radius: 15px;
+
+  cursor: pointer;
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.match-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, .06);
+}
+
+
+/* =========================
+   PHOTO
+========================= */
+
+.profile-photo {
+  position: relative;
+
+  height: 235px;
+
+  background: #f0f0f3;
+}
+
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #aaaab0;
+
+  font-size: 48px;
+}
+
+
+/* VERIFIED */
+
+.verified-badge {
+  position: absolute;
+
+  top: 12px;
+  left: 12px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 5px 8px;
+
+  border-radius: 6px;
+
+  background: #fff;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, .08);
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.match-content {
+  padding: 16px;
+}
+
+.profile-heading {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.profile-heading h3 {
+  margin: 0;
+
+  font-size: 17px;
+}
+
+.profile-heading span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #99999f;
+
+  font-size: 10px;
+}
+
+
+/* =========================
+   SHORTLIST
+========================= */
+
+.shortlist-btn {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e3e3e7;
+
+  border-radius: 8px;
+
+  background: #fff;
+
+  color: #77777e;
+
+  cursor: pointer;
+}
+
+.shortlist-btn:hover {
+  background: #f5f5f7;
+}
+
+.shortlist-btn.active {
+  background: #fff7e6;
+  border-color: #f5b400;
+  color: #f5b400;
+}
+
+
+/* =========================
+   DETAILS
+========================= */
+
+.profile-details {
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  gap: 8px;
+
+  margin: 15px 0;
+}
+
+.profile-details span {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: #65656c;
+
+  font-size: 11px;
+}
+
+.profile-details i {
+  width: 14px;
+
+  color: #929299;
+
+  text-align: center;
+}
+
+
+/* =========================
+   INTEREST
+========================= */
+
+.interest-btn {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 10px;
+
+  border: 1px solid #dedee3;
+
+  border-radius: 8px;
+
+  background: #fff;
+
+  color: #333;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition: .18s ease;
+}
+
+.interest-btn:hover {
+  background: #f3f3f5;
+}
+
+.interest-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: #f3f3f5;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1050px) {
+
+  .dashboard-main {
+    padding-left: 28px;
+
+    padding-right: 28px;
+  }
+
+  .matching-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 760px) {
+
+  .dashboard-main {
+    margin-left: 0;
+
+    padding: 25px 15px 50px;
+  }
+
+  .matching-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .page-header h1 {
+    font-size: 27px;
+  }
+
+  .profile-photo {
+    height: 260px;
+  }
+
+}
+
+.matching-empty {
+  width: 100%;
+  max-width: 520px;
+  margin: 50px auto;
+  padding: 40px 30px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 18px;
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #f5f5f5;
+
+  font-size: 26px;
+}
+
+.matching-empty h3 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.matching-empty p {
+  margin: 0 auto 8px;
+  max-width: 420px;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.matching-empty > span {
+  display: block;
+  margin-bottom: 24px;
+
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
+.empty-action {
+  border: 0;
+  padding: 11px 18px;
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}

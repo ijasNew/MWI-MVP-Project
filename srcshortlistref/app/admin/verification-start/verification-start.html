@@ -1,0 +1,471 @@
+<app-admin-menu></app-admin-menu>
+<div class="verification-page">
+
+  <header class="page-header">
+
+    <div>
+
+      <button type="button" class="back-button" (click)="backToList()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Verification
+      </button>
+
+      <span class="page-label">
+        ADMIN / HOME VERIFICATION
+      </span>
+
+      <h1>
+        Start Verification
+      </h1>
+
+      <p>
+        Verify the home location and upload proof for
+        <strong>{{ memberId }}</strong>.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- PROFILE SUMMARY -->
+
+  <section class="profile-summary">
+
+    <div class="avatar">
+      {{ profileName.charAt(0) }}
+    </div>
+
+    <div class="profile-info">
+
+      <strong>
+        {{ profileName }}
+      </strong>
+
+      <span>
+        {{ memberId }}
+      </span>
+
+      <small>
+        {{ profilePlace }}
+      </small>
+
+    </div>
+
+    <button type="button" class="view-profile" (click)="backToProfile()">
+      View Profile
+    </button>
+
+  </section>
+
+
+  <!-- STEPS -->
+
+  <div class="steps">
+
+    <div class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
+
+      <span>
+        01
+      </span>
+
+      <div>
+        <strong>
+          Current Location
+        </strong>
+
+        <small>
+          Confirm verification location
+        </small>
+      </div>
+
+    </div>
+
+
+    <div class="step-line"></div>
+
+
+    <div class="step" [class.active]="currentStep === 2">
+
+      <span>
+        02
+      </span>
+
+      <div>
+        <strong>
+          Home Image
+        </strong>
+
+        <small>
+          Upload verification proof
+        </small>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- LOCATION STEP -->
+
+  @if (currentStep === 1) {
+
+  <section class="verification-card">
+
+    <div class="card-header">
+
+      <div class="icon-box">
+        <i class="fa-solid fa-location-crosshairs"></i>
+      </div>
+
+      <div>
+
+        <h2>
+          Confirm Current Location
+        </h2>
+
+        <p>
+          The verification officer must be physically
+          present at the member's home location.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="location-notice">
+
+      <i class="fa-solid fa-shield-halved"></i>
+
+      <div>
+
+        <strong>
+          Location must be captured from this device
+        </strong>
+
+        <span>
+          Manual location entry is not available.
+          Use the device's current GPS location.
+        </span>
+
+      </div>
+
+    </div>
+
+
+    @if (!locationCaptured) {
+
+    <div class="location-action">
+
+      <button type="button" class="location-button" (click)="useCurrentLocation()" [disabled]="locationLoading">
+
+        @if (locationLoading) {
+
+        <i class="fa-solid fa-spinner fa-spin"></i>
+
+        Getting Current Location...
+
+        } @else {
+
+        <i class="fa-solid fa-location-crosshairs"></i>
+
+        Use My Current Location
+
+        }
+
+      </button>
+
+    </div>
+
+    } @else {
+
+    <div class="location-success">
+
+      <div class="success-icon">
+        <i class="fa-solid fa-check"></i>
+      </div>
+
+      <div class="location-data">
+
+        <strong>
+          Current location captured
+        </strong>
+
+         <div class="location-details">
+
+  @if (locationResolving) {
+
+    <div class="location-resolving">
+
+      <i class="fa-solid fa-spinner fa-spin"></i>
+
+      <span>
+        Identifying current location...
+      </span>
+
+    </div>
+
+  } @else {
+
+    <div class="location-place">
+
+      <i class="fa-solid fa-location-dot"></i>
+
+      <strong>
+        {{ locationName }}
+      </strong>
+
+    </div>
+
+    @if (accuracy !== null) {
+
+      <span class="location-accuracy">
+
+        Accuracy:
+        {{ accuracy | number:'1.0-0' }} metres
+
+      </span>
+
+    }
+
+  }
+
+</div>
+      </div>
+
+      <button type="button" class="retry-button" (click)="useCurrentLocation()">
+        Recapture
+      </button>
+
+    </div>
+
+    }
+
+
+    @if (locationError) {
+
+    <div class="error-message">
+
+      <i class="fa-solid fa-circle-exclamation"></i>
+
+      {{ locationError }}
+
+    </div>
+
+    }
+
+
+    <div class="card-actions">
+
+      <button type="button" class="secondary-button" (click)="backToList()">
+        Cancel
+      </button>
+
+      <button type="button" class="primary-button" [disabled]="!locationCaptured" (click)="continueToPhoto()">
+        Continue
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+    </div>
+
+  </section>
+
+  }
+
+
+  <!-- PHOTO STEP -->
+
+  @if (currentStep === 2) {
+
+  <section class="verification-card">
+
+    <div class="card-header">
+
+      <div class="icon-box">
+        <i class="fa-solid fa-house"></i>
+      </div>
+
+      <div>
+
+        <h2>
+          Upload Home Image
+        </h2>
+
+        <p>
+          Upload a clear image showing the member's home.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="location-confirmed">
+
+      <i class="fa-solid fa-location-dot"></i>
+
+      <div>
+
+        <strong>
+          Location captured successfully
+        </strong>
+
+        <span>
+          Accuracy:
+          {{ accuracy | number:'1.0-0' }} metres
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+
+
+    @if (imageLoading) {
+
+    <div class="image-loading">
+
+      <i class="fa-solid fa-spinner fa-spin"></i>
+
+      <strong>
+        Loading image...
+      </strong>
+
+      <span>
+        Please wait
+      </span>
+
+    </div>
+
+    } @else if (!selectedImage) {
+
+    <label class="upload-area" for="homeImage">
+
+      <div class="upload-icon">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+      </div>
+
+      <strong>
+        Upload Home Image
+      </strong>
+
+      <span>
+        JPG, PNG or WebP · Maximum 5 MB
+      </span>
+
+      <input id="homeImage" type="file" accept="image/jpeg,image/png,image/webp" (change)="onImageSelected($event)" />
+
+    </label>
+
+    } @else {
+
+    <div class="image-preview">
+
+     <div class="preview-image-wrapper">
+
+  @if (imagePreviewLoading) {
+
+    <div class="image-loading preview-loading">
+
+      <i class="fa-solid fa-spinner fa-spin"></i>
+
+      <strong>
+        Loading preview...
+      </strong>
+
+      <span>
+        Please wait
+      </span>
+
+    </div>
+
+  }
+
+  <img
+    [src]="selectedImage"
+    alt="Home verification preview"
+    [class.image-hidden]="imagePreviewLoading"
+    (load)="onImagePreviewLoaded()"
+    (error)="onImagePreviewError()"
+  />
+
+</div>
+
+      <div class="preview-actions">
+
+        <span>
+          Home image selected
+        </span>
+
+        <button type="button" (click)="removeImage()">
+          <i class="fa-solid fa-trash"></i>
+          Remove
+        </button>
+
+      </div>
+
+    </div>
+
+    }
+
+
+    @if (imageError) {
+
+    <div class="error-message">
+
+      <i class="fa-solid fa-circle-exclamation"></i>
+
+      {{ imageError }}
+
+    </div>
+
+    }
+
+
+    @if (successMessage) {
+
+    <div class="success-message">
+
+      <i class="fa-solid fa-circle-check"></i>
+
+      {{ successMessage }}
+
+    </div>
+
+    }
+
+
+    <div class="card-actions">
+
+      <button type="button" class="secondary-button" (click)="currentStep = 1">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+      </button>
+
+      <button type="button" class="primary-button" [disabled]="!selectedImage || isCompleting"
+        (click)="completeVerification()">
+
+        @if (isCompleting) {
+
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        Completing...
+
+        } @else {
+
+        <i class="fa-solid fa-check"></i>
+        Complete Verification
+
+        }
+
+      </button>
+
+    </div>
+
+  </section>
+
+  }
+
+</div>

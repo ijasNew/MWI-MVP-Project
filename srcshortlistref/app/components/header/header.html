@@ -1,0 +1,67 @@
+<header class="header">
+
+    <div class="container">
+
+        <div class="navbar">
+
+            <!-- Logo -->
+            <a href="#home" class="logo">
+                <span class="logo-main">MATCH WITH</span>
+                <span class="logo-sub">IJAS</span>
+            </a>
+
+            <!-- Desktop / Mobile Menu -->
+            <nav class="nav-menu" [class.active]="menuOpen">
+
+                <a href="#home" (click)="$event.preventDefault(); goToSection('home')">
+                    Home
+                </a>
+
+                <a href="#why-us" (click)="$event.preventDefault(); goToSection('why-us')">
+                    Why Us
+                </a>
+
+                <a href="#process" (click)="$event.preventDefault(); goToSection('process')">
+                    How It Works
+                </a>
+
+                <a href="#verification" (click)="$event.preventDefault(); goToSection('verification')">
+                    Home Verification
+                </a>
+
+                <a href="#faq" (click)="$event.preventDefault(); goToSection('faq')">
+                    FAQ
+                </a>
+
+                <a href="#contact" (click)="$event.preventDefault(); goToSection('contact')">
+                    Contact
+                </a>
+
+            </nav>
+
+            <!-- Login / Register -->
+            <div class="nav-right" [class.active]="menuOpen">
+
+                <a routerLink="/login" class="login-btn" (click)="closeMenu()">
+                    Login
+                </a>
+
+                <a routerLink="/register" class="register-btn" (click)="closeMenu()">
+                    Register Free
+                </a>
+
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="menu-btn" type="button" aria-label="Toggle menu" [class.active]="menuOpen"
+                (click)="toggleMenu()">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</header>

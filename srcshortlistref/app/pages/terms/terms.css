@@ -1,0 +1,111 @@
+.terms-page {
+  padding: 80px 0 100px;
+  background: #fafafa;
+}
+
+.terms-container {
+  max-width: 900px;
+  margin: auto;
+  background: #ffffff;
+  padding: 55px 65px;
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, .05);
+}
+
+.terms-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.terms-header span {
+  color: #7c3aed;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.terms-header h1 {
+  font-size: 42px;
+  margin: 12px 0;
+}
+
+.terms-header .updated {
+  color: #777;
+  font-size: 14px;
+}
+
+.terms-page h2 {
+  font-size: 24px;
+  margin: 35px 0 15px;
+  color: #222;
+}
+
+.terms-page p {
+  color: #666;
+  line-height: 30px;
+  margin-bottom: 18px;
+}
+
+.terms-page ul {
+  padding-left: 22px;
+  margin-bottom: 25px;
+}
+
+.terms-page li {
+  color: #666;
+  line-height: 30px;
+  margin-bottom: 8px;
+}
+
+.terms-page strong {
+  color: #222;
+}
+
+.terms-page a {
+  color: #7c3aed;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.terms-page a:hover {
+  text-decoration: underline;
+}
+
+.terms-contact {
+  background: #faf7ff;
+  border-left: 4px solid #7c3aed;
+  padding: 22px 25px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.terms-contact p {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+
+  .terms-page {
+    padding: 40px 0 60px;
+  }
+
+  .terms-container {
+    width: 90%;
+    padding: 35px 25px;
+    border-radius: 15px;
+  }
+
+  .terms-header h1 {
+    font-size: 30px;
+  }
+
+  .terms-page h2 {
+    font-size: 21px;
+  }
+
+  .terms-page p,
+  .terms-page li {
+    font-size: 14px;
+    line-height: 26px;
+  }
+
+}

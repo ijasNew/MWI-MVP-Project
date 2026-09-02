@@ -1,0 +1,2289 @@
+<section class="register-page">
+
+    <div class="register-card">
+
+        <!-- HEADER -->
+        <div class="register-header">
+
+            <span class="step-label">
+                Registration
+            </span>
+
+            <h1>Create Your Profile</h1>
+
+            <p>
+                Start your journey with Match With Ijas.
+            </p>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+
+        <div class="progress">
+
+            <!-- 1 MOBILE -->
+
+            <div class="progress-step" [class.active]="
+                step === 'mobile' ||
+                step === 'otp' ||
+                step === 'password' ||
+                step === 'basic' ||
+                step === 'location' ||
+                step === 'religion' ||
+                step === 'education' ||
+                step === 'preferences' ||
+                step === 'success' 
+                ">
+
+                <span>1</span>
+                <small>Mobile</small>
+
+            </div>
+
+
+            <div class="progress-line"></div>
+
+
+            <!-- 2 VERIFY -->
+
+            <div class="progress-step" [class.active]="
+                step === 'otp' ||
+                 step === 'password' ||
+                step === 'basic' ||
+                step === 'location' ||
+                step === 'religion' ||
+                step === 'education' ||
+                step === 'preferences' ||
+                step === 'success'
+                ">
+
+                <span>2</span>
+                <small>Verify</small>
+
+            </div>
+
+
+            <div class="progress-line"></div>
+
+
+            <!-- 3 DETAILS -->
+
+            <div class="progress-step" [class.active]="
+                step === 'basic' ||
+                step === 'location' ||
+                step === 'religion' ||
+                step === 'education' ||
+                step === 'preferences' ||
+                step === 'success'
+                                ">
+
+                <span>3</span>
+                <small>Details</small>
+
+            </div>
+
+
+            <div class="progress-line"></div>
+
+
+            <!-- 4 PREFERENCES -->
+
+            <div class="progress-step" [class.active]="
+                  step === 'preferences' ||
+                 step === 'success'
+                ">
+
+                <span>4</span>
+                <small>Preferences</small>
+
+            </div>
+
+
+            <div class="progress-line"></div>
+
+
+            <!-- 5 COMPLETE -->
+
+            <div class="progress-step" [class.active]="
+                    step === 'success'
+             ">
+
+                <span>5</span>
+                <small>Complete</small>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+         STEP 1 : MOBILE
+    ========================== -->
+
+        <div class="form-section" [hidden]="step !== 'mobile'">
+
+            <h2>Enter your mobile number</h2>
+
+            <p class="form-description">
+                We'll use your mobile number to securely create your account.
+            </p>
+
+            <label for="phone">
+                Mobile Number
+            </label>
+
+            <div class="phone-input">
+
+                <span class="country-code">+91</span>
+
+                <input id="phone" type="tel" maxlength="10" inputmode="numeric" autocomplete="tel" [(ngModel)]="phone"
+                    placeholder="Enter 10 digit mobile number">
+
+            </div>
+
+            @if (errorMessage) {
+            <div class="message error-message">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>{{ errorMessage }}</span>
+            </div>
+            }
+
+            <button type="button" class="continue-btn" (click)="continueRegistration()" [disabled]="loading">
+                @if (loading) {
+                <span class="loading-content">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Checking...
+                </span>
+                } @else {
+                Continue
+                <i class="fa-solid fa-arrow-right"></i>
+                }
+            </button>
+
+            <p class="login-text">
+                Already registered?
+                <a routerLink="/login">Login</a>
+            </p>
+            <button type="button" class="back-home-btn" (click)="goToHome()">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Home
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+         STEP 2 : OTP
+    ========================== -->
+
+        <div class="form-section otp-section" [hidden]="step !== 'otp'">
+
+            <div class="otp-icon">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+
+            <h2>Verify your mobile number</h2>
+
+            <p class="form-description">
+                We've sent a verification code to
+                <strong>+91 {{ phone }}</strong>
+            </p>
+
+            <label for="otp">
+                Enter OTP
+            </label>
+
+            <input id="otp" class="otp-input" type="text" maxlength="6" inputmode="numeric" autocomplete="one-time-code"
+                [(ngModel)]="otp" placeholder="Enter 6 digit OTP">
+
+           
+
+            @if (errorMessage) {
+            <div class="message error-message">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>{{ errorMessage }}</span>
+            </div>
+            }
+
+            <button type="button" class="continue-btn" (click)="verifyOtp()" [disabled]="loading">
+
+                @if (loading) {
+                <span class="loading-content">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Verifying...
+                </span>
+                } @else {
+                Verify OTP
+                <i class="fa-solid fa-check"></i>
+                }
+
+            </button>
+
+            <button type="button" class="back-btn"
+                (click)="step = 'mobile'; otp = ''; errorMessage = ''; successMessage = ''">
+                <i class="fa-solid fa-arrow-left"></i>
+                Change Mobile Number
+            </button>
+
+        </div>
+
+
+        <!-- password -->
+        <!-- =========================
+     PASSWORD
+========================= -->
+
+        @if (step === 'password') {
+
+        <div class="form-section password-section">
+
+            <div class="password-icon">
+
+                <i class="fa-solid fa-lock"></i>
+
+            </div>
+
+            <h2>Create Your Password</h2>
+
+            <p class="form-description">
+                Create a password to securely access your
+                Match With Ijas account later.
+            </p>
+
+
+            <!-- PASSWORD -->
+
+            <label for="password">
+                Password
+            </label>
+
+            <div class="password-input">
+
+                <input id="password" [type]="
+          showPassword
+            ? 'text'
+            : 'password'
+        " [(ngModel)]="password" placeholder="Create password" autocomplete="new-password">
+
+                <button type="button" (click)="
+          showPassword = !showPassword
+        ">
+
+                    <i class="fa-solid" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <label for="confirmPassword">
+                Confirm Password
+            </label>
+
+            <div class="password-input">
+
+                <input id="confirmPassword" [type]="
+          showConfirmPassword
+            ? 'text'
+            : 'password'
+        " [(ngModel)]="confirmPassword" placeholder="Confirm password" autocomplete="new-password">
+
+                <button type="button" (click)="
+          showConfirmPassword =
+            !showConfirmPassword
+        ">
+
+                    <i class="fa-solid" [class.fa-eye]="!showConfirmPassword"
+                        [class.fa-eye-slash]="showConfirmPassword"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- PASSWORD RULES -->
+
+            <div class="password-rules">
+
+                <p>
+                    Password must contain:
+                </p>
+
+                <span [class.valid]="password.length >= 8">
+                    <i class="fa-solid fa-check"></i>
+                    At least 8 characters
+                </span>
+
+                <span [class.valid]="/[A-Z]/.test(password)">
+                    <i class="fa-solid fa-check"></i>
+                    One uppercase letter
+                </span>
+
+                <span [class.valid]="/[a-z]/.test(password)">
+                    <i class="fa-solid fa-check"></i>
+                    One lowercase letter
+                </span>
+
+                <span [class.valid]="/[0-9]/.test(password)">
+                    <i class="fa-solid fa-check"></i>
+                    One number
+                </span>
+
+            </div>
+
+
+            @if (errorMessage) {
+
+            <div class="message error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <span>
+                    {{ errorMessage }}
+                </span>
+
+            </div>
+
+            }
+
+
+            <button type="button" class="continue-btn" (click)="continueFromPassword()">
+
+                Continue
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </div>
+
+        }
+
+        @if (step === 'basic') {
+
+        <div class="form-section">
+
+            <h2>Basic Details</h2>
+
+            <p class="form-description">
+                Tell us about the person looking for a life partner.
+            </p>
+
+
+            <!-- Profile For -->
+
+            <label for="profileFor">
+                Profile for?
+            </label>
+
+            <select id="profileFor" [(ngModel)]="profileFor" (ngModelChange)="onProfileForChange()">
+
+                <option value="">
+                    Select
+                </option>
+
+                <option value="self">
+                    Self
+                </option>
+
+                <option value="sister">
+                    Sister
+                </option>
+
+                <option value="brother">
+                    Brother
+                </option>
+
+                <option value="son">
+                    Son
+                </option>
+
+                <option value="daughter">
+                    Daughter
+                </option>
+
+                <option value="friend">
+                    Friend
+                </option>
+
+                <option value="relative">
+                    Relative
+                </option>
+
+            </select>
+
+
+            <!-- Gender -->
+
+            <label for="gender">
+                Gender
+            </label>
+
+            <select id="gender" [(ngModel)]="gender" [disabled]="
+        profileFor === 'sister' ||
+        profileFor === 'brother' ||
+        profileFor === 'son' ||
+        profileFor === 'daughter'
+      ">
+
+                <option value="">
+                    Select Gender
+                </option>
+
+                <option value="male">
+                    Male
+                </option>
+
+                <option value="female">
+                    Female
+                </option>
+
+            </select>
+
+
+            <!-- Name -->
+
+            <label for="fullName">
+                Name
+            </label>
+
+            <input id="fullName" type="text" [(ngModel)]="fullName" placeholder="Enter full name">
+
+
+            <!-- Marital Status -->
+
+            <label for="maritalStatus">
+                Marital Status
+            </label>
+
+            <select id="maritalStatus" [(ngModel)]="maritalStatus" (ngModelChange)="onMaritalStatusChange()">
+
+                <option value="">
+                    Select marital status
+                </option>
+
+                <option value="never_married">
+                    Never Married
+                </option>
+
+                <option value="divorced">
+                    Divorced
+                </option>
+
+                <option value="nikah_divorce">
+                    Nikah Divorce
+                </option>
+
+                <option value="widowed">
+                    Widowed
+                </option>
+
+                <option value="separated">
+                    Separated
+                </option>
+
+                <option value="awaiting_divorce">
+                    Awaiting Divorce
+                </option>
+
+            </select>
+
+
+            <!-- KIDS -->
+
+            @if (
+            maritalStatus === 'divorced' ||
+            maritalStatus === 'widowed' ||
+            maritalStatus === 'separated' ||
+            maritalStatus === 'awaiting_divorce'
+            ) {
+
+            <label>
+                Do you have kids?
+            </label>
+
+            <div class="choice-group">
+
+                <button type="button" [class.selected]="hasKids === 'yes'" (click)="hasKids = 'yes'">
+                    Yes
+                </button>
+
+                <button type="button" [class.selected]="hasKids === 'no'" (click)="hasKids = 'no'">
+                    No
+                </button>
+
+            </div>
+
+
+            @if (hasKids === 'yes') {
+
+            <label for="numberOfKids">
+                Number of Kids
+            </label>
+
+            <select id="numberOfKids" [(ngModel)]="numberOfKids">
+
+                <option value="">
+                    Select
+                </option>
+
+                <option value="1">
+                    1
+                </option>
+
+                <option value="2">
+                    2
+                </option>
+
+                <option value="3_plus">
+                    3+
+                </option>
+
+            </select>
+
+
+            <label>
+                Kids living status
+            </label>
+
+            <div class="choice-group">
+
+                <button type="button" [class.selected]="
+              kidsLivingStatus === 'with_me'
+            " (click)="
+              kidsLivingStatus = 'with_me'
+            ">
+                    Living with me
+                </button>
+
+                <button type="button" [class.selected]="
+              kidsLivingStatus === 'not_with_me'
+            " (click)="
+              kidsLivingStatus = 'not_with_me'
+            ">
+                    Not living with me
+                </button>
+
+            </div>
+
+            }
+
+            }
+
+
+            <!-- DOB -->
+
+            <label>
+                Date of Birth
+            </label>
+
+            <div class="dob-row">
+
+                <select [(ngModel)]="dobDay" (ngModelChange)="calculateAge()">
+                    <option value="">Day</option>
+
+                    @for (day of days; track day) {
+                    <option [value]="day">
+                        {{ day }}
+                    </option>
+                    }
+                </select>
+
+
+                <select [(ngModel)]="dobMonth" (ngModelChange)="calculateAge()">
+                    <option value="">Month</option>
+
+                    @for (month of months; track month.value) {
+                    <option [value]="month.value">
+                        {{ month.name }}
+                    </option>
+                    }
+                </select>
+
+
+                <select [(ngModel)]="dobYear" (ngModelChange)="calculateAge()">
+                    <option value="">Year</option>
+
+                    @for (year of years; track year) {
+                    <option [value]="year">
+                        {{ year }}
+                    </option>
+                    }
+                </select>
+
+            </div>
+
+
+            <!-- HEIGHT -->
+
+            <!-- HEIGHT -->
+
+            <label for="height">
+                Height
+            </label>
+
+            <select id="height" [(ngModel)]="heightInches">
+
+                <option value="">
+                    Select height
+                </option>
+
+                @for (
+                h of heightOptions;
+                track h.totalInches
+                ) {
+
+                <option [value]="h.totalInches">
+                    {{ h.feet }}'{{ h.inches }}" ({{ h.cm }} cm)
+                </option>
+
+                }
+
+            </select>
+
+
+            <!-- ERROR -->
+
+            @if (errorMessage) {
+
+            <div class="message error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <span>
+                    {{ errorMessage }}
+                </span>
+
+            </div>
+
+            }
+
+
+
+            @if (calculatedAge !== null && !dobError) {
+
+            <div class="age-display">
+                Age: <strong>{{ calculatedAge }} years</strong>
+            </div>
+
+            }
+
+            @if (dobError) {
+
+            <div class="message error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <span>
+                    {{ dobError }}
+                </span>
+
+            </div>
+
+            }
+            <!-- NEXT -->
+
+            <button type="button" class="continue-btn" (click)="goToLocation()">
+
+                Next
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </div>
+
+        }
+
+        <!-- LOCATION STEP -->
+        @if (step === 'location') {
+
+        <div class="form-section">
+
+            <h2>Location Details</h2>
+
+            <p class="form-description">
+                Add the current location of the person.
+                This helps us show relevant matches based on location.
+            </p>
+
+
+            <!-- CURRENT LOCATION -->
+
+            <button type="button" class="location-option" [class.selected]="locationMethod === 'current'"
+                (click)="useCurrentLocation()">
+
+                <span class="location-option-icon">
+                    <i class="fa-solid fa-location-crosshairs"></i>
+                </span>
+
+                <span class="location-option-content">
+
+                    <strong>Use My Current Location</strong>
+
+                    <small>
+                        Automatically detect district, state and pincode
+                    </small>
+
+                </span>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </button>
+
+
+            <div class="location-or">
+                <span>OR</span>
+            </div>
+
+
+            <!-- MAP -->
+
+            <button type="button" class="location-option" [class.selected]="locationMethod === 'map'"
+                (click)="selectOnMap()">
+
+                <span class="location-option-icon">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </span>
+
+                <span class="location-option-content">
+
+                    <strong>Select Location on Map</strong>
+
+                    <small>
+                        Choose the location manually on the map
+                    </small>
+
+                </span>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </button>
+
+
+            <div class="location-or">
+                <span>OR</span>
+            </div>
+
+
+            <!-- MANUAL -->
+
+            <button type="button" class="location-option" [class.selected]="locationMethod === 'manual'"
+                (click)="useManualLocation()">
+
+                <span class="location-option-icon">
+                    <i class="fa-solid fa-pen"></i>
+                </span>
+
+                <span class="location-option-content">
+
+                    <strong>Enter Location Manually</strong>
+
+                    <small>
+                        Enter district, state and pincode yourself
+                    </small>
+
+                </span>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </button>
+
+
+            <!-- LOCATION DETAILS -->
+
+            @if (showLocationDetails) {
+
+            <div class="location-details">
+
+                <h3>Location</h3>
+
+                <label for="district">
+                    District
+                </label>
+
+                <div class="autocomplete">
+
+                    <input id="district" type="text" [(ngModel)]="district" (focus)="showDistrictSuggestions = true"
+                        (input)="showDistrictSuggestions = true" placeholder="Search district"
+                        [readonly]="locationMethod !== 'manual'" autocomplete="off">
+
+                    @if (
+                    locationMethod === 'manual' &&
+                    showDistrictSuggestions &&
+                    filteredDistricts.length > 0
+                    ) {
+
+                    <div class="suggestions">
+
+                        @for (
+                        item of filteredDistricts;
+                        track item
+                        ) {
+
+                        <button type="button" class="suggestion-item" (click)="selectDistrict(item)">
+
+                            {{ item }}
+
+                        </button>
+
+                        }
+
+                    </div>
+
+                    }
+
+                </div>
+
+
+                <input type="hidden" [(ngModel)]="state">
+
+
+                <label for="pincode">
+                    Pincode
+                </label>
+
+                <input id="pincode" type="text" maxlength="6" inputmode="numeric" [(ngModel)]="pincode"
+                    placeholder="6 digit pincode">
+
+
+                <label for="houseName">
+                    House Name
+                </label>
+
+                <input id="houseName" type="text" [(ngModel)]="houseName" placeholder="Enter house name">
+
+
+                <label for="place">
+                    Place
+                </label>
+
+                <input id="place" type="text" [(ngModel)]="place" placeholder="Enter place">
+
+            </div>
+
+            }
+            @if (
+            showLocationModal &&
+            locationModalType === 'current'
+            ) {
+
+            <div class="location-modal-overlay">
+
+                <div class="location-modal">
+
+                    <div class="location-modal-icon">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                    </div>
+
+                    <h3>Getting your location</h3>
+
+                    <p>
+                        Please allow location access to automatically
+                        detect your location.
+                    </p>
+
+                    @if (locationProcessing) {
+
+                    <div class="location-loader">
+
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+
+                        Detecting location...
+
+                    </div>
+
+                    }
+
+                    <button type="button" class="cancel-location-btn" (click)="cancelLocation()">
+                        Cancel
+                    </button>
+
+                </div>
+
+            </div>
+
+            }
+            @if (
+            showLocationModal &&
+            locationModalType === 'map'
+            ) {
+
+            <div class="location-modal-overlay">
+
+                <div class="map-modal">
+
+                    <div class="map-modal-header">
+
+                        <div>
+
+                            <h3>Select Location</h3>
+
+                            <p>
+                                Choose the location on the map
+                            </p>
+
+                        </div>
+
+                        <button type="button" class="map-close-btn" (click)="cancelMap()">
+                            ×
+                        </button>
+
+                    </div>
+
+
+                    <div class="map-container">
+
+                        <div id="register-map" class="register-map"></div>
+
+                    </div>
+
+
+                    <button type="button" class="continue-btn" (click)="confirmMapLocation()">
+                        Select Location
+                        <i class="fa-solid fa-check"></i>
+                    </button>
+
+
+                    <button type="button" class="cancel-location-btn" (click)="cancelMap()">
+                        Cancel
+                    </button>
+
+                </div>
+
+            </div>
+
+            }
+
+
+
+
+            @if (locationError) {
+
+            <div class="message error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <span>
+                    {{ locationError }}
+                </span>
+
+            </div>
+
+            }
+
+            <button type="button" class="back-btn" (click)="goBack()">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </button>
+            <button type="button" class="continue-btn" (click)="goToReligion()">
+
+                Next
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </div>
+
+        }
+
+        <!-- religion start -->
+        @if (step === 'religion') {
+
+        <div class="form-section">
+
+            <h2>Religion & Community</h2>
+
+            <p class="form-description">
+                Tell us about the religious and community background.
+            </p>
+
+
+            <!-- RELIGION -->
+
+            <label for="religion">
+                Religion
+            </label>
+
+            <select id="religion" [(ngModel)]="religion" (ngModelChange)="onReligionChange()">
+
+                <option value="">
+                    Select Religion
+                </option>
+
+                <option value="Muslim">
+                    Muslim
+                </option>
+
+                <option value="Hindu">
+                    Hindu
+                </option>
+
+                <option value="Christian">
+                    Christian
+                </option>
+
+            </select>
+
+
+            <!-- ======================
+         MUSLIM
+    ======================= -->
+
+            @if (religion === 'Muslim') {
+
+            <label>
+                Sect
+            </label>
+
+            <select [(ngModel)]="muslimSect">
+
+                <option value="">
+                    Select Sect
+                </option>
+
+                @for (
+                sect of muslimSects;
+                track sect
+                ) {
+
+                <option [value]="sect">
+                    {{ sect }}
+                </option>
+
+                }
+
+            </select>
+
+
+            @if (muslimSect === 'Sunni') {
+
+            <label>
+                Sunni Group
+            </label>
+
+            <select [(ngModel)]="sunniGroup">
+
+                <option value="">
+                    Select
+                </option>
+
+                @for (
+                group of sunniGroups;
+                track group
+                ) {
+
+                <option [value]="group">
+                    {{ group }}
+                </option>
+
+                }
+
+            </select>
+
+            }
+
+
+            @if (muslimSect === 'Salafi') {
+
+            <label>
+                Salafi Group
+            </label>
+
+            <select [(ngModel)]="salafiGroup">
+
+                <option value="">
+                    Select
+                </option>
+
+                @for (
+                group of salafiGroups;
+                track group
+                ) {
+
+                <option [value]="group">
+                    {{ group }}
+                </option>
+
+                }
+
+            </select>
+
+            }
+
+            }
+
+
+            <!-- ======================
+         HINDU
+    ======================= -->
+
+            @if (religion === 'Hindu') {
+
+            <label>
+                Caste
+            </label>
+
+            <select [(ngModel)]="hinduCaste">
+
+                <option value="">
+                    Select Caste
+                </option>
+
+                @for (
+                caste of hinduCastes;
+                track caste
+                ) {
+
+                <option [value]="caste">
+                    {{ caste }}
+                </option>
+
+                }
+
+            </select>
+
+
+            @if (getHinduSubCastes().length > 0) {
+
+            <label>
+                Sub-caste
+            </label>
+
+            <select [(ngModel)]="hinduSubCaste">
+
+                <option value="">
+                    Select Sub-caste
+                </option>
+
+                @for (
+                sub of getHinduSubCastes();
+                track sub
+                ) {
+
+                <option [value]="sub">
+                    {{ sub }}
+                </option>
+
+                }
+
+            </select>
+
+            }
+
+
+            <!-- NAKSHATRA -->
+
+            <label>
+                Nakshatra / Star
+            </label>
+
+            <select [(ngModel)]="nakshatra">
+
+                <option value="">
+                    Select Nakshatra
+                </option>
+
+                @for (
+                star of nakshatras;
+                track star
+                ) {
+
+                <option [value]="star">
+                    {{ star }}
+                </option>
+
+                }
+
+            </select>
+
+
+            <!-- RASHI -->
+
+            <label>
+                Rashi / Zodiac
+            </label>
+
+            <select [(ngModel)]="rashi">
+
+                <option value="">
+                    Select Rashi
+                </option>
+
+                @for (
+                zodiac of rashis;
+                track zodiac
+                ) {
+
+                <option [value]="zodiac">
+                    {{ zodiac }}
+                </option>
+
+                }
+
+            </select>
+
+
+            <!-- DOSHAM -->
+
+            <label>
+                Dosham
+            </label>
+
+            <select [(ngModel)]="dosham">
+
+                <option value="">
+                    Select
+                </option>
+
+                <option value="yes">
+                    Yes
+                </option>
+
+                <option value="no">
+                    No
+                </option>
+
+                <option value="dont_know">
+                    Don't Know
+                </option>
+
+            </select>
+
+            }
+
+
+            <!-- ======================
+         CHRISTIAN
+    ======================= -->
+
+            @if (religion === 'Christian') {
+
+            <label>
+                Denomination
+            </label>
+
+            <select [(ngModel)]="christianDenomination">
+
+                <option value="">
+                    Select Denomination
+                </option>
+
+                @for (
+                denomination of christianDenominations;
+                track denomination
+                ) {
+
+                <option [value]="denomination">
+                    {{ denomination }}
+                </option>
+
+                }
+
+            </select>
+
+
+            @if (christianDenomination) {
+
+            <label>
+                Church / Group
+            </label>
+
+            <select [(ngModel)]="christianSubDenomination">
+
+                <option value="">
+                    Select
+                </option>
+
+                @for (
+                option of christianOptions[
+                christianDenomination
+                ];
+                track option
+                ) {
+
+                <option [value]="option">
+                    {{ option }}
+                </option>
+
+                }
+
+            </select>
+
+            }
+
+
+            @if (
+            christianSubDenomination === 'Other' ||
+            christianSubDenomination === 'Other Pentecostal'
+            ) {
+
+            <label>
+                Please specify
+            </label>
+
+            <input type="text" [(ngModel)]="otherChristianChurch" placeholder="Enter church / group name">
+
+            }
+
+
+            <label>
+                Parish / Church Name
+            </label>
+
+            <input type="text" [(ngModel)]="otherChristianChurch" placeholder="Enter parish / church name">
+
+            }
+
+
+            <!-- ERROR -->
+
+            @if (errorMessage) {
+
+            <div class="message error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <span>
+                    {{ errorMessage }}
+                </span>
+
+            </div>
+
+            }
+            <button type="button" class="back-btn" (click)="goBack()">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </button>
+
+            <!-- NEXT -->
+
+            <button type="button" class="continue-btn" (click)="goToEducation()">
+
+                Next
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </div>
+
+        }
+
+        <!-- education -->
+        @if (step === 'education') {
+
+        <div class="form-section">
+
+            <h2>Education & Career</h2>
+
+            <p class="form-description">
+                Tell us about the person's education and current work.
+            </p>
+
+
+            <!-- =====================
+         EDUCATION
+    ====================== -->
+
+            <label for="highestEducation">
+                Highest Education
+            </label>
+
+            <select id="highestEducation" [(ngModel)]="highestEducation" (ngModelChange)="onEducationChange()">
+
+                <option value="">
+                    Select highest education
+                </option>
+
+                @for (
+                education of educationOptions;
+                track education
+                ) {
+
+                <option [value]="education">
+                    {{ education }}
+                </option>
+
+                }
+
+            </select>
+
+
+            <!-- =====================
+         SPECIALIZATION
+    ====================== -->
+
+            @if (currentSpecializations.length > 0) {
+
+            <label for="specialization">
+                Specialization
+            </label>
+
+            <select id="specialization" [(ngModel)]="specialization">
+
+                <option value="">
+                    Select specialization
+                </option>
+
+                @for (
+                item of currentSpecializations;
+                track item
+                ) {
+
+                <option [value]="item">
+                    {{ item }}
+                </option>
+
+                }
+
+            </select>
+
+            }
+
+
+            <!-- =====================
+         JOB TITLE
+    ====================== -->
+
+            <label for="jobTitle">
+                Job Title / Role
+            </label>
+
+            <div class="autocomplete">
+
+                <input id="jobTitle" type="text" [(ngModel)]="jobTitle" (input)="showJobSuggestions = true"
+                    (focus)="showJobSuggestions = true" placeholder="Type job title or role" autocomplete="off">
+
+
+                @if (
+                showJobSuggestions &&
+                filteredJobTitles.length > 0
+                ) {
+
+                <div class="suggestions">
+
+                    @for (
+                    title of filteredJobTitles;
+                    track title
+                    ) {
+
+                    <button type="button" class="suggestion-item" (click)="selectJobTitle(title)">
+
+                        {{ title }}
+
+                    </button>
+
+                    }
+
+                </div>
+
+                }
+
+            </div>
+
+
+            <!-- =====================
+         JOB SECTOR
+    ====================== -->
+
+            <label for="jobSector">
+                Job Sector
+            </label>
+
+            <select id="jobSector" [(ngModel)]="jobSector">
+
+                <option value="">
+                    Select job sector
+                </option>
+
+                @for (
+                sector of jobSectors;
+                track sector
+                ) {
+
+                <option [value]="sector">
+                    {{ sector }}
+                </option>
+
+                }
+
+            </select>
+
+
+            <!-- ERROR -->
+
+            @if (errorMessage) {
+
+            <div class="message error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <span>
+                    {{ errorMessage }}
+                </span>
+
+            </div>
+
+            }
+
+            <button type="button" class="back-btn" (click)="goBack()">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </button>
+            <!-- NEXT -->
+
+            <button type="button" class="continue-btn" (click)="goToPreferences()">
+
+                Next
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </div>
+
+        }
+
+
+        @if (step === 'preferences') {
+
+        <div class="form-section">
+
+            <h2>Partner Preferences</h2>
+
+            <p class="form-description">
+                Tell us what you are looking for in a life partner.
+            </p>
+
+
+            <!-- ======================
+                        AGE
+            ======================= -->
+
+            <label>
+                Preferred Age
+            </label>
+
+            <div class="preference-range">
+
+                <select [(ngModel)]="preferredAgeMin">
+
+                    <option value="">
+                        From
+                    </option>
+
+                    @for (
+                    age of ageOptions;
+                    track age
+                    ) {
+
+                    <option [value]="age">
+                        {{ age }}
+                    </option>
+
+                    }
+
+                </select>
+
+
+                <span>to</span>
+
+
+                <select [(ngModel)]="preferredAgeMax">
+
+                    <option value="">
+                        To
+                    </option>
+
+                    @for (
+                    age of ageOptions;
+                    track age
+                    ) {
+
+                    <option [value]="age">
+                        {{ age }}
+                    </option>
+
+                    }
+
+                </select>
+
+            </div>
+
+
+            <!-- ======================
+                 HEIGHT
+            ======================= -->
+
+            <label>
+                Preferred Height
+            </label>
+
+            <div class="preference-range">
+
+                <select [(ngModel)]="preferredHeightMin">
+
+                    <option value="">
+                        Minimum
+                    </option>
+
+                    @for (
+                    h of heightOptions;
+                    track h.totalInches
+                    ) {
+
+                    <option [value]="h.totalInches">
+                        {{ h.feet }}'{{ h.inches }}"
+                        ({{ h.cm }} cm)
+                    </option>
+
+                    }
+
+                </select>
+
+
+                <span>to</span>
+
+
+                <select [(ngModel)]="preferredHeightMax">
+
+                    <option value="">
+                        Maximum
+                    </option>
+
+                    @for (
+                    h of heightOptions;
+                    track h.totalInches
+                    ) {
+
+                    <option [value]="h.totalInches">
+                        {{ h.feet }}'{{ h.inches }}"
+                        ({{ h.cm }} cm)
+                    </option>
+
+                    }
+
+                </select>
+
+            </div>
+
+
+            <!-- ======================
+                 MARITAL STATUS
+            ======================= -->
+
+            <label>
+                Preferred Marital Status
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                status of maritalStatusOptions;
+                track status.value
+                ) {
+
+                <button type="button" [class.selected]="
+            preferredMaritalStatuses.includes(
+              status.value
+            )
+          " (click)="
+            toggleMaritalStatus(
+              status.value
+            )
+          ">
+
+                    {{ status.label }}
+
+                </button>
+
+                }
+
+            </div>
+
+
+            <!-- ======================
+             ACCEPTANCE OF KIDS
+            ======================= -->
+
+            @if (showKidsAcceptance) {
+
+            <label>
+                Acceptance of Kids
+            </label>
+
+            <div class="multi-choice">
+
+                <button type="button" [class.selected]="
+            acceptanceOfKids === 'yes'
+          " (click)="
+            acceptanceOfKids = 'yes'
+          ">
+                    Yes
+                </button>
+
+                <button type="button" [class.selected]="
+            acceptanceOfKids === 'no'
+          " (click)="
+            acceptanceOfKids = 'no'
+          ">
+                    No
+                </button>
+
+                <button type="button" [class.selected]="
+            acceptanceOfKids ===
+            'yes_not_living'
+          " (click)="
+            acceptanceOfKids =
+              'yes_not_living'
+          ">
+                    Yes, not living with them
+                </button>
+
+                <button type="button" [class.selected]="
+            acceptanceOfKids ===
+            'yes_living'
+          " (click)="
+            acceptanceOfKids =
+              'yes_living'
+          ">
+                    Yes, living with them
+                </button>
+
+            </div>
+
+            }
+
+
+            <!-- ======================
+              RELIGION
+             ======================= -->
+
+            <label>
+                Religion
+            </label>
+
+            <div class="locked-field">
+
+                {{ religion }}
+
+                <i class="fa-solid fa-lock"></i>
+
+            </div>
+
+
+
+            <!-- =========================
+          COMMUNITY PREFERENCE
+            ========================= -->
+            @if (religion === 'Christian') {
+
+            <label>
+                Preferred Denomination
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                denomination of christianDenominations;
+                track denomination
+                ) {
+
+                <button type="button" [class.selected]="
+          preferredSects.includes(
+            denomination
+          )
+        " (click)="
+          togglePreferredDenomination(
+            denomination
+          )
+        ">
+                    {{ denomination }}
+                </button>
+
+                }
+
+            </div>
+
+
+            @if (
+            preferredSects.length > 0
+            ) {
+
+            <label>
+                Preferred Sub-denomination
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                sub of preferredSects
+                .flatMap(
+                denomination =>
+                christianOptions[
+                denomination
+                ] || []
+                )
+                .filter(
+                (value, index, array) =>
+                array.indexOf(value) === index
+                );
+                track sub
+                ) {
+
+                <button type="button" [class.selected]="
+            preferredSubCastes.includes(sub)
+          " (click)="
+            togglePreferredSubDenomination(sub)
+          ">
+                    {{ sub }}
+                </button>
+
+                }
+
+            </div>
+
+            }
+
+            }
+
+            @if (religion === 'Muslim') {
+
+            <label>
+                Preferred Sect
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                sect of muslimSects;
+                track sect
+                ) {
+
+                <button type="button" [class.selected]="
+          preferredSects.includes(sect)
+        " (click)="
+          togglePreferredSect(sect)
+        ">
+                    {{ sect }}
+                </button>
+
+                }
+
+            </div>
+
+
+            <!-- SUNNI GROUP -->
+
+            @if (
+            preferredSects.includes('Sunni')
+            ) {
+
+            <label>
+                Preferred Sunni Group
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                group of sunniGroups;
+                track group
+                ) {
+
+                <button type="button" [class.selected]="
+            preferredSunniGroups.includes(group)
+          " (click)="
+            togglePreferredSunniGroup(group)
+          ">
+                    {{ group }}
+                </button>
+
+                }
+
+            </div>
+
+            }
+
+
+            <!-- SALAFI GROUP -->
+
+            @if (
+            preferredSects.includes('Salafi')
+            ) {
+
+            <label>
+                Preferred Salafi Group
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                group of salafiGroups;
+                track group
+                ) {
+
+                <button type="button" [class.selected]="
+            preferredSalafiGroups.includes(group)
+          " (click)="
+            togglePreferredSalafiGroup(group)
+          ">
+                    {{ group }}
+                </button>
+
+                }
+
+            </div>
+
+            }
+
+            }
+
+
+            @if (religion === 'Hindu') {
+
+            <label>
+                Preferred Caste
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                caste of hinduCastes;
+                track caste
+                ) {
+
+                <button type="button" [class.selected]="
+          preferredCastes.includes(caste)
+        " (click)="
+          togglePreferredCaste(caste)
+        ">
+                    {{ caste }}
+                </button>
+
+                }
+
+            </div>
+
+
+            @if (preferredCastes.length > 0) {
+
+            <label>
+                Preferred Sub-caste
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                subCaste of preferredCastes
+                .flatMap(
+                caste =>
+                getHinduSubCastesForCaste(caste)
+                )
+                .filter(
+                (value, index, array) =>
+                array.indexOf(value) === index
+                );
+                track subCaste
+                ) {
+
+                <button type="button" [class.selected]="
+            preferredSubCastes.includes(
+              subCaste
+            )
+          " (click)="
+            togglePreferredSubCaste(subCaste)
+          ">
+                    {{ subCaste }}
+                </button>
+
+                }
+
+            </div>
+
+            }
+
+            }
+
+
+
+            <!-- =========================
+     PREFERRED EDUCATION
+========================= -->
+
+            <label>
+                Preferred Education
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                education of preferredEducationOptions;
+                track education
+                ) {
+
+                <button type="button" [class.selected]="
+        preferredEducation.includes(education)
+      " (click)="
+        togglePreferredEducation(education)
+      ">
+
+                    {{ education }}
+
+                </button>
+
+                }
+
+            </div>
+
+            <!-- Specific Qualification -->
+            @if (preferredEducation.includes('Professional Degree')) {
+
+            <div class="preference-subsection">
+
+                <div class="preference-subsection-title">
+                    <span>Specific Qualification</span>
+                </div>
+
+                <div class="checkbox-grid">
+
+                    @for (
+                    option of getEducationSpecificOptions();
+                    track option
+                    ) {
+
+                    <label class="checkbox-item">
+
+                        <input type="checkbox" [checked]="
+              preferredEducationSpecific.includes(option)
+            " (change)="
+  togglePreferredEducationSpecific(option)
+">
+
+                        <span>{{ option }}</span>
+
+                    </label>
+
+                    }
+
+                </div>
+
+
+
+            </div>
+
+            }
+
+            <!-- =========================
+     PREFERRED CAREER
+========================= -->
+
+            <label>
+                Preferred Career / Job Sector
+            </label>
+
+            <div class="multi-choice">
+
+                @for (
+                sector of preferredCareerSectorOptions;
+                track sector
+                ) {
+
+                <button type="button" [class.selected]="
+        preferredCareerSectors.includes(sector)
+      " (click)="
+        togglePreferredCareerSector(sector)
+      ">
+
+                    {{ sector }}
+
+                </button>
+
+                }
+
+            </div>
+
+
+
+
+            <!-- ======================
+             PREFERRED LOCATION
+            ======================= -->
+            <label>
+                Preferred Location
+            </label>
+
+            <div class="autocomplete">
+
+                <input type="text" [(ngModel)]="preferredLocationInput"
+                    (focus)="showPreferredLocationSuggestions = true" (input)="showPreferredLocationSuggestions = true"
+                    placeholder="Search district" autocomplete="off">
+
+                @if (
+                showPreferredLocationSuggestions &&
+                filteredPreferredLocations.length > 0
+                ) {
+
+                <div class="suggestions">
+
+                    @for (
+                    district of filteredPreferredLocations;
+                    track district
+                    ) {
+
+                    <button type="button" class="suggestion-item" (click)="
+            selectPreferredLocation(district)
+              ">
+                        {{ district }}
+                    </button>
+
+                    }
+
+                </div>
+
+                }
+
+            </div>
+            @if (preferredLocations.length > 0) {
+
+            <div class="selected-locations">
+
+                @for (
+                location of preferredLocations;
+                track location
+                ) {
+
+                <span class="location-chip">
+
+                    {{ location }}
+
+                    <button type="button" (click)="
+            removePreferredLocation(location)
+          ">
+                        ×
+                    </button>
+
+                </span>
+
+                }
+
+            </div>
+
+            }
+
+
+            @if (errorMessage) {
+
+            <div class="message error-message">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <span>
+                    {{ errorMessage }}
+                </span>
+
+            </div>
+
+            }
+            <button type="button" class="back-btn" (click)="goBack()">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </button>
+
+            <button type="button" class="continue-btn" (click)="completeRegistration()">
+                Complete Registration
+
+                <i class="fa-solid fa-check"></i>
+            </button>
+
+
+        </div>
+
+        }
+        <!-- =========================
+     SUCCESS STEP
+========================= -->
+
+        @if (step === 'success') {
+
+        <div class="form-section success-section">
+
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <h2>Registration Completed</h2>
+
+            <p class="form-description">
+                Your profile has been successfully registered
+                with Match With Ijas.
+            </p>
+
+
+            <div class="member-id-card">
+
+                <span>Your Member ID</span>
+
+                <strong>
+                    {{ memberId }}
+                </strong>
+
+            </div>
+
+
+            <div class="success-info">
+
+                <div>
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <span>
+                        Your mobile number is verified.
+                    </span>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-user-check"></i>
+
+                    <span>
+                        Your profile details have been submitted.
+                    </span>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-house"></i>
+
+                    <span>
+                        Home verification will be completed before
+                        full profile access.
+                    </span>
+                </div>
+
+            </div>
+
+
+            <button type="button" class="continue-btn" (click)="goToHome()">
+
+                Go to Home
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+            <button type="button" class="continue-btn" (click)="goToDbCheck()">
+                Check Saved Registration Data
+
+                <i class="fa-solid fa-database"></i>
+            </button>
+
+
+        </div>
+
+        }
+
+    </div>
+
+</section>

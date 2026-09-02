@@ -1,0 +1,287 @@
+<div class="photos-page">
+
+  <header class="form-header">
+
+    <button
+      type="button"
+      class="back-btn"
+      (click)="goBack()"
+    >
+
+      <i class="fa-solid fa-arrow-left"></i>
+
+      Back
+
+    </button>
+
+
+    <span class="page-label">
+      PROFILE COMPLETION
+    </span>
+
+
+    <h1>
+      Profile Photos
+    </h1>
+
+
+    <p>
+      Add up to 4 clear photos to make your
+      profile more complete.
+    </p>
+
+  </header>
+
+
+  <section class="photos-card">
+
+
+    <!-- =========================
+         PHOTO GRID
+         ========================= -->
+
+    <div class="photo-grid">
+
+
+      @for (
+        photo of photos;
+        track $index
+      ) {
+
+        <div class="photo-item">
+
+          <img
+            [src]="photo"
+            alt="Profile photo"
+          >
+
+
+          <button
+            type="button"
+            class="remove-photo"
+            (click)="removePhoto($index)"
+            aria-label="Remove photo"
+          >
+
+            <i
+              class="fa-solid fa-xmark"
+            ></i>
+
+          </button>
+
+
+          @if (
+            $index === 0
+          ) {
+
+            <span class="main-photo">
+              Main Photo
+            </span>
+
+          }
+
+        </div>
+
+      }
+
+
+      <!-- =========================
+           ADD PHOTO
+           ========================= -->
+
+      @if (
+        photos.length < 4
+      ) {
+
+        <label class="upload-box">
+
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            (change)="
+              onPhotosSelected($event)
+            "
+            [disabled]="isLoadingPhoto"
+            hidden
+          >
+
+
+          <i
+            class="fa-solid fa-camera"
+          ></i>
+
+
+          <strong>
+            Add Photos
+          </strong>
+
+
+          <span>
+            {{ 4 - photos.length }}
+            slot(s) remaining
+          </span>
+
+        </label>
+
+      }
+
+    </div>
+
+
+    <!-- =========================
+         ERROR
+         ========================= -->
+
+    @if (
+      photoError
+    ) {
+
+      <div
+        class="photo-error"
+        role="alert"
+      >
+
+        <i
+          class="fa-solid fa-circle-exclamation"
+        ></i>
+
+        <span>
+          {{ photoError }}
+        </span>
+
+      </div>
+
+    }
+
+
+    <!-- =========================
+         LOADING
+         ========================= -->
+
+    @if (
+      isLoadingPhoto
+    ) {
+
+      <div
+        class="photo-loading-overlay"
+      >
+
+        <div
+          class="photo-loading-popup"
+        >
+
+          <div
+            class="loading-spinner"
+          >
+
+            <i
+              class="fa-solid fa-spinner fa-spin"
+            ></i>
+
+          </div>
+
+
+          <strong>
+            Loading photo...
+          </strong>
+
+
+          <span>
+            Please wait
+          </span>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- =========================
+         GUIDELINES
+         ========================= -->
+
+    <div
+      class="photo-guidelines"
+    >
+
+      <h3>
+        Photo guidelines
+      </h3>
+
+
+      <ul>
+
+        <li>
+          Use clear and recent photos.
+        </li>
+
+        <li>
+          Your main photo should clearly
+          show you.
+        </li>
+
+        <li>
+          Avoid group photos as the main photo.
+        </li>
+
+        <li>
+          Avoid phone numbers, text or
+          contact details appearing in photos.
+        </li>
+
+        <li>
+          JPG, PNG and WebP images only.
+        </li>
+
+        <li>
+          Maximum 5 MB per photo.
+        </li>
+
+      </ul>
+
+    </div>
+
+
+    <!-- =========================
+         ACTIONS
+         ========================= -->
+
+    <div class="form-actions">
+
+
+      <button
+        type="button"
+        class="secondary-btn"
+        [disabled]="isLoadingPhoto"
+        (click)="goBack()"
+      >
+
+        Cancel
+
+      </button>
+
+
+      <button
+        type="button"
+        class="primary-btn"
+        [disabled]="isLoadingPhoto"
+        (click)="savePhotos()"
+      >
+
+        Save Photos
+
+        <i
+          class="fa-solid fa-arrow-right"
+        ></i>
+
+      </button>
+
+
+    </div>
+
+
+  </section>
+
+</div>

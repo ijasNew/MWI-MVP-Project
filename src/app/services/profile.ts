@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Profile } from '../models/profile.model';
-import { ApiService } from './api';
-import { Observable, map } from 'rxjs';
+import { ApiService } from './api'; 
+import { Observable, forkJoin, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -43,11 +43,16 @@ getCurrentProfile(): Profile | null {
 
   getCurrentProfileFromApi(): Observable<Profile | null> {
 
-    return this.apiService.getMyProfile().pipe(
+    return forkJoin({
 
-      map((response: any) => {
+      profileResponse: this.apiService.getMyProfile(),
+      photoResponse: this.apiService.getProfilePhotos()
+    }).pipe(
 
-        console.log(
+      map(({ profileResponse, photoResponse }: any) => {
+
+        const response = profileResponse;
+        console.log(  
           'PROFILE SERVICE API RESPONSE:',
           response
         );
@@ -56,6 +61,7 @@ getCurrentProfile(): Profile | null {
           return null;
         }
 
+        
         const data = response?.data || {};
 
         const users =
@@ -521,10 +527,11 @@ getCurrentProfile(): Profile | null {
           expectations:
             dbProfile?.expectations || '',
 
-          photos:
-            Array.isArray(dbProfile?.photos)
-              ? dbProfile.photos
-              : [],
+          photos: this.normalizeProfilePhotoUrls(
+            photoResponse?.data?.photos ??
+            photoResponse?.photos ??
+            []
+          ),
 
 
           // =========================
@@ -637,6 +644,33 @@ getCurrentProfile(): Profile | null {
 
       return null;
     }
+  }
+
+
+  private normalizeProfilePhotoUrls(photos: any[]): string[] {
+
+    if (!Array.isArray(photos)) {
+      return [];
+    }
+
+    const apiRoot = this.apiService.getApiRoot();
+    
+    return photos
+      .map((photo: any) => {
+        const rawUrl = String(photo?.url ?? '').trim();
+
+        if (!rawUrl) {
+          return '';
+        }
+
+        if (/^https?:\/\//i.test(rawUrl)) {
+          return rawUrl;
+        }
+
+        return `${apiRoot}/${rawUrl.replace(/^\/+/, '')}`;
+      })
+      .filter((url: string) => url !== '')
+      .slice(0, 4);
   }
 
 

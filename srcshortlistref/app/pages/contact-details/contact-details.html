@@ -1,0 +1,152 @@
+<div class="contact-page">
+
+  <header class="form-header">
+
+    <button type="button" class="back-btn" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i>
+      Back
+    </button>
+
+    <span class="page-label">
+      PROFILE COMPLETION
+    </span>
+
+    <h1>Contact Information</h1>
+
+    <p>
+      Add additional contact details to help us
+      communicate with you when required.
+    </p>
+
+  </header>
+
+
+  <section class="form-card">
+
+    <!-- PRIMARY MOBILE -->
+
+    <div class="form-group">
+
+      <label>
+        Primary Mobile Number
+      </label>
+
+      <div class="verified-input">
+
+        <input type="text" [value]="primaryMobile" readonly>
+
+        <span>
+          <i class="fa-solid fa-circle-check"></i>
+          Verified
+        </span>
+
+      </div>
+
+      <small>
+        Your verified registration number cannot be changed here.
+      </small>
+
+    </div>
+
+
+
+
+    <!-- WHATSAPP -->
+    <div class="form-group">
+
+      <label>
+        WhatsApp Number
+        <span class="required">*</span>
+      </label>
+
+      <div class="whatsapp-input">
+
+        <select [(ngModel)]="whatsappCountryCode" aria-label="WhatsApp country code">
+
+          @for (
+          country of countryCodes;
+          track country.iso
+          ) {
+
+          <option [value]="country.code">
+            {{ country.name }} {{ country.code }}
+          </option>
+
+          }
+
+        </select>
+
+        <input type="tel" [(ngModel)]="whatsappNumber" inputmode="tel" autocomplete="tel"
+          placeholder="Enter WhatsApp number">
+
+      </div>
+
+      @if (
+      submitted &&
+      !whatsappNumber.trim()
+      ) {
+
+      <small class="field-error">
+        WhatsApp number is required.
+      </small>
+
+      }
+
+      @if (
+      submitted &&
+      whatsappNumber.trim() &&
+      !isWhatsAppValid()
+      ) {
+
+      <small class="field-error">
+        Please enter a valid WhatsApp number.
+      </small>
+
+      }
+
+    </div>
+
+    <!-- SECONDARY MOBILE -->
+
+    <div class="form-group">
+
+      <label>
+        Secondary Mobile Number
+        <span class="optional">Optional</span>
+      </label>
+
+      <input type="tel" [(ngModel)]="secondaryMobile" maxlength="15" placeholder="Enter secondary mobile number">
+
+    </div>
+
+
+    <!-- EMAIL -->
+
+    <div class="form-group">
+
+      <label>
+        Email Address
+        <span class="optional">Optional</span>
+      </label>
+
+      <input type="email" [(ngModel)]="email" placeholder="Enter your email address">
+
+    </div>
+
+
+    <div class="form-actions">
+
+      <button type="button" class="secondary-btn" (click)="goBack()">
+        Cancel
+      </button>
+
+      <button type="button" class="primary-btn" (click)="saveDetails()">
+        Save & Continue
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+    </div>
+
+  </section>
+
+</div>

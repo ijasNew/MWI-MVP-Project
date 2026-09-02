@@ -1,0 +1,249 @@
+<div class="matching-page">
+
+
+  <!-- =========================
+       USER MENU
+  ========================== -->
+
+  <app-user-menu></app-user-menu>
+
+
+  <!-- =========================
+       MAIN
+  ========================== -->
+
+  <main class="dashboard-main">
+
+
+    <!-- PAGE HEADER -->
+
+    <header class="page-header">
+
+    
+
+      <h1>
+        Matching Profiles
+      </h1>
+
+      <p>
+        Find profiles that match your preferences.
+      </p>
+
+    </header>
+
+
+    <!-- =========================
+         PROFILE GRID
+    ========================== -->
+
+     
+
+    <section class="matching-grid">
+
+  <!-- LOADING -->
+  <div
+    class="matching-state"
+    *ngIf="loading"
+  >
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    <span>Finding matching profiles...</span>
+  </div>
+
+
+  <!-- ERROR -->
+  <div
+    class="matching-state error"
+    *ngIf="!loading && errorMessage"
+  >
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+
+ <!-- NO MATCHING PROFILES -->
+<div
+  class="matching-empty"
+  *ngIf="
+    !loading &&
+    !errorMessage &&
+    profiles.length === 0
+  "
+>
+
+  <div class="empty-icon">
+    <i class="fa-solid fa-user-group"></i>
+  </div>
+
+  <h3>
+    No matching profiles yet
+  </h3>
+
+  <p>
+    We couldn't find a profile that matches your
+    current preferences.
+  </p> 
+ 
+
+</div>
+
+
+  <!-- MATCHING PROFILES -->
+  <article
+    class="match-card"
+    *ngFor="let profile of profiles"
+    (click)="openProfile(profile.memberId)"
+  >
+
+    <!-- PHOTO -->
+    <div class="profile-photo">
+
+      <img
+        *ngIf="profile.photoUrl"
+        [src]="profile.photoUrl"
+        [alt]="profile.name"
+        class="profile-image"
+      />
+
+      <div
+        class="photo-placeholder"
+        *ngIf="!profile.photoUrl"
+      >
+        <i class="fa-solid fa-user"></i>
+      </div>
+
+
+      <!-- VERIFIED -->
+      <span
+        class="verified-badge"
+        *ngIf="profile.verified"
+      >
+        <i class="fa-solid fa-check"></i>
+        Verified
+      </span>
+
+    </div>
+
+
+    <!-- CONTENT -->
+    <div class="match-content">
+
+      <!-- HEADING -->
+      <div class="profile-heading">
+
+        <div>
+
+          <h3>
+            {{ profile.name }}
+          </h3>
+
+          <span>
+            Profile ID: {{ profile.memberId }}
+          </span>
+
+        </div>
+
+
+        <!-- SHORTLIST -->
+        <button
+          type="button"
+          class="shortlist-btn"
+          [class.active]="isShortlisted(profile.memberId)"
+          [title]="isShortlisted(profile.memberId) ? 'Remove from shortlist' : 'Shortlist'"
+          (click)="
+            toggleShortlist(
+              $event,
+              profile.memberId
+            )
+          "
+        >
+          <i [class]="isShortlisted(profile.memberId) ? 'fa-solid fa-star' : 'fa-regular fa-star'"></i>
+        </button>
+
+      </div>
+
+
+      <!-- DETAILS -->
+      <div class="profile-details">
+
+        <!-- AGE -->
+        <span>
+          <i class="fa-solid fa-cake-candles"></i>
+
+          {{ profile.age }} Years
+        </span>
+
+
+        <!-- EDUCATION -->
+        <span>
+          <i class="fa-solid fa-graduation-cap"></i>
+
+          {{ profile.education }}
+        </span>
+
+
+        <!-- MARITAL STATUS -->
+        <span>
+          <i class="fa-solid fa-ring"></i>
+
+          {{ profile.maritalStatus }}
+        </span>
+
+
+        <!-- DISTRICT -->
+        <span>
+          <i class="fa-solid fa-location-dot"></i>
+
+          {{ profile.district }}
+        </span>
+
+
+        <!-- RELIGION -->
+        <span>
+          <i class="fa-solid fa-moon"></i>
+
+          {{ profile.religion }}
+        </span>
+
+      </div>
+
+
+      <!-- SEND INTEREST -->
+      <button
+        type="button"
+        class="interest-btn"
+        [disabled]="interestSentIds.has(profile.memberId)"
+        (click)="
+          sendInterest(
+            $event,
+            profile.memberId
+          )
+        "
+      >
+
+        <i class="fa-solid fa-heart"></i>
+
+        {{ interestSentIds.has(profile.memberId) ? 'Interest Sent' : 'Send Interest' }}
+
+      </button>
+
+    </div>
+
+  </article>
+
+</section>
+
+
+
+
+       
+
+
+
+
+       
+
+     
+
+  </main>
+
+</div>

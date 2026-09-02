@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileService } from '../../services/profile';
+import { ApiService } from '../../services/api';
 
 @Component({
   selector: 'app-work-details',
@@ -36,6 +37,9 @@ export class WorkDetails implements OnInit {
   workCity = '';
 
   annualIncome = '';
+
+  // Latest profile loaded from API
+  private currentProfile: any = null;
 
 
   // =========================
@@ -122,7 +126,10 @@ export class WorkDetails implements OnInit {
 
   constructor(
     private router: Router,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private apiService: ApiService,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) { }
 
 
@@ -132,21 +139,22 @@ export class WorkDetails implements OnInit {
 
   ngOnInit(): void {
 
-    const fromMyDetails =
-      sessionStorage.getItem('mwi_edit_source');
+    // Return page from query parameter
+    this.returnTo =
+      this.route.snapshot.queryParamMap.get('returnUrl') ||
+      '/complete-profile';
 
-    if (fromMyDetails === 'my-details') {
-      this.returnTo = '/my-details';
-    }
-
-
+    // Load latest profile directly from API / database
     this.profileService.getCurrentProfileFromApi().subscribe({
 
       next: (profile) => {
 
         if (!profile) {
+          console.error('Unable to load current profile');
           return;
         }
+
+        this.currentProfile = profile;
 
         this.collegeUniversity =
           profile.collegeUniversity || '';
@@ -174,12 +182,29 @@ export class WorkDetails implements OnInit {
 
         this.registeredState =
           profile.state || '';
+
+        console.log(
+          'WORK DETAILS LOADED FROM API:',
+          {
+            collegeUniversity: this.collegeUniversity,
+            companyName: this.companyName,
+            workLocationType: this.workLocationType,
+            workState: this.workState,
+            workDistrict: this.workDistrict,
+            workCountry: this.workCountry,
+            workCity: this.workCity,
+            annualIncome: this.annualIncome
+          }
+        );
+
+        // Ensure Angular updates the form after API response
+        this.cdr.detectChanges();
       },
 
       error: (error: any) => {
 
         console.error(
-          'Failed to load profile:',
+          'Failed to load work details from API:',
           error
         );
       }
@@ -418,58 +443,103 @@ export class WorkDetails implements OnInit {
 
 
     // =========================
-    // TEMPORARY PROFILE UPDATE
+    // API PROFILE UPDATE
     // =========================
 
-    const updatedProfile =
-      this.profileService.updateProfile({
+    const payload: Record<string, unknown> = {
 
-        collegeUniversity:
-          this.collegeUniversity.trim(),
+      collegeUniversity:
+        this.collegeUniversity.trim(),
 
-        companyName:
-          this.companyName.trim(),
+      companyName:
+        this.companyName.trim(),
 
-        workLocationType:
-          this.workLocationType,
+      workLocationType:
+        this.workLocationType,
 
-        workState:
-          this.workState,
+      workState:
+        this.workState,
 
-        workDistrict:
-          this.workDistrict.trim(),
+      workDistrict:
+        this.workDistrict.trim(),
 
-        workCountry:
-          this.workCountry,
+      workCountry:
+        this.workCountry,
 
-        workCity:
-          this.workCity.trim(),
+      workCity:
+        this.workCity.trim(),
 
-        annualIncome:
-          this.annualIncome,
+      annualIncome:
+        this.annualIncome
+    };
 
-        workDetailsCompleted:
-          true
-      });
+    this.apiService.updateProfileSection(
+      'work',
+      payload
+    ).subscribe({
 
+      next: (response: any) => {
 
-    if (!updatedProfile) {
+        console.log(
+          'WORK DETAILS UPDATE RESPONSE:',
+          response
+        );
 
-      console.error(
-        'Unable to update profile'
-      );
+        if (!response?.success) {
 
-      return;
-    }
+          console.error(
+            'Unable to update work details',
+            response
+          );
 
+          return;
+        }
 
-    // =========================
-    // NAVIGATE
-    // =========================
+        // Keep local cache in sync for the current session.
+        this.profileService.updateProfile({
 
-    this.router.navigate([
-      this.returnTo
-    ]);
+          collegeUniversity:
+            this.collegeUniversity.trim(),
+
+          companyName:
+            this.companyName.trim(),
+
+          workLocationType:
+            this.workLocationType,
+
+          workState:
+            this.workState,
+
+          workDistrict:
+            this.workDistrict.trim(),
+
+          workCountry:
+            this.workCountry,
+
+          workCity:
+            this.workCity.trim(),
+
+          annualIncome:
+            this.annualIncome,
+
+          workDetailsCompleted:
+            true
+        });
+
+        // Return to the page that opened this editor.
+        this.router.navigateByUrl(
+          this.returnTo
+        );
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'Unable to update work details:',
+          error
+        );
+      }
+    });
   }
 
 
@@ -493,7 +563,21 @@ export class WorkDetails implements OnInit {
     field: string
   ): string {
 
-    return '-';
+    if (!this.currentProfile) {
+      return '-';
+    }
+
+    const value = this.currentProfile[field];
+
+    if (
+      value === null ||
+      value === undefined ||
+      String(value).trim() === ''
+    ) {
+      return '-';
+    }
+
+    return String(value);
   }
 
 }

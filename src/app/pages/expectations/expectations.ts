@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 import { ProfileService } from '../../services/profile';
+import { ApiService } from '../../services/api';
 
 @Component({
   selector: 'app-expectations',
@@ -21,7 +23,10 @@ export class Expectations implements OnInit {
 
   constructor(
     private router: Router,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private apiService: ApiService,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
 
@@ -35,30 +40,39 @@ export class Expectations implements OnInit {
     // Return destination
     // -----------------------------------------------------
 
-    const fromMyDetails =
-      sessionStorage.getItem('mwi_edit_source');
+    const returnUrl =
+      this.route.snapshot.queryParamMap.get('returnUrl');
 
-    if (fromMyDetails === 'my-details') {
-      this.returnTo = '/my-details';
+    if (returnUrl) {
+      this.returnTo = returnUrl;
     }
 
-
     // -----------------------------------------------------
-    // Load current profile
+    // Load current profile from API
     // -----------------------------------------------------
 
-    const profile =
-      this.profileService.getCurrentProfile();
+    this.profileService.getCurrentProfileFromApi()
+      .subscribe({
+        next: (profile) => {
 
-    if (!profile) {
-      return;
-    }
+          if (!profile) {
+            return;
+          }
 
+          this.expectations =
+            profile.expectations || '';
 
-    this.expectations =
-      profile.expectations || '';
+          this.cdr.detectChanges();
+        },
+
+        error: (error) => {
+          console.error(
+            'Unable to load expectations from API.',
+            error
+          );
+        }
+      });
   }
-
 
   // =====================================================
   // CONTACT INFORMATION CHECK
@@ -147,7 +161,6 @@ export class Expectations implements OnInit {
 
     this.submitted = true;
 
-
     // -----------------------------------------------------
     // Validate
     // -----------------------------------------------------
@@ -156,7 +169,6 @@ export class Expectations implements OnInit {
       return;
     }
 
-
     // -----------------------------------------------------
     // Clean text
     // -----------------------------------------------------
@@ -164,48 +176,52 @@ export class Expectations implements OnInit {
     const cleanedText =
       this.expectations
         .trim()
-        .replace(/\s+/g, '');
-
+        .replace(/\\s+/g, ' ');
 
     // -----------------------------------------------------
-    // Update current profile
+    // Save to backend API
     // -----------------------------------------------------
 
-    const updatedProfile =
-      this.profileService.updateProfile({
+    this.apiService
+      .updateProfileSection(
+        'expectations',
+        {
+          expectations: cleanedText
+        }
+      )
+      .subscribe({
+        next: (response) => {
 
-        expectations:
-          cleanedText,
+          if (!response?.success) {
+            console.error(
+              'Unable to update expectations.',
+              response
+            );
+            return;
+          }
 
-        expectationsCompleted:
-          cleanedText.length > 0
+          // Keep local cache synchronized.
+          this.profileService.updateProfile({
+            expectations: cleanedText,
+            expectationsCompleted:
+              cleanedText.length > 0
+          });
 
+          // -------------------------------------------------
+          // Return to the page that opened the editor
+          // -------------------------------------------------
+
+          this.router.navigateByUrl(this.returnTo);
+        },
+
+        error: (error) => {
+          console.error(
+            'Unable to save expectations.',
+            error
+          );
+        }
       });
-
-
-    // -----------------------------------------------------
-    // Update failed
-    // -----------------------------------------------------
-
-    if (!updatedProfile) {
-
-      console.error(
-        'Unable to update expectations'
-      );
-
-      return;
-    }
-
-
-    // -----------------------------------------------------
-    // Navigate
-    // -----------------------------------------------------
-
-    this.router.navigate([
-      this.returnTo
-    ]);
   }
-
 
   // =====================================================
   // BACK
