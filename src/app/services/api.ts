@@ -83,6 +83,26 @@ export class ApiService {
 
 
   // =========================================================
+  // ADMIN MULTIPART HEADERS
+  // =========================================================
+
+  private adminMultipartHeaders(): HttpHeaders {
+    const token = localStorage.getItem(this.ADMIN_TOKEN_KEY);
+
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set(
+        'Authorization',
+        `Bearer ${token}`
+      );
+    }
+
+    return headers;
+  }
+
+
+  // =========================================================
   // USER AUTH
   // =========================================================
 
@@ -374,4 +394,43 @@ getVerificationStatus() {
       }
     );
   }
+
+  // =========================================================
+  // ADMIN HOME VERIFICATION
+  // =========================================================
+
+  getAdminVerificationRequests() {
+    return this.http.get<any>(
+      `${this.apiUrl}/admin/verification`,
+      {
+        headers: this.adminAuthHeaders()
+      }
+    );
+  }
+
+
+  startAdminVerification(verificationId: number | null, paymentId: number) {
+    return this.http.post<any>(
+      `${this.apiUrl}/admin/verification/start`,
+      {
+        verification_id: verificationId,
+        payment_id: paymentId
+      },
+      {
+        headers: this.adminAuthHeaders()
+      }
+    );
+  }
+
+
+  completeAdminVerification(formData: FormData) {
+    return this.http.post<any>(
+      `${this.apiUrl}/admin/verification/complete`,
+      formData,
+      {
+        headers: this.adminMultipartHeaders()
+      }
+    );
+  }
+
 }

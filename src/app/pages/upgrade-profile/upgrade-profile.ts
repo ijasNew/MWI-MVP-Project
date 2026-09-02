@@ -318,9 +318,7 @@ export class UpgradeProfile
 
             alert(
               'Your district is eligible for verification. Proceeding to payment.'
-            );
-
-
+            ); 
             return;
 
           }
@@ -332,6 +330,7 @@ export class UpgradeProfile
 
           this.showServiceUnavailable =
             true;
+             this.cdr.detectChanges();
 
         },
 
