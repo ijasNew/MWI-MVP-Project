@@ -1,39 +1,82 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
+
 import { Router } from '@angular/router';
-import { UserMenu } from '../../components/user-menu/user-menu';
+
+import { UserMenu }
+  from '../../components/user-menu/user-menu';
 
 import {
   ProfileCompletionService,
   ProfileCompletionStatus
 } from '../../services/profile-completion';
 
-import { ProfileService } from '../../services/profile';
+import { ProfileService }
+  from '../../services/profile';
+
+import { ApiService }
+  from '../../services/api';
+
 
 @Component({
+
   selector: 'app-complete-profile',
+
   standalone: true,
+
   imports: [UserMenu],
+
   templateUrl: './complete-profile.html',
+
   styleUrl: './complete-profile.css'
+
 })
-export class CompleteProfile implements OnInit {
+
+
+export class CompleteProfile
+  implements OnInit {
+
 
   physicalCompleted = false;
+
   contactCompleted = false;
+
   workCompleted = false;
+
   familyCompleted = false;
+
   additionalPreferencesCompleted = false;
+
   expectationsCompleted = false;
+
   photosCompleted = false;
 
-  completionPercentage = 0;
+
+  profileComplete = false;
+
+  completionPercentage = 0; 
 
 
   constructor(
+
     private router: Router,
-    private profileService: ProfileService,
-    private profileCompletionService: ProfileCompletionService
-  ) {}
+
+    private profileService:
+      ProfileService,
+
+    private profileCompletionService:
+      ProfileCompletionService,
+
+    private apiService:
+      ApiService,
+
+    private cdr:
+      ChangeDetectorRef
+
+  ) { }
 
 
   // =====================================================
@@ -42,72 +85,172 @@ export class CompleteProfile implements OnInit {
 
   ngOnInit(): void {
 
-    // Clear edit-source flag when entering
-    // Complete Profile normally.
+
     sessionStorage.removeItem(
       'mwi_edit_source'
     );
 
-    this.calculateProfileCompletion();
+
+    this.loadCompletionStatus();
+
   }
 
 
   // =====================================================
-  // CALCULATE PROFILE COMPLETION
+  // REAL API
   // =====================================================
 
-  calculateProfileCompletion(): void {
-
-    const profile =
-      this.profileService.getCurrentProfile();
+  private loadCompletionStatus(): void {
 
 
-    if (!profile) {
+    this.apiService
+      .getProfileCompletionStatus()
+      .subscribe({
 
-      this.resetCompletion();
-
-      return;
-    }
-
-
-    const status: ProfileCompletionStatus =
-      this.profileCompletionService.getStatus(
-        profile
-      );
+        next:
+          (response: any) => {
 
 
-    // -----------------------------------------------------
-    // Percentage
-    // -----------------------------------------------------
-
-    this.completionPercentage =
-      status.percentage;
+            console.log(
+              '🔥 COMPLETE PROFILE → REAL API:',
+              response
+            );
 
 
-    // -----------------------------------------------------
-    // Section status
-    // -----------------------------------------------------
+            if (!response?.success) {
 
-    this.physicalCompleted =
-      status.physical;
+              this.resetCompletion();
 
-    this.contactCompleted =
-      status.contact;
+              this.cdr.detectChanges();
 
-    this.workCompleted =
-      status.work;
+              return;
 
-    this.familyCompleted =
-      status.family;
+            }
 
-    this.additionalPreferencesCompleted =
-      status.additionalPreferences;
 
-    this.expectationsCompleted =
-      status.expectations;
+            const status:
+              ProfileCompletionStatus =
+              this.profileCompletionService
+                .fromApiResponse(
+                  response
+                );
 
-    this.photosCompleted =
-      status.photos;
+
+            this.completionPercentage =
+              status.percentage;
+
+
+            this.profileComplete =
+              status.profileComplete;
+
+
+            /*
+             * REQUIRED:
+             *
+             * Physical Status
+             */
+
+            this.physicalCompleted =
+              status.required
+                .physical_status;
+
+
+            /*
+             * REQUIRED:
+             *
+             * Work Location
+             */
+
+            this.workCompleted =
+              status.required
+                .work_location;
+
+
+            /*
+             * REQUIRED:
+             *
+             * All 3 Additional Preference
+             * fields must be completed.
+             */
+
+            this.additionalPreferencesCompleted =
+
+              status.required
+                .preferred_family_status
+
+              &&
+
+              status.required
+                .preferred_physical_status
+
+              &&
+
+              status.required
+                .preferred_location_radius;
+
+
+            /*
+             * REQUIRED:
+             *
+             * Family Background
+             */
+
+            this.familyCompleted =
+              status.required
+                .family_background;
+
+
+            /*
+             * REQUIRED:
+             *
+             * Photo
+             */
+
+            this.photosCompleted =
+              status.required
+                .photo;
+
+
+            /*
+             * These remain optional.
+             */
+
+            this.contactCompleted =
+              status.required.whatsapp_number === true;
+
+            this.expectationsCompleted = false;
+            this.expectationsCompleted = false;
+
+
+            console.log(
+              'FINAL PROFILE STATUS:',
+              status
+            );
+
+
+            this.cdr.detectChanges();
+
+          },
+
+
+        error:
+          (error: any) => {
+
+
+            console.error(
+              'COMPLETE PROFILE API ERROR:',
+              error
+            );
+
+
+            this.resetCompletion();
+
+            this.cdr.detectChanges();
+
+          }
+
+      });
+
   }
 
 
@@ -117,7 +260,11 @@ export class CompleteProfile implements OnInit {
 
   private resetCompletion(): void {
 
+
     this.completionPercentage = 0;
+
+    this.profileComplete = false;
+
 
     this.physicalCompleted = false;
 
@@ -132,6 +279,7 @@ export class CompleteProfile implements OnInit {
     this.expectationsCompleted = false;
 
     this.photosCompleted = false;
+
   }
 
 
@@ -144,6 +292,7 @@ export class CompleteProfile implements OnInit {
     this.router.navigate([
       '/physical-details'
     ]);
+
   }
 
 
@@ -152,6 +301,7 @@ export class CompleteProfile implements OnInit {
     this.router.navigate([
       '/contact-details'
     ]);
+
   }
 
 
@@ -160,6 +310,7 @@ export class CompleteProfile implements OnInit {
     this.router.navigate([
       '/work-details'
     ]);
+
   }
 
 
@@ -168,6 +319,7 @@ export class CompleteProfile implements OnInit {
     this.router.navigate([
       '/family-details'
     ]);
+
   }
 
 
@@ -176,6 +328,7 @@ export class CompleteProfile implements OnInit {
     this.router.navigate([
       '/additional-preferences'
     ]);
+
   }
 
 
@@ -184,6 +337,7 @@ export class CompleteProfile implements OnInit {
     this.router.navigate([
       '/expectations'
     ]);
+
   }
 
 
@@ -192,6 +346,7 @@ export class CompleteProfile implements OnInit {
     this.router.navigate([
       '/profile-photos'
     ]);
+
   }
 
 }

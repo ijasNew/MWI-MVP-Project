@@ -1,174 +1,417 @@
-import { Component, OnInit,ChangeDetectorRef  } from '@angular/core';
-import { Router } from '@angular/router'; 
-import { UserMenu } from '../../components/user-menu/user-menu';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
 
-import { ProfileService } from '../../services/profile';
-import { ProfileCompletionService } from '../../services/profile-completion';
-import { ApiService } from '../../services/api';
-import { Profile } from '../../models/profile.model'; 
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+import { UserMenu }
+  from '../../components/user-menu/user-menu';
+
+import { ProfileService }
+  from '../../services/profile';
+
+import {
+  ProfileCompletionService
+} from '../../services/profile-completion';
+
+import { ApiService }
+  from '../../services/api';
+
+import { Profile }
+  from '../../models/profile.model';
+
+import { CommonModule }
+  from '@angular/common';
+
+
 interface MatchingProfile {
+
   memberId: string;
+
   name: string;
+
   age: number | null;
+
   maritalStatus: string;
+
   district: string;
+
   religion: string;
+
   education: string;
+
   photoUrl: string | null;
+
   verified: boolean;
+
 }
 
+
 @Component({
+
   selector: 'app-user-home',
+
   standalone: true,
-  imports: [UserMenu,CommonModule],
+
+  imports: [
+    UserMenu,
+    CommonModule
+  ],
+
   templateUrl: './user-home.html',
+
   styleUrl: './user-home.css'
+
 })
-export class UserHome implements OnInit {
+
+
+export class UserHome
+  implements OnInit {
+
 
   user: Profile | null = null;
 
+
   profileCompletion = 0;
 
-  showProfilePopup = false;
-  matchingProfiles: MatchingProfile[] = [];
+  profileComplete = false;
 
-matchingProfilesLoading = true;
+
+  showProfilePopup = false;
+
+
+  matchingProfiles:
+    MatchingProfile[] = [];
+
+
+  matchingProfilesLoading = true;
+
 
   constructor(
+
     private router: Router,
-    private profileService: ProfileService,
-    private profileCompletionService: ProfileCompletionService, 
-    private cdr: ChangeDetectorRef,
-    private apiService: ApiService,
+
+    private profileService:
+      ProfileService,
+
+    private profileCompletionService:
+      ProfileCompletionService,
+
+    private cdr:
+      ChangeDetectorRef,
+
+    private apiService:
+      ApiService
+
   ) { }
 
 
   // =====================================================
   // INIT
   // =====================================================
+
   ngOnInit(): void {
 
-  console.log('🔥 USER HOME → load profile');
 
-  this.profileService.getCurrentProfileFromApi().subscribe({
+    console.log(
+      '🔥 USER HOME → load profile'
+    );
 
-    next: (profile: Profile | null) => {
 
-      console.log(
-        'USER HOME PROFILE API:',
-        profile
-      );
+    this.profileService
+      .getCurrentProfileFromApi()
+      .subscribe({
 
-      if (!profile) {
-        this.user = null;
-        return;
-      }
+        next:
+          (profile:
+            Profile | null) => {
 
-      this.user = profile;
 
-      this.profileCompletion =
-        this.profileCompletionService.calculate(
-          profile
-        );
+            console.log(
+              'USER HOME PROFILE API:',
+              profile
+            );
 
-      console.log(
-        'USER HOME USER:',
-        this.user
-      );
 
-      console.log(
-        'PROFILE COMPLETION:',
-        this.profileCompletion
-      );
+            if (!profile) {
 
-      if (this.profileCompletion < 90) {
-        this.showProfilePopup = true;
-      }
-       this.cdr.detectChanges();
+              this.user = null;
 
-    },
+              this.profileCompletion = 0;
 
-    error: (error: any) => {
+              this.profileComplete = false;
 
-      console.error(
-        'USER HOME PROFILE API ERROR:',
-        error
-      );
+              this.showProfilePopup = false;
 
-      this.user = null;
+              this.cdr.detectChanges();
 
-    }
+              return;
 
-  });
-  this.loadMatchingProfiles();
+            }
 
-}
-  
+
+            this.user = profile;
+
+
+            /*
+             * IMPORTANT:
+             * Do NOT use 90% here.
+             *
+             * Completion is checked from
+             * the real backend API.
+             */
+
+            this.loadRealProfileCompletionStatus();
+
+          },
+
+
+        error:
+          (error: any) => {
+
+
+            console.error(
+              'USER HOME PROFILE API ERROR:',
+              error
+            );
+
+
+            this.user = null;
+
+            this.profileCompletion = 0;
+
+            this.profileComplete = false;
+
+            this.showProfilePopup = false;
+
+            this.cdr.detectChanges();
+
+          }
+
+      });
+
+
+    this.loadMatchingProfiles();
+
+  }
+
+
+  // =====================================================
+  // REAL PROFILE COMPLETION API
+  // =====================================================
+
+  private loadRealProfileCompletionStatus():
+    void {
+
+
+    this.apiService
+      .getProfileCompletionStatus()
+      .subscribe({
+
+        next:
+          (response: any) => {
+
+
+            console.log(
+              '🔥 REAL PROFILE COMPLETION API:',
+              response
+            );
+
+
+            if (!response?.success) {
+
+              console.error(
+                'PROFILE COMPLETION API FAILED:',
+                response
+              );
+
+
+              this.profileCompletion = 0;
+
+              this.profileComplete = false;
+
+              this.showProfilePopup = false;
+
+              this.cdr.detectChanges();
+
+              return;
+
+            }
+
+
+            const status =
+              this.profileCompletionService
+                .fromApiResponse(
+                  response
+                );
+
+
+            this.profileCompletion =
+              status.percentage;
+
+
+            this.profileComplete =
+              status.profileComplete;
+
+
+            /*
+             * FINAL POPUP CONDITION
+             *
+             * ALL 8 required details complete
+             *     → NO popup
+             *
+             * ANY required detail missing
+             *     → SHOW popup
+             */
+
+            this.showProfilePopup =
+              !status.profileComplete;
+
+
+            console.log(
+              'PROFILE COMPLETION:',
+              status
+            );
+
+
+            console.log(
+              'PROFILE COMPLETE:',
+              status.profileComplete
+            );
+
+
+            this.cdr.detectChanges();
+
+          },
+
+
+        error:
+          (error: any) => {
+
+
+            console.error(
+              'PROFILE COMPLETION API ERROR:',
+              error
+            );
+
+
+            /*
+             * If API fails, do not show
+             * a false completion popup.
+             */
+
+            this.profileCompletion = 0;
+
+            this.profileComplete = false;
+
+            this.showProfilePopup = false;
+
+            this.cdr.detectChanges();
+
+          }
+
+      });
+
+  }
+
+
+  // =====================================================
+  // MATCHING PROFILES
+  // =====================================================
+
   loadMatchingProfiles(): void {
 
-  this.matchingProfilesLoading = true;
 
-  this.apiService.getMatchingProfiles().subscribe({
+    this.matchingProfilesLoading = true;
 
-    next: (response: any) => {
 
-      console.log(
-        'USER HOME MATCHING PROFILES:',
-        response
-      );
+    this.apiService
+      .getMatchingProfiles()
+      .subscribe({
 
-      if (!response?.success) {
+        next:
+          (response: any) => {
 
-        this.matchingProfiles = [];
 
-        this.matchingProfilesLoading = false;
+            console.log(
+              'USER HOME MATCHING PROFILES:',
+              response
+            );
 
-        this.cdr.detectChanges();
 
-        return;
-      }
+            if (!response?.success) {
 
-      const profiles =
-        Array.isArray(response?.data?.profiles)
-          ? response.data.profiles
-          : [];
+              this.matchingProfiles = [];
 
-      // Home page → maximum 3 profiles
-      this.matchingProfiles =
-        profiles.slice(0, 3);
+              this.matchingProfilesLoading =
+                false;
 
-      this.matchingProfilesLoading = false;
+              this.cdr.detectChanges();
 
-      this.cdr.detectChanges();
+              return;
 
-    },
+            }
 
-    error: (error: any) => {
 
-      console.error(
-        'USER HOME MATCHING API ERROR:',
-        error
-      );
+            const profiles =
+              Array.isArray(
+                response?.data?.profiles
+              )
+                ? response.data.profiles
+                : [];
 
-      this.matchingProfiles = [];
 
-      this.matchingProfilesLoading = false;
+            this.matchingProfiles =
+              profiles.slice(0, 3);
 
-      this.cdr.detectChanges();
 
-    }
+            this.matchingProfilesLoading =
+              false;
 
-  });
-  
 
-}
+            this.cdr.detectChanges();
 
-get isHomeVerified(): boolean {
-  return this.user?.homeVerified === true;
-}
+          },
+
+
+        error:
+          (error: any) => {
+
+
+            console.error(
+              'USER HOME MATCHING PROFILES ERROR:',
+              error
+            );
+
+
+            this.matchingProfiles = [];
+
+            this.matchingProfilesLoading =
+              false;
+
+
+            this.cdr.detectChanges();
+
+          }
+
+      });
+
+  }
+
+
+  // =====================================================
+  // HOME VERIFICATION
+  // =====================================================
+
+  get isHomeVerified(): boolean {
+
+    return this.user?.homeVerified === true;
+
+  }
+
+
   // =====================================================
   // FORMAT HEIGHT
   // =====================================================
@@ -177,8 +420,11 @@ get isHomeVerified(): boolean {
     totalInches: number
   ): string {
 
+
     if (!totalInches) {
+
       return '';
+
     }
 
 
@@ -193,6 +439,7 @@ get isHomeVerified(): boolean {
 
 
     return `${feet}'${inches}"`;
+
   }
 
 
@@ -204,14 +451,27 @@ get isHomeVerified(): boolean {
     memberId: string
   ): void {
 
-    this.router.navigate([
-      '/profile-view',
-      memberId
-    ], {
-      state: {
-        returnUrl: '/user-home'
+
+    this.router.navigate(
+
+      [
+        '/profile-view',
+        memberId
+      ],
+
+      {
+
+        state: {
+
+          returnUrl:
+            '/user-home'
+
+        }
+
       }
-    });
+
+    );
+
   }
 
 
@@ -224,6 +484,7 @@ get isHomeVerified(): boolean {
     this.router.navigate([
       '/matching-profiles'
     ]);
+
   }
 
 
@@ -236,16 +497,18 @@ get isHomeVerified(): boolean {
     this.router.navigate([
       '/upgrade-profile'
     ]);
+
   }
 
 
   // =====================================================
-  // CLOSE PROFILE POPUP
+  // CLOSE POPUP
   // =====================================================
 
   closeProfilePopup(): void {
 
     this.showProfilePopup = false;
+
   }
 
 
@@ -255,13 +518,14 @@ get isHomeVerified(): boolean {
 
   completeProfile(): void {
 
+
     this.showProfilePopup = false;
+
 
     this.router.navigate([
       '/complete-profile'
     ]);
-  }
 
-  
+  }
 
 }

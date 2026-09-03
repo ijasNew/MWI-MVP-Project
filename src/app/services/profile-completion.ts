@@ -1,323 +1,343 @@
 import { Injectable } from '@angular/core';
 import { Profile } from '../models/profile.model';
 
+
+export interface ProfileCompletionRequired {
+
+  physical_status: boolean;
+
+  work_location: boolean;
+
+  preferred_family_status: boolean;
+
+  preferred_physical_status: boolean;
+
+  preferred_location_radius: boolean;
+
+  family_background: boolean;
+
+  photo: boolean;
+
+  whatsapp_number: boolean;
+
+}
+
+
 export interface ProfileCompletionStatus {
+
   percentage: number;
 
-  basic: boolean;
-  location: boolean;
-  religion: boolean;
-  education: boolean;
-  preference: boolean;
-  physical: boolean;
-  contact: boolean;
-  work: boolean;
-  family: boolean;
-  additionalPreferences: boolean;
-  expectations: boolean;
-  photos: boolean;
+  profileComplete: boolean;
+
+  completedCount: number;
+
+  requiredCount: number;
+
+  required: ProfileCompletionRequired;
+
+  photoCount: number;
+
 }
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileCompletionService {
 
-  constructor() {}
+
+  constructor() { }
 
 
-  // =====================================================
-  // PUBLIC
-  // =====================================================
+  /*
+  |--------------------------------------------------------------------------
+  | REAL API RESPONSE → FRONTEND STATUS
+  |--------------------------------------------------------------------------
+  */
 
-  calculate(profile: Profile | null): number {
+  fromApiResponse(
+    response: any
+  ): ProfileCompletionStatus {
 
-    return this.getStatus(profile).percentage;
+    const data =
+      response?.data ?? {};
+
+    const required =
+      data?.required ?? {};
+
+
+    return {
+
+      percentage:
+        Number(
+          data?.percentage ?? 0
+        ),
+
+      profileComplete:
+        data?.profile_complete === true,
+
+      completedCount:
+        Number(
+          data?.completed_count ?? 0
+        ),
+
+      requiredCount:
+        Number(
+          data?.required_count ?? 7
+        ),
+
+      required: {
+
+        physical_status:
+          required?.physical_status === true,
+
+        work_location:
+          required?.work_location === true,
+
+        preferred_family_status:
+          required?.preferred_family_status === true,
+
+        preferred_physical_status:
+          required?.preferred_physical_status === true,
+
+        preferred_location_radius:
+          required?.preferred_location_radius === true,
+
+        family_background:
+          required?.family_background === true,
+
+        photo:
+          required?.photo === true,
+
+        whatsapp_number:
+          required?.whatsapp_number === true,
+
+      },
+
+      photoCount:
+        Number(
+          data?.photo_count ?? 0
+        )
+
+    };
+
   }
 
 
-  // =====================================================
-  // COMPLETE STATUS
-  // =====================================================
+  /*
+  |--------------------------------------------------------------------------
+  | LOCAL STATUS
+  |--------------------------------------------------------------------------
+  |
+  | Used only for section display if a Profile object is already available.
+  | Final Home popup decision uses the REAL API.
+  |
+  */
 
   getStatus(
     profile: Profile | null
   ): ProfileCompletionStatus {
 
+
     if (!profile) {
 
-      return {
-        percentage: 0,
+      return this.emptyStatus();
 
-        basic: false,
-        location: false,
-        religion: false,
-        education: false,
-        preference: false,
-        physical: false,
-        contact: false,
-        work: false,
-        family: false,
-        additionalPreferences: false,
-        expectations: false,
-        photos: false
-      };
     }
 
 
-    // ===================================================
-    // 01 BASIC DETAILS
-    // ===================================================
-
-    const basic =
-      !!(
-        profile.fullName?.trim() &&
-        profile.gender &&
-        profile.age &&
-        profile.maritalStatus &&
-        profile.height
-      );
+    const physicalStatus =
+      !!profile.physicalStatus;
 
 
-    // ===================================================
-    // 02 LOCATION
-    // ===================================================
-
-    const location =
-      !!(
-        profile.houseName?.trim() &&
-        profile.place?.trim() &&
-        profile.district &&
-        profile.pincode
-      );
-
-
-    // ===================================================
-    // 03 RELIGION & COMMUNITY
-    // ===================================================
-
-    const religion =
-      !!(
-        profile.religion &&
-        profile.preferredReligion
-      );
-
-
-    // ===================================================
-    // 04 EDUCATION & CAREER
-    // ===================================================
-
-    const education =
-      !!(
-        profile.highestEducation &&
-        profile.specialization &&
-        profile.jobTitle &&
-        profile.jobSector
-      );
-
-
-    // ===================================================
-    // 05 PARTNER PREFERENCE
-    // ===================================================
-
-    const preference =
-      !!(
-        profile.preferredAgeMin != null &&
-        profile.preferredAgeMax != null &&
-        profile.preferredHeightMin != null &&
-        profile.preferredHeightMax != null &&
-        profile.preferredMaritalStatus?.length &&
-        profile.preferredReligion &&
-        profile.preferredLocations?.length
-      );
-
-
-    // ===================================================
-    // 06 PHYSICAL DETAILS
-    // ===================================================
-
-    const physical =
-      !!(
-        profile.weight &&
-        profile.bodyType &&
-        profile.complexion &&
-        profile.physicalStatus
-      );
-
-
-    // ===================================================
-    // 07 CONTACT INFORMATION
-    // ===================================================
-
-    const contact =
-      !!(
-        profile.phone ||
-        profile.whatsappNumber ||
-        profile.secondaryMobile ||
-        profile.email
-      );
-
-
-    // ===================================================
-    // 08 WORK DETAILS
-    // ===================================================
-
-    const hasWorkLocation =
+    const workLocation =
       !!(
         profile.workLocation ||
+
         (
           profile.workLocationType &&
+
           (
+
             (
+
               (
                 profile.workLocationType ===
-                  'india_same_state' ||
+                'india_same_state' ||
+
                 profile.workLocationType ===
-                  'india_other_state'
+                'india_other_state'
+
               ) &&
+
               profile.workState &&
+
               profile.workDistrict
+
             ) ||
+
             (
+
               profile.workLocationType ===
-                'outside_india' &&
+              'outside_india' &&
+
               profile.workCountry &&
+
               profile.workCity
+
             )
+
           )
+
         )
       );
 
 
-    const work =
-      !!(
-        profile.collegeUniversity?.trim() ||
-        profile.companyName?.trim() ||
-        hasWorkLocation ||
-        profile.annualIncome
-      );
+    const preferredFamilyStatus =
+      Array.isArray(
+        profile.preferredFamilyStatus
+      ) &&
+      profile.preferredFamilyStatus.length > 0;
 
 
-    // ===================================================
-    // 09 FAMILY DETAILS
-    // ===================================================
-
-    const family =
-      !!(
-        profile.fatherName?.trim() ||
-        profile.motherName?.trim() ||
-        profile.brothers != null ||
-        profile.sisters != null ||
-        profile.marriedBrothers != null ||
-        profile.marriedSisters != null ||
-        profile.familyStatus ||
-        profile.homeType
-      );
+    const preferredPhysicalStatus =
+      Array.isArray(
+        profile.preferredPhysicalStatus
+      ) &&
+      profile.preferredPhysicalStatus.length > 0;
 
 
-    // ===================================================
-    // 10 ADDITIONAL PREFERENCES
-    // ===================================================
-
-    const additionalPreferences =
-      !!(
-        profile.preferredFamilyStatus?.length ||
-        profile.preferredPhysicalStatus?.length ||
-        profile.preferredIncome?.length ||
-        profile.preferredLocationRadius?.length ||
-        profile.preferredComplexion?.length ||
-        profile.horoscopeRequired ||
-        profile.preferredStar?.length
-      );
+    const preferredLocationRadius =
+      Array.isArray(
+        profile.preferredLocationRadius
+      ) &&
+      profile.preferredLocationRadius.length > 0;
 
 
-    // ===================================================
-    // 11 EXPECTATIONS
-    // ===================================================
-
-    const expectations =
-      !!(
-        profile.expectations &&
-        profile.expectations.trim().length > 0
-      );
+    const familyBackground =
+      !!profile.familyStatus;
 
 
-    // ===================================================
-    // 12 PROFILE PHOTOS
-    // ===================================================
+    const photo =
+      Number(
+        profile.photoCount ?? 0
+      ) > 0;
 
-    const photos =
-      !!(
-        profile.photoCount &&
-        profile.photoCount > 0
-      );
+    const whatsappNumber =
+      !!profile.whatsappNumber;
 
 
-    // ===================================================
-    // ALL SECTIONS
-    // ===================================================
+    const required = {
 
-    const sections = [
-      basic,
-      location,
-      religion,
-      education,
-      preference,
-      physical,
-      contact,
-      work,
-      family,
-      additionalPreferences,
-      expectations,
-      photos
-    ];
+      physical_status:
+        physicalStatus,
 
+      work_location:
+        workLocation,
 
-    const completedSections =
-      sections.filter(Boolean).length;
+      preferred_family_status:
+        preferredFamilyStatus,
 
+      preferred_physical_status:
+        preferredPhysicalStatus,
 
-    const percentage =
-      Math.round(
-        (
-          completedSections /
-          sections.length
-        ) * 100
-      );
+      preferred_location_radius:
+        preferredLocationRadius,
+
+      family_background:
+        familyBackground,
+
+      photo:
+        photo,
+
+      whatsapp_number:
+        whatsappNumber
+    };
 
 
-    // ===================================================
-    // RETURN
-    // ===================================================
+    const completedCount =
+      Object.values(required)
+        .filter(Boolean)
+        .length;
+
 
     return {
 
-      percentage,
+      percentage:
+        Math.round(
+          (
+            completedCount /
+            7
+          ) * 100
+        ),
 
-      basic,
+      profileComplete:
+        completedCount === 7,
 
-      location,
+      completedCount,
 
-      religion,
+      requiredCount: 7,
 
-      education,
+      required,
 
-      preference,
+      photoCount:
+        Number(
+          profile.photoCount ?? 0
+        )
 
-      physical,
-
-      contact,
-
-      work,
-
-      family,
-
-      additionalPreferences,
-
-      expectations,
-
-      photos
     };
+
+  }
+
+
+  calculate(
+    profile: Profile | null
+  ): number {
+
+    return this.getStatus(
+      profile
+    ).percentage;
+
+  }
+
+
+  private emptyStatus():
+    ProfileCompletionStatus {
+
+    return {
+
+      percentage: 0,
+
+      profileComplete: false,
+
+      completedCount: 0,
+
+      requiredCount: 8,
+
+      required: {
+
+        physical_status: false,
+
+        work_location: false,
+
+        preferred_family_status: false,
+
+        preferred_physical_status: false,
+
+        preferred_location_radius: false,
+
+        family_background: false,
+
+        photo: false,
+
+        whatsapp_number: false,
+
+      },
+
+      photoCount: 0
+
+    };
+
   }
 
 }

@@ -351,19 +351,19 @@ export class ApiService {
   }
 
   // =========================================================
-// HOME VERIFICATION STATUS
-// =========================================================
+  // HOME VERIFICATION STATUS
+  // =========================================================
 
-getVerificationStatus() {
+  getVerificationStatus() {
 
-  return this.http.get<any>(
-    `${this.apiUrl}/verification/status`,
-    {
-      headers: this.authHeaders()
-    }
-  );
+    return this.http.get<any>(
+      `${this.apiUrl}/verification/status`,
+      {
+        headers: this.authHeaders()
+      }
+    );
 
-}
+  }
 
 
   resetPassword(
@@ -501,9 +501,24 @@ getVerificationStatus() {
       }
     );
   }
-  
+
   getApiRoot(): string {
-  return String(this.apiUrl || '').replace(/\/$/, '');
+    return String(this.apiUrl || '').replace(/\/$/, '');
+  }
+
+  // =========================================================
+// PROFILE COMPLETION STATUS
+// =========================================================
+
+getProfileCompletionStatus() {
+
+  return this.http.get<any>(
+    `${this.apiUrl}/profile/completion-status`,
+    {
+      headers: this.authHeaders()
+    }
+  );
+
 }
 
 }

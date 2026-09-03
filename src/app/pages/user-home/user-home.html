@@ -25,10 +25,6 @@
 
       <div>
 
-        <span class="page-label">
-          HOME
-        </span>
-
         <h1>
           Welcome, {{ user.fullName }} 👋
         </h1>
@@ -40,7 +36,7 @@
       </div>
 
 
-      
+
 
     </header>
 
@@ -50,39 +46,39 @@
       ========================== -->
     @if (!isHomeVerified) {
 
-  <section class="verification-banner">
+    <section class="verification-banner">
 
-    <div class="verification-icon">
-      <i class="fa-solid fa-house-circle-check"></i>
-    </div>
+      <div class="verification-icon">
+        <i class="fa-solid fa-house-circle-check"></i>
+      </div>
 
-    <div class="verification-text">
+      <div class="verification-text">
 
-      <span>
-        NEXT STEP
-      </span>
+        <span>
+          NEXT STEP
+        </span>
 
-      <h2>
-        Complete Home Verification
-      </h2>
+        <h2>
+          Complete Home Verification
+        </h2>
 
-      <p>
-        Complete your one-time home verification
-        to access verified profiles and
-        unlimited matchmaking features.
-      </p>
+        <p>
+          Complete your one-time home verification
+          to access verified profiles and
+          unlimited matchmaking features.
+        </p>
 
-    </div>
+      </div>
 
-    <button type="button" class="primary-btn" (click)="openVerification()">
-      Continue
-      <i class="fa-solid fa-arrow-right"></i>
-    </button>
+      <button type="button" class="primary-btn" (click)="openVerification()">
+        Continue
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
 
-  </section>
+    </section>
 
-}
-   
+    }
+
 
     <!-- =========================
            MATCHING PROFILES
@@ -92,7 +88,7 @@
 
       <div>
 
- 
+
         <h2>
           Matching Profiles
         </h2>
