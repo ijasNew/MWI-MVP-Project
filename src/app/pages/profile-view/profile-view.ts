@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Profile } from '../../models/profile.model';
+import { ApiService } from '../../services/api';
 
 @Component({
   selector: 'app-profile-view',
@@ -32,7 +33,9 @@ export class ProfileView implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService,
+    private cdr: ChangeDetectorRef
   ) { }
 
 
@@ -59,275 +62,44 @@ export class ProfileView implements OnInit {
 
 
   loadProfile(memberId: string): void {
-
-    const dummyProfile: Profile = {
-
-      // =========================
-      // ACCOUNT
-      // =========================
-
-      memberId: memberId,
-
-      phone: '9876543210',
-
-
-      // =========================
-      // BASIC DETAILS
-      // =========================
-
-      profileFor: 'self',
-
-      gender: 'Female',
-
-      fullName: 'Ayesha Fathima',
-
-      maritalStatus: 'Never Married',
-
-      hasKids: 'no',
-
-      numberOfKids: '0',
-
-      kidsLivingStatus: '',
-
-      dobDay: '15',
-
-      dobMonth: '06',
-
-      dobYear: '1998',
-
-      age: 28,
-
-      height: 64,
-
-
-      // =========================
-      // LOCATION
-      // =========================
-
-      district: 'Kozhikode',
-
-      state: 'Kerala',
-
-      pincode: '673001',
-
-      houseName: 'Sample House',
-
-      place: 'Kozhikode',
-
-
-      // =========================
-      // RELIGION
-      // =========================
-
-      religion: 'Muslim',
-
-      sect: 'Sunni',
-
-      muslimGroup: 'AP-Sunni',
-
-      salafiGroup: '',
-
-
-      // =========================
-      // EDUCATION & CAREER
-      // =========================
-
-      highestEducation: "Master's Degree",
-
-      specialization: 'MSc Computer Science',
-
-      jobTitle: 'Software Engineer',
-
-      jobSector: 'IT',
-
-
-      // =========================
-      // PARTNER PREFERENCE
-      // =========================
-
-      preferredAgeMin: 28,
-
-      preferredAgeMax: 35,
-
-      preferredHeightMin: 60,
-
-      preferredHeightMax: 70,
-
-      preferredMaritalStatus: [
-        'Never Married'
-      ],
-
-      acceptanceOfKids: 'no',
-
-      preferredReligion: 'Muslim',
-
-      preferredSects: [
-        'Sunni'
-      ],
-
-      preferredSunniGroups: [
-        'AP-Sunni',
-        'EK-Sunni'
-      ],
-
-      preferredSalafiGroups: [],
-
-      preferredCaste: [],
-
-      preferredSubCaste: [],
-
-      preferredEducation: [
-        "Bachelor's Degree",
-        "Master's Degree"
-      ],
-      preferredEducationSpecific: [],
-
-      preferredCareerSector: [
-        'IT',
-        'Engineering'
-      ],
-
-      preferredLocations: [
-        'Malappuram',
-        'Kozhikode'
-      ],
-
-
-      // =========================
-      // PHYSICAL DETAILS
-      // =========================
-
-      weight: 55,
-
-      bodyType: 'Slim',
-
-      complexion: 'Medium',
-
-      physicalStatus: 'Normal',
-
-
-      // =========================
-      // CONTACT
-      // =========================
-
-      secondaryMobile: '',
-
-      whatsappNumber: '',
-
-      email: '',
-
-
-      // =========================
-      // WORK / EDUCATION
-      // =========================
-
-      collegeUniversity:
-        'University of Calicut',
-
-      annualIncome:
-        '₹5 - ₹10 Lakh',
-
-      workLocation:
-        'Kozhikode',
-
-      companyName:
-        'Private IT Company',
-
-
-      // =========================
-      // FAMILY
-      // =========================
-
-      fatherName:
-        'Abdul Rahman',
-
-      fatherOccupation:
-        'Business',
-
-      fatherStatus:
-        'Alive',
-
-      motherName:
-        'Amina',
-
-      motherOccupation:
-        'Teacher',
-
-      motherStatus:
-        'Alive',
-
-
-
-
-      familyStatus:
-        'Upper Middle Class',
-
-      homeType:
-        'Own House',
-
-
-      // =========================
-      // ADDITIONAL PREFERENCES
-      // =========================
-
-      preferredFamilyStatus: [
-        'Upper Middle Class'
-      ],
-
-      preferredPhysicalStatus: [
-        'Normal'
-      ],
-
-
-
-      // HINDU SPECIFIC
-
-      horoscopeRequired:
-        'no',
-
-
-      // =========================
-      // EXPECTATIONS
-      // =========================
-
-      expectations:
-        'Looking for a well educated, responsible and family-oriented partner. Good character, mutual respect and understanding are important.',
-
-
-      // =========================
-      // PHOTOS
-      // =========================
-
-      photos: [],
-
-      primaryPhoto: '',
-
-
-      // =========================
-      // PROFILE COMPLETION
-      // =========================
-
-      registrationCompleted: true,
-
-      completionPercentage: 100,
-
-
-      // =========================
-      // STATUS
-      // =========================
-
-      homeVerified: true,
-      profileCreatedAt:
-        '2026-08-19'
-
-
-    };
-
-
-    this.profile = dummyProfile;
-
-    this.isLoading = false;
-
+    this.isLoading = true;
+    this.profile = null;
+    this.isInterestSent = false;
+    this.isShortlisted = false;
+    this.isInterestAccepted = false;
+    this.isContactVisible = false;
+
+    this.apiService.getProfileView(memberId).subscribe({
+      next: (response: any) => {
+        console.log('PROFILE VIEW API RESPONSE:', response);
+
+        if (!response?.success || !response?.data?.profile) {
+          this.profile = null;
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          return;
+        }
+
+        this.profile = response.data.profile as Profile;
+        this.isInterestAccepted =
+          response?.data?.is_interest_accepted === true ||
+          response?.data?.is_interest_accepted === 1;
+
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+
+      error: (error: any) => {
+        console.error('PROFILE VIEW API ERROR:', error);
+
+        this.profile = null;
+        this.isInterestAccepted = false;
+        this.isContactVisible = false;
+        this.isLoading = false;
+
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   goBack(): void {

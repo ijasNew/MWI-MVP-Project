@@ -19,6 +19,9 @@ import {
 import { ApiService }
   from '../../services/api';
 
+import { ProfileCompletionPopupService }
+  from '../../services/profile-completion-popup';
+
 import { Profile }
   from '../../models/profile.model';
 
@@ -79,7 +82,6 @@ export class UserHome
   profileComplete = false;
 
 
-  showProfilePopup = false;
 
 
   matchingProfiles:
@@ -103,7 +105,10 @@ export class UserHome
       ChangeDetectorRef,
 
     private apiService:
-      ApiService
+      ApiService,
+
+    private profileCompletionPopupService:
+      ProfileCompletionPopupService
 
   ) { }
 
@@ -143,8 +148,6 @@ export class UserHome
 
               this.profileComplete = false;
 
-              this.showProfilePopup = false;
-
               this.cdr.detectChanges();
 
               return;
@@ -183,8 +186,6 @@ export class UserHome
             this.profileCompletion = 0;
 
             this.profileComplete = false;
-
-            this.showProfilePopup = false;
 
             this.cdr.detectChanges();
 
@@ -232,8 +233,6 @@ export class UserHome
 
               this.profileComplete = false;
 
-              this.showProfilePopup = false;
-
               this.cdr.detectChanges();
 
               return;
@@ -249,7 +248,7 @@ export class UserHome
 
 
             this.profileCompletion =
-              status.percentage;
+              status.requiredPercentage;
 
 
             this.profileComplete =
@@ -266,8 +265,13 @@ export class UserHome
              *     → SHOW popup
              */
 
-            this.showProfilePopup =
-              !status.profileComplete;
+            // Popup is now global.
+            // User Home only requests it when needed.
+            if (!status.profileComplete) {
+              this.profileCompletionPopupService.open(
+                status.requiredPercentage
+              );
+            }
 
 
             console.log(
@@ -305,8 +309,6 @@ export class UserHome
             this.profileCompletion = 0;
 
             this.profileComplete = false;
-
-            this.showProfilePopup = false;
 
             this.cdr.detectChanges();
 
@@ -486,7 +488,9 @@ export class UserHome
     ]);
 
   }
-
+  completeProfile(): void {
+    this.router.navigate(['/complete-profile']);
+  }
 
   // =====================================================
   // OPEN VERIFICATION
@@ -500,32 +504,5 @@ export class UserHome
 
   }
 
-
-  // =====================================================
-  // CLOSE POPUP
-  // =====================================================
-
-  closeProfilePopup(): void {
-
-    this.showProfilePopup = false;
-
-  }
-
-
-  // =====================================================
-  // COMPLETE PROFILE
-  // =====================================================
-
-  completeProfile(): void {
-
-
-    this.showProfilePopup = false;
-
-
-    this.router.navigate([
-      '/complete-profile'
-    ]);
-
-  }
 
 }

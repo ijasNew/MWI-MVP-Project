@@ -1704,7 +1704,12 @@ export class Register implements AfterViewChecked {
       fullName: this.fullName.trim(),
       maritalStatus: this.maritalStatus,
       hasKids: this.hasKids || null,
-      numberOfKids: this.numberOfKids || null,
+
+      numberOfKids:
+        this.numberOfKids === '3_plus'
+          ? 3
+          : Number(this.numberOfKids) || null,
+
       kidsLivingStatus: this.kidsLivingStatus || null,
       dobDay: this.dobDay,
       dobMonth: this.dobMonth,
@@ -2545,12 +2550,12 @@ export class Register implements AfterViewChecked {
 
       return;
     }
-const houseName = this.houseName.trim();
+    const houseName = this.houseName.trim();
 
-if (houseName.length < 1 || houseName.length > 150) {
-  this.locationError = 'House name must be between 1 and 150 characters.';
-  return ;
-}
+    if (houseName.length < 1 || houseName.length > 150) {
+      this.locationError = 'House name must be between 1 and 150 characters.';
+      return;
+    }
     if (!this.place.trim()) {
 
       this.locationError =
@@ -2560,10 +2565,10 @@ if (houseName.length < 1 || houseName.length > 150) {
     }
     const place = this.place.trim();
 
-if (place.length < 1 || place.length > 100 ) {
-  this.locationError = 'Place must be between 1 and 100 characters.';
-  return ;
-}
+    if (place.length < 1 || place.length > 100) {
+      this.locationError = 'Place must be between 1 and 100 characters.';
+      return;
+    }
     // District must be from allowed list
 
     if (!this.districts.includes(this.district)) {
@@ -3070,10 +3075,10 @@ if (place.length < 1 || place.length > 100 ) {
     }
     const jobTitle = this.jobTitle.trim();
 
-if (jobTitle.length < 1 || jobTitle.length > 100) {
-  this.errorMessage = 'Job title must be between 1 and 100 characters.';
-  return ;
-}
+    if (jobTitle.length < 1 || jobTitle.length > 100) {
+      this.errorMessage = 'Job title must be between 1 and 100 characters.';
+      return;
+    }
 
     if (!this.jobSector) {
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -407,6 +408,82 @@ export class ApiService {
       }
     );
   }
+
+  // =========================================================
+  // PROFILE VIEW
+  // =========================================================
+
+ 
+// =========================================================
+// PROFILE VIEW
+// =========================================================
+
+getProfileView(memberId: string) {
+  return this.http.get<any>(
+    `${this.apiUrl}/profile-view/${encodeURIComponent(memberId)}`,
+    {
+      headers: this.authHeaders()
+    }
+  ).pipe(
+    map((response: any) => {
+
+      if (response?.data?.profile) {
+
+        const profile = response.data.profile;
+
+        if (Array.isArray(profile.photos)) {
+          profile.photos = profile.photos.map(
+            (photo: string) =>
+              this.toAbsolutePhotoUrl(photo)
+          );
+        }
+
+        if (profile.primaryPhoto) {
+          profile.primaryPhoto =
+            this.toAbsolutePhotoUrl(
+              profile.primaryPhoto
+            );
+        }
+      }
+
+      return response;
+    })
+  );
+}
+
+ 
+  private toAbsolutePhotoUrl(url: string): string {
+
+  if (!url) {
+    return '';
+  }
+
+  // Already full URL
+  if (/^https?:\/\//i.test(url)) {
+    return url;
+  }
+
+  // Backend already returned:
+  // /matchwithijas-api/uploads/...
+  if (url.startsWith('/')) {
+
+    try {
+
+      return `${new URL(this.apiUrl).origin}${url}`;
+
+    } catch {
+
+      return url;
+
+    }
+  }
+
+  // Backend returned:
+  // uploads/profile-photos/...
+  return `${String(this.apiUrl || '').replace(/\/$/, '')}/${
+    String(url).replace(/^\/+/, '')
+  }`;
+}
 
 
   // =========================================================

@@ -57,7 +57,7 @@ export class CompleteProfile
 
   profileComplete = false;
 
-  completionPercentage = 0; 
+  completionPercentage = 0;
 
 
   constructor(
@@ -137,7 +137,7 @@ export class CompleteProfile
 
 
             this.completionPercentage =
-              status.percentage;
+              status.requiredPercentage;
 
 
             this.profileComplete =
@@ -211,14 +211,10 @@ export class CompleteProfile
                 .photo;
 
 
-            /*
-             * These remain optional.
-             */
 
             this.contactCompleted =
               status.required.whatsapp_number === true;
 
-            this.expectationsCompleted = false;
             this.expectationsCompleted = false;
 
 
