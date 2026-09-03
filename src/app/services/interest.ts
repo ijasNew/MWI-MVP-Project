@@ -1,71 +1,51 @@
 import { Injectable } from '@angular/core';
+import { Observable, map, catchError, of } from 'rxjs';
+import { ApiService } from './api';
+
+export interface InterestProfile {
+  interestId: string;
+  memberId: string;
+  name: string;
+  age: number | null;
+  maritalStatus: string;
+  district: string;
+  religion: string;
+  education: string;
+  photoUrl: string | null;
+  verified: boolean;
+  status: 'pending' | 'accepted' | 'declined' | 'cancelled';
+  createdAt: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class InterestService {
 
-  constructor() {}
+  constructor(private apiService: ApiService) {}
 
   // =====================================================
   // SEND INTEREST
   // =====================================================
 
-  sendInterest(
-    senderMemberId: string,
-    receiverMemberId: string
-  ): boolean {
-
-    if (!senderMemberId || !receiverMemberId) {
-      return false;
-    }
-
-    if (senderMemberId === receiverMemberId) {
-      return false;
-    }
-
-    /*
-     * Backend will handle the actual interest creation.
-     *
-     * Future:
-     *
-     * Angular
-     *   ↓
-     * PHP API
-     *   ↓
-     * MySQL
-     */
-
-    console.log(
-      'Interest:',
-      senderMemberId,
-      '→',
-      receiverMemberId
-    );
-
-    return true;
-  }
-
-
-  // =====================================================
-  // GET SENT INTERESTS
-  // =====================================================
-
-  getSentInterests(
-    memberId: string
-  ): any[] {
+  sendInterest(memberId: string): Observable<{ success: boolean; message: string }> {
 
     if (!memberId) {
-      return [];
+      return of({ success: false, message: 'Invalid profile.' });
     }
 
-    /*
-     * Temporary empty result.
-     *
-     * Backend will return actual data later.
-     */
+    return this.apiService.sendInterest(memberId).pipe(
 
-    return [];
+      map((response: any) => ({
+        success: !!response?.success,
+        message: response?.message || 'Interest sent successfully.'
+      })),
+
+      catchError((error) => of({
+        success: false,
+        message: error?.error?.message || 'Unable to send interest. Please try again.'
+      }))
+    );
   }
 
 
@@ -73,21 +53,47 @@ export class InterestService {
   // GET RECEIVED INTERESTS
   // =====================================================
 
-  getReceivedInterests(
-    memberId: string
-  ): any[] {
+  getReceivedInterests(): Observable<InterestProfile[]> {
 
-    if (!memberId) {
-      return [];
-    }
+    return this.apiService.getReceivedInterests().pipe(
 
-    /*
-     * Temporary empty result.
-     *
-     * Backend will return actual data later.
-     */
+      map((response: any) => {
 
-    return [];
+        if (!response?.success) {
+          return [];
+        }
+
+        return Array.isArray(response?.data?.interests)
+          ? response.data.interests
+          : [];
+      }),
+
+      catchError(() => of([]))
+    );
+  }
+
+
+  // =====================================================
+  // GET SENT INTERESTS
+  // =====================================================
+
+  getSentInterests(): Observable<InterestProfile[]> {
+
+    return this.apiService.getSentInterests().pipe(
+
+      map((response: any) => {
+
+        if (!response?.success) {
+          return [];
+        }
+
+        return Array.isArray(response?.data?.interests)
+          ? response.data.interests
+          : [];
+      }),
+
+      catchError(() => of([]))
+    );
   }
 
 
@@ -95,20 +101,24 @@ export class InterestService {
   // ACCEPT INTEREST
   // =====================================================
 
-  acceptInterest(
-    interestId: string
-  ): boolean {
+  acceptInterest(interestId: string): Observable<{ success: boolean; message: string }> {
 
     if (!interestId) {
-      return false;
+      return of({ success: false, message: 'Invalid interest.' });
     }
 
-    console.log(
-      'Accept interest:',
-      interestId
-    );
+    return this.apiService.respondInterest(interestId, 'accept').pipe(
 
-    return true;
+      map((response: any) => ({
+        success: !!response?.success,
+        message: response?.message || 'Interest accepted successfully.'
+      })),
+
+      catchError((error) => of({
+        success: false,
+        message: error?.error?.message || 'Unable to accept interest.'
+      }))
+    );
   }
 
 
@@ -116,21 +126,49 @@ export class InterestService {
   // DECLINE INTEREST
   // =====================================================
 
-  declineInterest(
-    interestId: string
-  ): boolean {
+  declineInterest(interestId: string): Observable<{ success: boolean; message: string }> {
 
     if (!interestId) {
-      return false;
+      return of({ success: false, message: 'Invalid interest.' });
     }
 
-    console.log(
-      'Decline interest:',
-      interestId
-    );
+    return this.apiService.respondInterest(interestId, 'decline').pipe(
 
-    return true;
+      map((response: any) => ({
+        success: !!response?.success,
+        message: response?.message || 'Interest declined.'
+      })),
+
+      catchError((error) => of({
+        success: false,
+        message: error?.error?.message || 'Unable to decline interest.'
+      }))
+    );
   }
 
-  
+
+  // =====================================================
+  // CANCEL INTEREST
+  // =====================================================
+
+  cancelInterest(interestId: string): Observable<{ success: boolean; message: string }> {
+
+    if (!interestId) {
+      return of({ success: false, message: 'Invalid interest.' });
+    }
+
+    return this.apiService.cancelInterest(interestId).pipe(
+
+      map((response: any) => ({
+        success: !!response?.success,
+        message: response?.message || 'Interest cancelled.'
+      })),
+
+      catchError((error) => of({
+        success: false,
+        message: error?.error?.message || 'Unable to cancel interest.'
+      }))
+    );
+  }
+
 }

@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
-import { ProfileService } from '../../services/profile';
 import { AuthService } from '../../services/auth';
+import { InterestService, InterestProfile } from '../../services/interest';
 
 @Component({
   selector: 'app-interests',
-  imports: [UserMenu],
+  imports: [CommonModule, UserMenu],
   templateUrl: './interests.html',
   styleUrl: './interests.css'
 })
@@ -14,150 +15,199 @@ export class Interests implements OnInit {
 
   constructor(
     private router: Router,
-     private profileService: ProfileService,private authService: AuthService
+    private authService: AuthService,
+    private interestService: InterestService,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  user: any = null;
+  activeTab: 'received' | 'sent' = 'received';
 
-  menuOpen = false;
+  received: InterestProfile[] = [];
+  sent: InterestProfile[] = [];
 
-  activeTab = 'received';
+  loading = true;
+  errorMessage = '';
 
-ngOnInit(): void {
+  // interestIds currently being processed (disables buttons while in-flight)
+  busyIds = new Set<string>();
 
-  const profile =
-    this.profileService.getCurrentProfile();
 
-  if (!profile) {
-    return;
-  }
-
-  this.user = profile;
-}
-  
-
-  toggleMenu(): void {
-
-    this.menuOpen =
-      !this.menuOpen;
-
+  ngOnInit(): void {
+    this.loadInterests();
   }
 
 
-  selectTab(tab: string): void {
+  // =========================
+  // LOAD BOTH LISTS
+  // =========================
 
+  loadInterests(): void {
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.interestService.getReceivedInterests().subscribe((received) => {
+
+      this.received = received;
+
+      this.interestService.getSentInterests().subscribe((sent) => {
+
+        this.sent = sent;
+
+        this.loading = false;
+
+        this.cdr.detectChanges();
+
+      });
+
+    });
+
+  }
+
+
+  selectTab(tab: 'received' | 'sent'): void {
     this.activeTab = tab;
-
   }
 
 
-  getInitials(
-    name: string | undefined
-  ): string {
+  getInitials(name: string | undefined): string {
 
     if (!name) {
       return 'U';
     }
 
-    const parts =
-      name.trim().split(/\s+/);
+    const parts = name.trim().split(/\s+/);
 
     if (parts.length === 1) {
-
-      return parts[0][0]
-        .toUpperCase();
-
+      return parts[0][0].toUpperCase();
     }
 
-    return (
-      parts[0][0] +
-      parts[parts.length - 1][0]
-    ).toUpperCase();
-
-  }
-// =========================
-// VIEW PROFILE
-// =========================
-
-viewProfile(memberId: string): void {
-
-  if (!memberId) {
-    return;
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  this.router.navigate([
-    '/profile-view',
-    memberId
-  ], {
-    state: {
-      returnUrl: '/interests'
+
+  // =========================
+  // VIEW PROFILE
+  // =========================
+
+  viewProfile(memberId: string): void {
+
+    if (!memberId) {
+      return;
     }
-  });
 
-}
+    this.router.navigate(['/profile-view', memberId], {
+      state: { returnUrl: '/interests' }
+    });
 
-
-// =========================
-// ACCEPT INTEREST
-// =========================
-
-acceptInterest(
-  interestId: string
-): void {
-
-  if (!interestId) {
-    return;
   }
 
-  console.log(
-    'Accept interest:',
-    interestId
-  );
 
-}
+  // =========================
+  // ACCEPT INTEREST
+  // =========================
 
+  acceptInterest(interestId: string): void {
 
-// =========================
-// DECLINE INTEREST
-// =========================
+    if (!interestId || this.busyIds.has(interestId)) {
+      return;
+    }
 
-declineInterest(
-  interestId: string
-): void {
+    this.busyIds.add(interestId);
 
-  if (!interestId) {
-    return;
+    this.interestService.acceptInterest(interestId).subscribe((result) => {
+
+      this.busyIds.delete(interestId);
+
+      if (!result.success) {
+        alert(result.message);
+        this.cdr.detectChanges();
+        return;
+      }
+
+      // Update the item in place instead of a full reload.
+      const item = this.received.find((i) => i.interestId === interestId);
+
+      if (item) {
+        item.status = 'accepted';
+      }
+
+      this.cdr.detectChanges();
+
+    });
+
   }
 
-  console.log(
-    'Decline interest:',
-    interestId
-  );
 
-}
+  // =========================
+  // DECLINE INTEREST
+  // =========================
 
+  declineInterest(interestId: string): void {
 
-// =========================
-// CANCEL INTEREST
-// =========================
+    if (!interestId || this.busyIds.has(interestId)) {
+      return;
+    }
 
-cancelInterest(
-  interestId: string
-): void {
+    this.busyIds.add(interestId);
 
-  if (!interestId) {
-    return;
+    this.interestService.declineInterest(interestId).subscribe((result) => {
+
+      this.busyIds.delete(interestId);
+
+      if (!result.success) {
+        alert(result.message);
+        this.cdr.detectChanges();
+        return;
+      }
+
+      const item = this.received.find((i) => i.interestId === interestId);
+
+      if (item) {
+        item.status = 'declined';
+      }
+
+      this.cdr.detectChanges();
+
+    });
+
   }
 
-  console.log(
-    'Cancel interest:',
-    interestId
-  );
 
-}
+  // =========================
+  // CANCEL INTEREST
+  // =========================
+
+  cancelInterest(interestId: string): void {
+
+    if (!interestId || this.busyIds.has(interestId)) {
+      return;
+    }
+
+    this.busyIds.add(interestId);
+
+    this.interestService.cancelInterest(interestId).subscribe((result) => {
+
+      this.busyIds.delete(interestId);
+
+      if (!result.success) {
+        alert(result.message);
+        this.cdr.detectChanges();
+        return;
+      }
+
+      // Cancelled interests should disappear from the "sent" list.
+      this.sent = this.sent.filter((i) => i.interestId !== interestId);
+
+      this.cdr.detectChanges();
+
+    });
+
+  }
+
 
   logout(): void {
-  this.authService.logoutUser();
-}
+    this.authService.logoutUser();
+  }
 
 }

@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { UserMenu } from '../../components/user-menu/user-menu';
 import { AuthService } from '../../services/auth';
 import { InterestService } from '../../services/interest';
-import { ApiService } from '../../services/api'; 
-import { ChangeDetectorRef } from '@angular/core';
+import { ShortlistService } from '../../services/shortlist';
+import { ApiService } from '../../services/api';
 
 
 export interface MatchingProfile {
@@ -41,13 +41,23 @@ export class MatchingProfiles {
 
   errorMessage = '';
 
+  // memberIds currently shortlisted by the logged-in user
+  shortlistedIds = new Set<string>();
+
+  // memberIds currently being shortlisted/unshortlisted (disables the star while in-flight)
+  shortlistBusyIds = new Set<string>();
+
+  // memberIds an interest has already been sent to (disables the button)
+  interestSentIds = new Set<string>();
+
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private interestService: InterestService,
+    private shortlistService: ShortlistService,
     private apiService: ApiService,
-     private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) {}
 
 
@@ -58,6 +68,7 @@ export class MatchingProfiles {
   ngOnInit(): void {
 
     this.loadMatchingProfiles();
+    this.loadShortlistState();
 
   }
 
@@ -67,88 +78,85 @@ export class MatchingProfiles {
   // =====================================================
   loadMatchingProfiles(): void {
 
-  this.loading = true;
-  this.errorMessage = '';
-  this.profiles = [];
+    this.loading = true;
+    this.errorMessage = '';
+    this.profiles = [];
 
-  this.cdr.detectChanges();
-
-
-  this.apiService.getMatchingProfiles().subscribe({
-
-    next: (response: any) => {
-
-      console.log(
-        'MATCHING PROFILES API RESPONSE:',
-        response
-      );
+    this.cdr.detectChanges();
 
 
-      if (!response?.success) {
+    this.apiService.getMatchingProfiles().subscribe({
 
-        this.errorMessage =
-          response?.message ||
-          'We could not find matching profiles right now.';
+      next: (response: any) => {
 
-        this.profiles = [];
+        if (!response?.success) {
+
+          this.errorMessage =
+            response?.message ||
+            'We could not find matching profiles right now.';
+
+          this.profiles = [];
+
+          this.loading = false;
+
+          this.cdr.detectChanges();
+
+          return;
+        }
+
+
+        this.profiles =
+          Array.isArray(response?.data?.profiles)
+            ? response.data.profiles
+            : [];
+
 
         this.loading = false;
 
         this.cdr.detectChanges();
 
-        return;
+      },
+
+
+      error: (error) => {
+
+        this.profiles = [];
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Something went wrong while finding profiles. Please try again.';
+
+        this.loading = false;
+
+        this.cdr.detectChanges();
+
       }
 
+    });
 
-      this.profiles =
-        Array.isArray(response?.data?.profiles)
-          ? response.data.profiles
-          : [];
+  }
 
 
-      console.log(
-        'MATCHING PROFILES:',
-        this.profiles
-      );
+  // =====================================================
+  // LOAD SHORTLIST STATE (so stars show correctly)
+  // =====================================================
 
+  loadShortlistState(): void {
 
-      // IMPORTANT
-      // API response received.
-      // Stop loading and refresh Angular UI.
+    this.shortlistService.getShortlist().subscribe({
 
-      this.loading = false;
+      next: (result) => {
 
-      this.cdr.detectChanges();
+        this.shortlistedIds = new Set(result.memberIds);
 
-    },
+        this.cdr.detectChanges();
 
+      }
 
-    error: (error) => {
+    });
 
-      console.error(
-        'MATCHING PROFILES API ERROR:',
-        error
-      );
+  }
 
-
-      this.profiles = [];
-
-
-      this.errorMessage =
-        error?.error?.message ||
-        'Something went wrong while finding profiles. Please try again.';
-
-
-      this.loading = false;
-
-      this.cdr.detectChanges();
-
-    }
-
-  });
-
-}
-  
 
   // =====================================================
   // OPEN PROFILE
@@ -160,7 +168,6 @@ export class MatchingProfiles {
       return;
     }
 
-
     this.router.navigate(
       [
         '/profile-view',
@@ -168,8 +175,7 @@ export class MatchingProfiles {
       ],
       {
         state: {
-          returnUrl:
-            '/matching-profiles'
+          returnUrl: '/matching-profiles'
         }
       }
     );
@@ -188,81 +194,35 @@ export class MatchingProfiles {
 
     event.stopPropagation();
 
-
     if (!memberId) {
-
-      alert(
-        'Invalid profile.'
-      );
-
+      alert('Invalid profile.');
       return;
     }
 
-
-    const currentUser =
-      this.authService.getCurrentUser();
-
-
-    if (!currentUser) {
-
-      alert(
-        'Please login to send interest.'
-      );
-
-      this.router.navigate([
-        '/login'
-      ]);
-
+    if (!this.authService.isUserLoggedIn()) {
+      alert('Please login to send interest.');
+      this.router.navigate(['/login']);
       return;
     }
 
-
-    const senderMemberId =
-      currentUser.memberId;
-
-
-    if (!senderMemberId) {
-
-      alert(
-        'Unable to identify your profile.'
-      );
-
+    if (this.interestSentIds.has(memberId)) {
       return;
     }
 
+    this.interestService.sendInterest(memberId).subscribe((result) => {
 
-    if (
-      senderMemberId === memberId
-    ) {
+      if (!result.success) {
+        alert(result.message);
+        return;
+      }
 
-      alert(
-        'You cannot send interest to your own profile.'
-      );
+      this.interestSentIds.add(memberId);
 
-      return;
-    }
+      alert(result.message);
 
+      this.cdr.detectChanges();
 
-    const success =
-      this.interestService.sendInterest(
-        senderMemberId,
-        memberId
-      );
-
-
-    if (!success) {
-
-      alert(
-        'Unable to send interest.'
-      );
-
-      return;
-    }
-
-
-    alert(
-      'Interest sent successfully.'
-    );
+    });
 
   }
 
@@ -278,63 +238,53 @@ export class MatchingProfiles {
 
     event.stopPropagation();
 
-
     if (!memberId) {
       return;
     }
 
-
-    const currentUser =
-      this.authService.getCurrentUser();
-
-
-    if (!currentUser) {
-
-      alert(
-        'Please login first.'
-      );
-
-      this.router.navigate([
-        '/login'
-      ]);
-
+    if (!this.authService.isUserLoggedIn()) {
+      alert('Please login first.');
+      this.router.navigate(['/login']);
       return;
     }
 
-
-    const senderMemberId =
-      currentUser.memberId;
-
-
-    if (!senderMemberId) {
-
-      alert(
-        'Unable to identify your profile.'
-      );
-
+    if (this.shortlistBusyIds.has(memberId)) {
       return;
     }
 
+    this.shortlistBusyIds.add(memberId);
 
-    if (
-      senderMemberId === memberId
-    ) {
+    const alreadyShortlisted = this.shortlistedIds.has(memberId);
 
-      alert(
-        'You cannot shortlist your own profile.'
-      );
+    const action$ = alreadyShortlisted
+      ? this.shortlistService.removeShortlist(memberId)
+      : this.shortlistService.addShortlist(memberId);
 
-      return;
-    }
+    action$.subscribe((result) => {
+
+      this.shortlistBusyIds.delete(memberId);
+
+      if (!result.success) {
+        alert(result.message);
+        this.cdr.detectChanges();
+        return;
+      }
+
+      if (alreadyShortlisted) {
+        this.shortlistedIds.delete(memberId);
+      } else {
+        this.shortlistedIds.add(memberId);
+      }
+
+      this.cdr.detectChanges();
+
+    });
+
+  }
 
 
-    console.log(
-      'Shortlist:',
-      senderMemberId,
-      '→',
-      memberId
-    );
-
+  isShortlisted(memberId: string): boolean {
+    return this.shortlistedIds.has(memberId);
   }
 
 }

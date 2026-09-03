@@ -1,6 +1,3 @@
-
-
-
 <app-user-menu></app-user-menu>
 
 <main class="dashboard-main">
@@ -28,35 +25,50 @@
     </div>
 
     <div class="profile-count">
-      3 Profiles
+      {{ profiles.length }} Profiles
     </div>
 
   </header>
+
+
+  <!-- LOADING -->
+
+  @if (loading) {
+    <section class="empty-state">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <p>Loading your shortlisted profiles...</p>
+    </section>
+  }
 
 
   <!-- =========================
        SHORTLISTED LIST
   ========================== -->
 
-  @if (hasShortlistedProfiles) {
+  @if (!loading && hasShortlistedProfiles) {
 
   <section class="shortlist-list">
 
-
-    <!-- PROFILE 1 -->
+    @for (profile of profiles; track profile.memberId) {
 
     <article class="shortlist-card">
 
       <div class="profile-photo">
 
-        <div class="photo-placeholder">
-          <i class="fa-solid fa-user"></i>
-        </div>
+        @if (profile.photoUrl) {
+          <img [src]="profile.photoUrl" [alt]="profile.name" class="profile-image" />
+        } @else {
+          <div class="photo-placeholder">
+            <i class="fa-solid fa-user"></i>
+          </div>
+        }
 
+        @if (profile.verified) {
         <span class="verified-badge">
           <i class="fa-solid fa-check"></i>
           Verified
         </span>
+        }
 
       </div>
 
@@ -68,11 +80,11 @@
           <div>
 
             <h2>
-              Ayesha
+              {{ profile.name }}
             </h2>
 
             <span class="profile-id">
-              Profile ID: F1024
+              Profile ID: {{ profile.memberId }}
             </span>
 
           </div>
@@ -89,22 +101,17 @@
 
           <span>
             <i class="fa-solid fa-graduation-cap"></i>
-            Master's Degree
+            {{ profile.education || 'Not specified' }}
           </span>
 
           <span>
             <i class="fa-solid fa-ring"></i>
-            Never Married
-          </span>
-
-          <span>
-            <i class="fa-solid fa-ruler-vertical"></i>
-            5'4"
+            {{ profile.maritalStatus || 'Not specified' }}
           </span>
 
           <span>
             <i class="fa-solid fa-location-dot"></i>
-            Malappuram
+            {{ profile.district || 'Not specified' }}
           </span>
 
         </div>
@@ -115,6 +122,7 @@
           <button
             type="button"
             class="view-btn"
+            (click)="viewProfile(profile.memberId)"
           >
             <i class="fa-solid fa-user"></i>
             View Profile
@@ -123,7 +131,8 @@
           <button
             type="button"
             class="remove-btn"
-            (click)="removeShortlist('Ayesha')"
+            [disabled]="busyIds.has(profile.memberId)"
+            (click)="removeShortlist(profile.memberId)"
           >
             <i class="fa-regular fa-star"></i>
             Remove
@@ -135,191 +144,7 @@
 
     </article>
 
-
-    <!-- PROFILE 2 -->
-
-    <article class="shortlist-card">
-
-      <div class="profile-photo">
-
-        <div class="photo-placeholder">
-          <i class="fa-solid fa-user"></i>
-        </div>
-
-        <span class="verified-badge">
-          <i class="fa-solid fa-check"></i>
-          Verified
-        </span>
-
-      </div>
-
-
-      <div class="profile-content">
-
-        <div class="profile-top">
-
-          <div>
-
-            <h2>
-              Fathima
-            </h2>
-
-            <span class="profile-id">
-              Profile ID: F1098
-            </span>
-
-          </div>
-
-          <span class="saved-badge">
-            <i class="fa-solid fa-star"></i>
-            Saved
-          </span>
-
-        </div>
-
-
-        <div class="profile-details">
-
-          <span>
-            <i class="fa-solid fa-graduation-cap"></i>
-            General Degree
-          </span>
-
-          <span>
-            <i class="fa-solid fa-ring"></i>
-            Never Married
-          </span>
-
-          <span>
-            <i class="fa-solid fa-ruler-vertical"></i>
-            5'3"
-          </span>
-
-          <span>
-            <i class="fa-solid fa-location-dot"></i>
-            Kozhikode
-          </span>
-
-        </div>
-
-
-        <div class="profile-actions">
-
-          <button
-            type="button"
-            class="view-btn"
-          >
-            <i class="fa-solid fa-user"></i>
-            View Profile
-          </button>
-
-          <button
-            type="button"
-            class="remove-btn"
-            (click)="removeShortlist('Fathima')"
-          >
-            <i class="fa-regular fa-star"></i>
-            Remove
-          </button>
-
-        </div>
-
-      </div>
-
-    </article>
-
-
-    <!-- PROFILE 3 -->
-
-    <article class="shortlist-card">
-
-      <div class="profile-photo">
-
-        <div class="photo-placeholder">
-          <i class="fa-solid fa-user"></i>
-        </div>
-
-        <span class="verified-badge">
-          <i class="fa-solid fa-check"></i>
-          Verified
-        </span>
-
-      </div>
-
-
-      <div class="profile-content">
-
-        <div class="profile-top">
-
-          <div>
-
-            <h2>
-              Safa
-            </h2>
-
-            <span class="profile-id">
-              Profile ID: F1156
-            </span>
-
-          </div>
-
-          <span class="saved-badge">
-            <i class="fa-solid fa-star"></i>
-            Saved
-          </span>
-
-        </div>
-
-
-        <div class="profile-details">
-
-          <span>
-            <i class="fa-solid fa-graduation-cap"></i>
-            Professional Degree
-          </span>
-
-          <span>
-            <i class="fa-solid fa-ring"></i>
-            Divorced
-          </span>
-
-          <span>
-            <i class="fa-solid fa-ruler-vertical"></i>
-            5'5"
-          </span>
-
-          <span>
-            <i class="fa-solid fa-location-dot"></i>
-            Palakkad
-          </span>
-
-        </div>
-
-
-        <div class="profile-actions">
-
-          <button
-            type="button"
-            class="view-btn"
-          >
-            <i class="fa-solid fa-user"></i>
-            View Profile
-          </button>
-
-          <button
-            type="button"
-            class="remove-btn"
-            (click)="removeShortlist('Safa')"
-          >
-            <i class="fa-regular fa-star"></i>
-            Remove
-          </button>
-
-        </div>
-
-      </div>
-
-    </article>
+    }
 
   </section>
 
@@ -330,7 +155,7 @@
        EMPTY STATE
   ========================== -->
 
-  @if (!hasShortlistedProfiles) {
+  @if (!loading && !hasShortlistedProfiles) {
 
   <section class="empty-state">
 
@@ -350,6 +175,7 @@
     <button
       type="button"
       class="explore-btn"
+      (click)="goToMatchingProfiles()"
     >
       Explore Matches
       <i class="fa-solid fa-arrow-right"></i>

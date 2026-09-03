@@ -147,7 +147,8 @@
         <button
           type="button"
           class="shortlist-btn"
-          title="Shortlist"
+          [class.active]="isShortlisted(profile.memberId)"
+          [title]="isShortlisted(profile.memberId) ? 'Remove from shortlist' : 'Shortlist'"
           (click)="
             toggleShortlist(
               $event,
@@ -155,7 +156,7 @@
             )
           "
         >
-          <i class="fa-regular fa-star"></i>
+          <i [class]="isShortlisted(profile.memberId) ? 'fa-solid fa-star' : 'fa-regular fa-star'"></i>
         </button>
 
       </div>
@@ -210,6 +211,7 @@
       <button
         type="button"
         class="interest-btn"
+        [disabled]="interestSentIds.has(profile.memberId)"
         (click)="
           sendInterest(
             $event,
@@ -220,7 +222,7 @@
 
         <i class="fa-solid fa-heart"></i>
 
-        Send Interest
+        {{ interestSentIds.has(profile.memberId) ? 'Interest Sent' : 'Send Interest' }}
 
       </button>
 
