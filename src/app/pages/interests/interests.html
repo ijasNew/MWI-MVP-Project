@@ -1,380 +1,76 @@
 <div class="dashboard">
-
-   <app-user-menu></app-user-menu>
-
-
-  <!-- MAIN -->
-
+  <app-user-menu></app-user-menu>
   <main class="dashboard-main">
-
     <div class="interests-page">
-      <div class="interests-page">
-
-        <!-- PAGE HEADER -->
-
-        <header class="page-header">
-
-          <div>
-            <span class="page-label">
-              MATCHMAKING
-            </span>
-
-            <h1>
-              Interests
-            </h1>
-
-            <p>
-              Manage the profiles you're interested in
-              and the interests you've received.
-            </p>
-          </div>
-
-        </header>
-
-
-        <!-- LOADING -->
-
-        @if (loading) {
-          <div class="interest-section">
-            <i class="fa-solid fa-spinner fa-spin"></i>
-            Loading interests...
-          </div>
-        }
-
-
-        @if (!loading) {
-
-        <!-- TABS -->
-
-        <div class="interest-tabs">
-
-          <button type="button" [class.active]="activeTab === 'received'" (click)="selectTab('received')">
-            <i class="fa-solid fa-inbox"></i>
-
-            Received
-
-            <span class="tab-count">
-              {{ received.length }}
-            </span>
-
-          </button>
-
-
-          <button type="button" [class.active]="activeTab === 'sent'" (click)="selectTab('sent')">
-            <i class="fa-solid fa-paper-plane"></i>
-
-            Sent
-
-            <span class="tab-count">
-              {{ sent.length }}
-            </span>
-
-          </button>
-
+      <header class="page-header">
+        <div>
+          <span class="page-label">MATCHMAKING</span>
+          <h1>Interests</h1>
+          <p>Manage the profiles you're interested in and the interests you've received.</p>
         </div>
-
-
-        <!-- =========================
-       RECEIVED
-  ========================== -->
-
-        @if (activeTab === 'received') {
-
-        <section class="interest-section">
-
-          <div class="section-heading">
-
-            <div>
-
-              <h2>
-                Received Interests
-              </h2>
-
-              <p>
-                People who have shown interest in your profile.
-              </p>
-
-            </div>
-
-            <span class="result-count">
-              {{ received.length }} Interests
-            </span>
-
-          </div>
-
-
-          @if (received.length === 0) {
-            <p>No interests received yet.</p>
-          }
-
-
-          <!-- INTEREST CARD -->
-
-          @for (item of received; track item.interestId) {
-
-          <article class="interest-card">
-
-            <div class="profile-photo">
-
-              @if (item.photoUrl) {
-                <img [src]="item.photoUrl" [alt]="item.name" class="profile-image" />
-              } @else {
-                <div class="photo-placeholder">
-                  <i class="fa-solid fa-user"></i>
-                </div>
-              }
-
-              @if (item.verified) {
-              <span class="verified-badge">
-                <i class="fa-solid fa-check"></i>
-                Verified
-              </span>
-              }
-
-            </div>
-
-
-            <div class="interest-content">
-
-              <div class="profile-main">
-
-                <div>
-
-                  <h3>
-                    {{ item.name }}
-                  </h3>
-
-                  <span>
-                    Profile ID: {{ item.memberId }}
-                  </span>
-
-                </div>
-
-                <span class="status-badge" [class.pending]="item.status === 'pending'"
-                      [class.accepted]="item.status === 'accepted'"
-                      [class.declined]="item.status === 'declined'">
-                  {{ item.status | titlecase }}
-                </span>
-
-              </div>
-
-
-              <div class="profile-info">
-
-                <span>
-                  <i class="fa-solid fa-graduation-cap"></i>
-                  {{ item.education || 'Not specified' }}
-                </span>
-
-                <span>
-                  <i class="fa-solid fa-ring"></i>
-                  {{ item.maritalStatus || 'Not specified' }}
-                </span>
-
-                <span>
-                  <i class="fa-solid fa-location-dot"></i>
-                  {{ item.district || 'Not specified' }}
-                </span>
-
-              </div>
-
-
-              <div class="interest-actions">
-
-                <button type="button" class="view-btn" (click)="viewProfile(item.memberId)">
-                  View Profile
-                </button>
-
-                @if (item.status === 'pending') {
-
-                <button type="button" class="decline-btn" [disabled]="busyIds.has(item.interestId)"
-                        (click)="declineInterest(item.interestId)">
-                  Decline
-                </button>
-
-                <button type="button" class="accept-btn" [disabled]="busyIds.has(item.interestId)"
-                        (click)="acceptInterest(item.interestId)">
-                  Accept Interest
-                </button>
-
-                } @else if (item.status === 'accepted') {
-
-                <span class="accepted-message">
-                  <i class="fa-solid fa-check-circle"></i>
-                  Interest Accepted
-                </span>
-
-                } @else if (item.status === 'declined') {
-
-                <span class="accepted-message">
-                  Declined
-                </span>
-
-                }
-
-              </div>
-
-            </div>
-
-          </article>
-
-          }
-
-        </section>
-
-        }
-
-
-        <!-- =========================
-       SENT
-  ========================== -->
-
-        @if (activeTab === 'sent') {
-
-        <section class="interest-section">
-
-          <div class="section-heading">
-
-            <div>
-
-              <h2>
-                Sent Interests
-              </h2>
-
-              <p>
-                Track the interests you've sent.
-              </p>
-
-            </div>
-
-            <span class="result-count">
-              {{ sent.length }} Interests
-            </span>
-
-          </div>
-
-
-          @if (sent.length === 0) {
-            <p>You haven't sent any interests yet.</p>
-          }
-
-
-          <!-- SENT CARD -->
-
-          @for (item of sent; track item.interestId) {
-
-          <article class="interest-card">
-
-            <div class="profile-photo">
-
-              @if (item.photoUrl) {
-                <img [src]="item.photoUrl" [alt]="item.name" class="profile-image" />
-              } @else {
-                <div class="photo-placeholder">
-                  <i class="fa-solid fa-user"></i>
-                </div>
-              }
-
-              @if (item.verified) {
-              <span class="verified-badge">
-                <i class="fa-solid fa-check"></i>
-                Verified
-              </span>
-              }
-
-            </div>
-
-
-            <div class="interest-content">
-
-              <div class="profile-main">
-
-                <div>
-
-                  <h3>
-                    {{ item.name }}
-                  </h3>
-
-                  <span>
-                    Profile ID: {{ item.memberId }}
-                  </span>
-
-                </div>
-
-                <span class="status-badge" [class.pending]="item.status === 'pending'"
-                      [class.accepted]="item.status === 'accepted'"
-                      [class.declined]="item.status === 'declined'">
-                  {{ item.status | titlecase }}
-                </span>
-
-              </div>
-
-
-              <div class="profile-info">
-
-                <span>
-                  <i class="fa-solid fa-graduation-cap"></i>
-                  {{ item.education || 'Not specified' }}
-                </span>
-
-                <span>
-                  <i class="fa-solid fa-ring"></i>
-                  {{ item.maritalStatus || 'Not specified' }}
-                </span>
-
-                <span>
-                  <i class="fa-solid fa-location-dot"></i>
-                  {{ item.district || 'Not specified' }}
-                </span>
-
-              </div>
-
-
-              <div class="interest-actions">
-
-                <button type="button" class="view-btn" (click)="viewProfile(item.memberId)">
-                  View Profile
-                </button>
-
-                @if (item.status === 'pending') {
-
-                <button type="button" class="cancel-btn" [disabled]="busyIds.has(item.interestId)"
-                        (click)="cancelInterest(item.interestId)">
-                  Cancel Interest
-                </button>
-
-                } @else if (item.status === 'accepted') {
-
-                <span class="accepted-message">
-                  <i class="fa-solid fa-check-circle"></i>
-                  Interest Accepted
-                </span>
-
-                } @else if (item.status === 'declined') {
-
-                <span class="accepted-message">
-                  Declined
-                </span>
-
-                }
-
-              </div>
-
-            </div>
-
-          </article>
-
-          }
-
-        </section>
-
-        }
-
-        }
-
+      </header>
+
+      <div class="interest-tabs">
+        <button type="button" [class.active]="activeTab === 'received'" (click)="selectTab('received')">
+          <i class="fa-solid fa-inbox"></i> Received <span class="tab-count">{{ received.length }}</span>
+        </button>
+        <button type="button" [class.active]="activeTab === 'sent'" (click)="selectTab('sent')">
+          <i class="fa-solid fa-paper-plane"></i> Sent <span class="tab-count">{{ sent.length }}</span>
+        </button>
       </div>
+
+      @if (isLoading) {
+        <section class="interest-section"><div class="empty-state"><h2>Loading interests...</h2></div></section>
+      } @else if (errorMessage) {
+        <section class="interest-section"><div class="empty-state"><h2>Unable to load interests</h2><p>{{ errorMessage }}</p></div></section>
+      } @else if (activeTab === 'received') {
+        <section class="interest-section">
+          <div class="section-heading"><div><h2>Received Interests</h2><p>People who have shown interest in your profile.</p></div><span class="result-count">{{ received.length }} Interests</span></div>
+          @if (received.length === 0) {
+            <div class="empty-state"><h2>No received interests</h2><p>New interests will appear here.</p></div>
+          }
+          @for (item of received; track item.interestId) {
+            <article class="interest-card">
+              <div class="profile-photo">
+                @if (item.photoUrl) { <img [src]="item.photoUrl" [alt]="item.name"> } @else { <div class="photo-placeholder"><i class="fa-solid fa-user"></i></div> }
+                @if (item.verified) { <span class="verified-badge"><i class="fa-solid fa-check"></i> Verified</span> }
+              </div>
+              <div class="interest-content">
+                <div class="profile-main"><div><h3>{{ item.name }}</h3><span>Profile ID: {{ item.memberId }}</span></div><span class="status-badge {{item.status}}">{{ formatStatus(item.status) }}</span></div>
+                <div class="profile-info"><span><i class="fa-solid fa-graduation-cap"></i>{{ item.education || '-' }}</span><span><i class="fa-solid fa-ring"></i>{{ item.maritalStatus || '-' }}</span><span><i class="fa-solid fa-location-dot"></i>{{ item.district || '-' }}</span></div>
+                <div class="interest-actions">
+                  <button type="button" class="view-btn" (click)="viewProfile(item.memberId)">View Profile</button>
+                  @if (item.status === 'pending') {
+                    <button type="button" class="accept-btn" [disabled]="actionLoadingId === item.interestId" (click)="acceptInterest(item)">Accept</button>
+                    <button type="button" class="decline-btn" [disabled]="actionLoadingId === item.interestId" (click)="declineInterest(item)">Decline</button>
+                  }
+                </div>
+              </div>
+            </article>
+          }
+        </section>
+      } @else {
+        <section class="interest-section">
+          <div class="section-heading"><div><h2>Sent Interests</h2><p>Profiles you have shown interest in.</p></div><span class="result-count">{{ sent.length }} Interests</span></div>
+          @if (sent.length === 0) { <div class="empty-state"><h2>No sent interests</h2><p>Send interest from a matching profile to see it here.</p></div> }
+          @for (item of sent; track item.interestId) {
+            <article class="interest-card">
+              <div class="profile-photo">
+                @if (item.photoUrl) { <img [src]="item.photoUrl" [alt]="item.name"> } @else { <div class="photo-placeholder"><i class="fa-solid fa-user"></i></div> }
+                @if (item.verified) { <span class="verified-badge"><i class="fa-solid fa-check"></i> Verified</span> }
+              </div>
+              <div class="interest-content">
+                <div class="profile-main"><div><h3>{{ item.name }}</h3><span>Profile ID: {{ item.memberId }}</span></div><span class="status-badge {{item.status}}">{{ formatStatus(item.status) }}</span></div>
+                <div class="profile-info"><span><i class="fa-solid fa-graduation-cap"></i>{{ item.education || '-' }}</span><span><i class="fa-solid fa-ring"></i>{{ item.maritalStatus || '-' }}</span><span><i class="fa-solid fa-location-dot"></i>{{ item.district || '-' }}</span></div>
+                <div class="interest-actions">
+                  <button type="button" class="view-btn" (click)="viewProfile(item.memberId)">View Profile</button>
+                  @if (item.status === 'pending') { <button type="button" class="cancel-btn" [disabled]="actionLoadingId === item.interestId" (click)="cancelInterest(item)">Cancel Interest</button> }
+                </div>
+              </div>
+            </article>
+          }
+        </section>
+      }
     </div>
-
   </main>
-
 </div>

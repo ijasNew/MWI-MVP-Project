@@ -1,189 +1,31 @@
 <app-user-menu></app-user-menu>
-
 <main class="dashboard-main">
+  <div class="shortlisted-page">
+    <header class="page-header">
+      <div><span class="page-label">YOUR SAVED PROFILES</span><h1>Shortlisted Profiles</h1><p>Profiles you've saved to review later.</p></div>
+      <div class="profile-count">{{ profiles.length }} Profiles</div>
+    </header>
 
-<div class="shortlisted-page">
-
-  <!-- PAGE HEADER -->
-
-  <header class="page-header">
-
-    <div>
-
-      <span class="page-label">
-        YOUR SAVED PROFILES
-      </span>
-
-      <h1>
-        Shortlisted Profiles
-      </h1>
-
-      <p>
-        Profiles you've saved to review later.
-      </p>
-
-    </div>
-
-    <div class="profile-count">
-      {{ profiles.length }} Profiles
-    </div>
-
-  </header>
-
-
-  <!-- LOADING -->
-
-  @if (loading) {
-    <section class="empty-state">
-      <i class="fa-solid fa-spinner fa-spin"></i>
-      <p>Loading your shortlisted profiles...</p>
-    </section>
-  }
-
-
-  <!-- =========================
-       SHORTLISTED LIST
-  ========================== -->
-
-  @if (!loading && hasShortlistedProfiles) {
-
-  <section class="shortlist-list">
-
-    @for (profile of profiles; track profile.memberId) {
-
-    <article class="shortlist-card">
-
-      <div class="profile-photo">
-
-        @if (profile.photoUrl) {
-          <img [src]="profile.photoUrl" [alt]="profile.name" class="profile-image" />
-        } @else {
-          <div class="photo-placeholder">
-            <i class="fa-solid fa-user"></i>
-          </div>
+    @if (isLoading) { <section class="empty-state"><h2>Loading shortlisted profiles...</h2></section> }
+    @else if (errorMessage) { <section class="empty-state"><h2>Unable to load</h2><p>{{ errorMessage }}</p></section> }
+    @else if (profiles.length === 0) {
+      <section class="empty-state"><div class="empty-icon"><i class="fa-regular fa-star"></i></div><h2>No shortlisted profiles yet</h2><p>Save profiles you're interested in and find them here later.</p><button type="button" class="explore-btn" (click)="exploreMatches()">Explore Matches <i class="fa-solid fa-arrow-right"></i></button></section>
+    } @else {
+      <section class="shortlist-list">
+        @for (profile of profiles; track profile.memberId) {
+          <article class="shortlist-card">
+            <div class="profile-photo">
+              @if (profile.photoUrl) { <img [src]="profile.photoUrl" [alt]="profile.name"> } @else { <div class="photo-placeholder"><i class="fa-solid fa-user"></i></div> }
+              @if (profile.verified) { <span class="verified-badge"><i class="fa-solid fa-check"></i> Verified</span> }
+            </div>
+            <div class="profile-content">
+              <div class="profile-top"><div><h2>{{ profile.name }}</h2><span class="profile-id">Profile ID: {{ profile.memberId }}</span></div><span class="saved-badge"><i class="fa-solid fa-star"></i> Saved</span></div>
+              <div class="profile-details"><span><i class="fa-solid fa-graduation-cap"></i>{{ profile.education || '-' }}</span><span><i class="fa-solid fa-ring"></i>{{ profile.maritalStatus || '-' }}</span><span><i class="fa-solid fa-location-dot"></i>{{ profile.district || '-' }}</span></div>
+              <div class="profile-actions"><button type="button" class="view-btn" (click)="viewProfile(profile.memberId)"><i class="fa-solid fa-user"></i> View Profile</button><button type="button" class="remove-btn" [disabled]="removingId === profile.memberId" (click)="removeShortlist(profile.memberId)"><i class="fa-regular fa-star"></i> Remove</button></div>
+            </div>
+          </article>
         }
-
-        @if (profile.verified) {
-        <span class="verified-badge">
-          <i class="fa-solid fa-check"></i>
-          Verified
-        </span>
-        }
-
-      </div>
-
-
-      <div class="profile-content">
-
-        <div class="profile-top">
-
-          <div>
-
-            <h2>
-              {{ profile.name }}
-            </h2>
-
-            <span class="profile-id">
-              Profile ID: {{ profile.memberId }}
-            </span>
-
-          </div>
-
-          <span class="saved-badge">
-            <i class="fa-solid fa-star"></i>
-            Saved
-          </span>
-
-        </div>
-
-
-        <div class="profile-details">
-
-          <span>
-            <i class="fa-solid fa-graduation-cap"></i>
-            {{ profile.education || 'Not specified' }}
-          </span>
-
-          <span>
-            <i class="fa-solid fa-ring"></i>
-            {{ profile.maritalStatus || 'Not specified' }}
-          </span>
-
-          <span>
-            <i class="fa-solid fa-location-dot"></i>
-            {{ profile.district || 'Not specified' }}
-          </span>
-
-        </div>
-
-
-        <div class="profile-actions">
-
-          <button
-            type="button"
-            class="view-btn"
-            (click)="viewProfile(profile.memberId)"
-          >
-            <i class="fa-solid fa-user"></i>
-            View Profile
-          </button>
-
-          <button
-            type="button"
-            class="remove-btn"
-            [disabled]="busyIds.has(profile.memberId)"
-            (click)="removeShortlist(profile.memberId)"
-          >
-            <i class="fa-regular fa-star"></i>
-            Remove
-          </button>
-
-        </div>
-
-      </div>
-
-    </article>
-
+      </section>
     }
-
-  </section>
-
-  }
-
-
-  <!-- =========================
-       EMPTY STATE
-  ========================== -->
-
-  @if (!loading && !hasShortlistedProfiles) {
-
-  <section class="empty-state">
-
-    <div class="empty-icon">
-      <i class="fa-regular fa-star"></i>
-    </div>
-
-    <h2>
-      No shortlisted profiles yet
-    </h2>
-
-    <p>
-      Save profiles you're interested in
-      and find them here later.
-    </p>
-
-    <button
-      type="button"
-      class="explore-btn"
-      (click)="goToMatchingProfiles()"
-    >
-      Explore Matches
-      <i class="fa-solid fa-arrow-right"></i>
-    </button>
-
-  </section>
-
-  }
-
-</div>
+  </div>
 </main>

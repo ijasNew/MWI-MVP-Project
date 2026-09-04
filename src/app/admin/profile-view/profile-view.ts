@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminMenu } from '../admin-menu/admin-menu';
+import { ApiService } from '../../services/api';
 
 interface AdminProfile {
   id: string;
@@ -55,7 +56,8 @@ export class ProfileView implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
@@ -68,64 +70,17 @@ export class ProfileView implements OnInit {
   }
 
   loadProfile(): void {
+    if (!this.memberId) return;
 
-    /*
-     * TEMPORARY ADMIN PROFILE DATA
-     *
-     * Backend/API integration will replace this later.
-     */
-
-    this.profile = {
-      id: this.memberId || 'F1024',
-
-      name: 'Ayesha Fathima',
-      gender: 'Female',
-      age: 28,
-      maritalStatus: 'Never Married',
-      height: "5'4\"",
-
-      place: 'Kozhikode',
-      district: 'Kozhikode',
-      state: 'Kerala',
-
-      religion: 'Islam',
-      community: 'Sunni',
-
-      education: "Master's Degree",
-      specialization: 'Computer Science',
-      jobTitle: 'Software Engineer',
-      jobSector: 'IT',
-
-      company: 'ABC Technologies',
-      workLocation: 'Kozhikode, Kerala',
-      annualIncome: '₹6,00,000',
-
-      weight: '55 kg',
-      bodyType: 'Average',
-      complexion: 'Wheatish',
-      physicalStatus: 'Normal',
-
-      fatherName: 'Abdul Rahman',
-      motherName: 'Fathima',
-      familyStatus: 'Middle Class',
-      homeType: 'Own House',
-
-      brothers: 1,
-      sisters: 1,
-
-      phone: '+91 97469 00055',
-      whatsapp: '+91 97469 00055',
-      email: 'ayesha@example.com',
-
-      plan: 'Free',
-      verificationStatus: 'Verified',
-
-      photos: [],
-
-      expectations:
-        'Looking for a suitable, educated and family-oriented partner.'
-    };
-
+    this.apiService.getAdminProfile(this.memberId).subscribe({
+      next: (response: any) => {
+        this.profile = response?.data?.profile ?? null;
+      },
+      error: (error: any) => {
+        this.profile = null;
+        alert(error?.error?.message || 'Unable to load profile.');
+      }
+    });
   }
 
   goBack(): void {

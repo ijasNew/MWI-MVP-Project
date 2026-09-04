@@ -19,7 +19,7 @@
 
     <header class="page-header">
 
-    
+
 
       <h1>
         Matching Profiles
@@ -36,213 +36,244 @@
          PROFILE GRID
     ========================== -->
 
-     
+
 
     <section class="matching-grid">
 
-  <!-- LOADING -->
-  <div
-    class="matching-state"
-    *ngIf="loading"
-  >
-    <i class="fa-solid fa-spinner fa-spin"></i>
-    <span>Finding matching profiles...</span>
-  </div>
-
-
-  <!-- ERROR -->
-  <div
-    class="matching-state error"
-    *ngIf="!loading && errorMessage"
-  >
-    <i class="fa-solid fa-circle-exclamation"></i>
-    <span>{{ errorMessage }}</span>
-  </div>
-
-
- <!-- NO MATCHING PROFILES -->
-<div
-  class="matching-empty"
-  *ngIf="
-    !loading &&
-    !errorMessage &&
-    profiles.length === 0
-  "
->
-
-  <div class="empty-icon">
-    <i class="fa-solid fa-user-group"></i>
-  </div>
-
-  <h3>
-    No matching profiles yet
-  </h3>
-
-  <p>
-    We couldn't find a profile that matches your
-    current preferences.
-  </p> 
- 
-
-</div>
-
-
-  <!-- MATCHING PROFILES -->
-  <article
-    class="match-card"
-    *ngFor="let profile of profiles"
-    (click)="openProfile(profile.memberId)"
-  >
-
-    <!-- PHOTO -->
-    <div class="profile-photo">
-
-      <img
-        *ngIf="profile.photoUrl"
-        [src]="profile.photoUrl"
-        [alt]="profile.name"
-        class="profile-image"
-      />
-
-      <div
-        class="photo-placeholder"
-        *ngIf="!profile.photoUrl"
-      >
-        <i class="fa-solid fa-user"></i>
+      <!-- LOADING -->
+      <div class="matching-state" *ngIf="loading">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <span>Finding matching profiles...</span>
       </div>
 
 
-      <!-- VERIFIED -->
-      <span
-        class="verified-badge"
-        *ngIf="profile.verified"
-      >
-        <i class="fa-solid fa-check"></i>
-        Verified
-      </span>
-
-    </div>
+      <!-- ERROR -->
+      <div class="matching-state error" *ngIf="!loading && errorMessage">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
 
 
-    <!-- CONTENT -->
-    <div class="match-content">
+      <!-- NO MATCHING PROFILES -->
+      <div class="matching-empty" *ngIf="
+    !loading &&
+    !errorMessage &&
+    profiles.length === 0
+  ">
 
-      <!-- HEADING -->
-      <div class="profile-heading">
+        <div class="empty-icon">
+          <i class="fa-solid fa-user-group"></i>
+        </div>
 
-        <div>
+        <h3>
+          No matching profiles yet
+        </h3>
 
-          <h3>
-            {{ profile.name }}
-          </h3>
+        <p>
+          We couldn't find a profile that matches your
+          current preferences.
+        </p>
 
-          <span>
-            Profile ID: {{ profile.memberId }}
+
+      </div>
+
+
+      <!-- MATCHING PROFILES -->
+      <article class="match-card" *ngFor="let profile of profiles" (click)="openProfile(profile.memberId)">
+
+        <!-- PHOTO -->
+        <div class="profile-photo">
+
+          <img *ngIf="profile.photoUrl" [src]="profile.photoUrl" [alt]="profile.name" class="profile-image" [class.blurred-photo]="!isHomeVerified"/>
+
+          <div class="photo-placeholder" *ngIf="!profile.photoUrl">
+            <i class="fa-solid fa-user"></i>
+          </div>
+
+
+          <!-- VERIFIED -->
+          <span class="verified-badge" *ngIf="profile.verified">
+            <i class="fa-solid fa-check"></i>
+            Verified
           </span>
 
         </div>
 
 
-        <!-- SHORTLIST -->
-        <button
-          type="button"
-          class="shortlist-btn"
-          [class.active]="isShortlisted(profile.memberId)"
-          [title]="isShortlisted(profile.memberId) ? 'Remove from shortlist' : 'Shortlist'"
-          (click)="
-            toggleShortlist(
+        <!-- CONTENT -->
+        <div class="match-content">
+
+          <!-- HEADING -->
+          <div class="profile-heading">
+
+            <div>
+
+              <h3>
+                {{ profile.name }}
+              </h3>
+
+              <span>
+                Profile ID: {{ profile.memberId }}
+              </span>
+
+            </div>
+
+
+            <!-- SHORTLIST -->
+            <button type="button" class="shortlist-btn" [class.shortlisted]="isShortlisted(profile.memberId)"
+              [disabled]="isShortlistLoading(profile.memberId)" [title]="
+                  isShortlisted(profile.memberId)
+                    ? 'Remove from shortlist'
+                    : 'Add to shortlist'
+                " (click)="
+                  toggleShortlist(
+                    $event,
+                    profile.memberId
+                  )
+                ">
+              <i [class.fa-solid]="isShortlisted(profile.memberId)"
+                [class.fa-regular]="!isShortlisted(profile.memberId)" class="fa-star"></i>
+            </button>
+
+          </div>
+
+
+          <!-- DETAILS -->
+          <div class="profile-details">
+
+            <!-- AGE -->
+            <span>
+              <i class="fa-solid fa-cake-candles"></i>
+
+              {{ profile.age }} Years
+            </span>
+
+
+            <!-- EDUCATION -->
+            <span>
+              <i class="fa-solid fa-graduation-cap"></i>
+
+              {{ profile.education }}
+            </span>
+
+
+            <!-- MARITAL STATUS -->
+            <span>
+              <i class="fa-solid fa-ring"></i>
+
+              {{ profile.maritalStatus }}
+            </span>
+
+
+            <!-- DISTRICT -->
+            <span>
+              <i class="fa-solid fa-location-dot"></i>
+
+              {{ profile.district }}
+            </span>
+
+
+            <!-- RELIGION -->
+            <span>
+              <i class="fa-solid fa-moon"></i>
+
+              {{ profile.religion }}
+            </span>
+
+          </div>
+
+
+          <!-- SEND INTEREST -->
+          <!-- INTEREST ACTION -->
+          <ng-container [ngSwitch]="getInterestState(profile.memberId)">
+
+            <!-- INCOMING PENDING -->
+            <div class="interest-actions" *ngSwitchCase="'incoming_pending'">
+
+              <button type="button" class="interest-btn accept-interest-btn"
+                [disabled]="isInterestActionLoading(profile.memberId)" (click)="
+              respondToInterest(
+                $event,
+                profile.memberId,
+                'accept'
+              )
+            ">
+                <i class="fa-solid fa-check"></i>
+
+                {{
+                isInterestActionLoading(profile.memberId)
+                ? 'Updating...'
+                : 'Accept'
+                }}
+              </button>
+
+              <button type="button" class="interest-btn decline-interest-btn"
+                [disabled]="isInterestActionLoading(profile.memberId)" (click)="
+              respondToInterest(
+                $event,
+                profile.memberId,
+                'decline'
+              )
+            ">
+                <i class="fa-solid fa-xmark"></i>
+                Decline
+              </button>
+
+            </div>
+
+            <!-- OUTGOING PENDING -->
+            <button type="button" class="interest-btn" disabled *ngSwitchCase="'outgoing_pending'">
+              <i class="fa-solid fa-check"></i>
+              Interest Sent
+            </button>
+            <!-- SENDING -->
+            <button type="button" class="interest-btn" disabled *ngSwitchCase="'sending'">
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              Sending...
+            </button>
+
+            <!-- ACCEPTED -->
+            <button type="button" class="interest-btn" disabled *ngSwitchCase="'accepted'">
+              <i class="fa-solid fa-check"></i>
+              Accepted
+            </button>
+
+            <!-- DECLINED -->
+            <button type="button" class="interest-btn" disabled *ngSwitchCase="'declined'">
+              <i class="fa-solid fa-xmark"></i>
+              Declined
+            </button>
+
+            <!-- NO RELATIONSHIP -->
+            <button type="button" class="interest-btn" *ngSwitchDefault (click)="
+            sendInterest(
               $event,
               profile.memberId
             )
-          "
-        >
-          <i [class]="isShortlisted(profile.memberId) ? 'fa-solid fa-star' : 'fa-regular fa-star'"></i>
-        </button>
+          ">
+              <i class="fa-solid fa-heart"></i>
+              Send Interest
+            </button>
 
-      </div>
+          </ng-container>
 
+        </div>
 
-      <!-- DETAILS -->
-      <div class="profile-details">
+      </article>
 
-        <!-- AGE -->
-        <span>
-          <i class="fa-solid fa-cake-candles"></i>
-
-          {{ profile.age }} Years
-        </span>
-
-
-        <!-- EDUCATION -->
-        <span>
-          <i class="fa-solid fa-graduation-cap"></i>
-
-          {{ profile.education }}
-        </span>
-
-
-        <!-- MARITAL STATUS -->
-        <span>
-          <i class="fa-solid fa-ring"></i>
-
-          {{ profile.maritalStatus }}
-        </span>
-
-
-        <!-- DISTRICT -->
-        <span>
-          <i class="fa-solid fa-location-dot"></i>
-
-          {{ profile.district }}
-        </span>
-
-
-        <!-- RELIGION -->
-        <span>
-          <i class="fa-solid fa-moon"></i>
-
-          {{ profile.religion }}
-        </span>
-
-      </div>
-
-
-      <!-- SEND INTEREST -->
-      <button
-        type="button"
-        class="interest-btn"
-        [disabled]="interestSentIds.has(profile.memberId)"
-        (click)="
-          sendInterest(
-            $event,
-            profile.memberId
-          )
-        "
-      >
-
-        <i class="fa-solid fa-heart"></i>
-
-        {{ interestSentIds.has(profile.memberId) ? 'Interest Sent' : 'Send Interest' }}
-
-      </button>
-
-    </div>
-
-  </article>
-
-</section>
+    </section>
 
 
 
 
-       
 
 
 
 
-       
 
-     
+
+
+
 
   </main>
 

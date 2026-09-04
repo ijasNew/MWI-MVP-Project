@@ -23,6 +23,7 @@ export class ProfileView implements OnInit {
 
   isInterestSent = false;
   isShortlisted = false;
+  isActionLoading = false;
   isInterestAccepted = true;
   isContactVisible = false;
   private returnUrl = '/user-home';
@@ -84,6 +85,14 @@ export class ProfileView implements OnInit {
         this.isInterestAccepted =
           response?.data?.is_interest_accepted === true ||
           response?.data?.is_interest_accepted === 1;
+
+        this.isInterestSent =
+          response?.data?.interest_status === 'pending' ||
+          response?.data?.interest_status === 'accepted';
+
+        this.isShortlisted =
+          response?.data?.is_shortlisted === true ||
+          response?.data?.is_shortlisted === 1;
 
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -359,12 +368,25 @@ export class ProfileView implements OnInit {
       return;
     }
 
-    this.isInterestSent = true;
+    if (this.isActionLoading) {
+      return;
+    }
 
-    console.log(
-      'Interest sent to:',
-      this.profile.memberId
-    );
+    this.isActionLoading = true;
+
+    this.apiService.sendInterest(this.profile.memberId).subscribe({
+      next: (response: any) => {
+        this.isInterestSent = true;
+        this.isActionLoading = false;
+        this.cdr.detectChanges();
+        alert(response?.message || 'Interest sent successfully.');
+      },
+      error: (error: any) => {
+        this.isActionLoading = false;
+        this.cdr.detectChanges();
+        alert(error?.error?.message || 'Unable to send interest.');
+      }
+    });
   }
 
   toggleShortlist(): void {
@@ -373,15 +395,29 @@ export class ProfileView implements OnInit {
       return;
     }
 
-    this.isShortlisted =
-      !this.isShortlisted;
+    if (this.isActionLoading) {
+      return;
+    }
 
-    console.log(
-      this.isShortlisted
-        ? 'Shortlisted:'
-        : 'Removed from shortlist:',
-      this.profile.memberId
-    );
+    this.isActionLoading = true;
+
+    const request = this.isShortlisted
+      ? this.apiService.removeShortlist(this.profile.memberId)
+      : this.apiService.addShortlist(this.profile.memberId);
+
+    request.subscribe({
+      next: (response: any) => {
+        this.isShortlisted = !this.isShortlisted;
+        this.isActionLoading = false;
+        this.cdr.detectChanges();
+        alert(response?.message || (this.isShortlisted ? 'Profile added to shortlist.' : 'Profile removed from shortlist.'));
+      },
+      error: (error: any) => {
+        this.isActionLoading = false;
+        this.cdr.detectChanges();
+        alert(error?.error?.message || 'Unable to update shortlist.');
+      }
+    });
   }
   viewContact(): void {
 

@@ -335,7 +335,6 @@ getCurrentProfile(): Profile | null {
 
           email:
             dbProfile?.email ||
-            users?.email ||
             '',
 
 
@@ -519,7 +518,7 @@ getCurrentProfile(): Profile | null {
           // =========================
 
           preferredLocationRadius:
-            preferences?.location_radius || '',
+            valuesByType('location_radius'),
 
           horoscopeRequired:
             preferences?.horoscope_required || '',

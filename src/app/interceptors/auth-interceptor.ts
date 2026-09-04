@@ -2,18 +2,23 @@ import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
+  // Requests such as admin APIs may already provide their own
+  // Authorization header. Never overwrite it with the user token.
+  if (req.headers.has('Authorization')) {
+    return next(req);
+  }
+
   const token = localStorage.getItem('mwi_token');
 
-  // No token → send request normally
   if (!token) {
     return next(req);
   }
 
-  const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-
-  return next(authReq);
+  return next(
+    req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+  );
 };

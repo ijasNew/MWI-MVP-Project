@@ -151,7 +151,7 @@
           <input
             type="number"
             name="age"
-            [(ngModel)]="profile.age"
+            [(ngModel)]="profile.age" [disabled]="true"
             min="18"
           />
 
@@ -802,7 +802,7 @@
 
           <select
             name="plan"
-            [(ngModel)]="profile.plan"
+            [(ngModel)]="profile.plan" [disabled]="true"
           >
 
             <option value="Free">
@@ -824,7 +824,7 @@
 
           <select
             name="verificationStatus"
-            [(ngModel)]="profile.verificationStatus"
+            [(ngModel)]="profile.verificationStatus" [disabled]="true"
           >
 
             <option value="Not Verified">

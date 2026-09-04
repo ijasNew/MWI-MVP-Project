@@ -383,15 +383,118 @@ export class ApiService {
 
 
   getMatchingProfiles() {
-
     return this.http.get<any>(
       `${this.apiUrl}/matching-profiles`,
-      {
-        headers: this.authHeaders()
-      }
+      { headers: this.authHeaders() }
+    ).pipe(
+      map((response: any) => {
+        const profiles = response?.data?.profiles;
+        if (Array.isArray(profiles)) {
+          profiles.forEach((profile: any) => {
+            if (profile?.photoUrl) {
+              profile.photoUrl = this.toAbsolutePhotoUrl(profile.photoUrl);
+            }
+          });
+        }
+        return response;
+      })
     );
   }
 
+
+
+  // =========================================================
+  // USER INTERESTS
+  // =========================================================
+
+  sendInterest(memberId: string) {
+    return this.http.post<any>(
+      `${this.apiUrl}/interests/send`,
+      { member_id: memberId },
+      { headers: this.authHeaders() }
+    );
+  }
+
+  getReceivedInterests() {
+    return this.http.get<any>(
+      `${this.apiUrl}/interests/received`,
+      { headers: this.authHeaders() }
+    ).pipe(map((response: any) => {
+      const items = response?.data?.interests;
+      if (Array.isArray(items)) {
+        items.forEach((item: any) => {
+          if (item?.photoUrl) item.photoUrl = this.toAbsolutePhotoUrl(item.photoUrl);
+        });
+      }
+      return response;
+    }));
+  }
+
+  getSentInterests() {
+    return this.http.get<any>(
+      `${this.apiUrl}/interests/sent`,
+      { headers: this.authHeaders() }
+    ).pipe(map((response: any) => {
+      const items = response?.data?.interests;
+      if (Array.isArray(items)) {
+        items.forEach((item: any) => {
+          if (item?.photoUrl) item.photoUrl = this.toAbsolutePhotoUrl(item.photoUrl);
+        });
+      }
+      return response;
+    }));
+  }
+
+  respondInterest(interestId: string, action: 'accept' | 'decline') {
+    return this.http.post<any>(
+      `${this.apiUrl}/interests/respond`,
+      { interest_id: interestId, action },
+      { headers: this.authHeaders() }
+    );
+  }
+
+  cancelInterest(interestId: string) {
+    return this.http.post<any>(
+      `${this.apiUrl}/interests/cancel`,
+      { interest_id: interestId },
+      { headers: this.authHeaders() }
+    );
+  }
+
+  // =========================================================
+  // USER SHORTLIST
+  // =========================================================
+
+  addShortlist(memberId: string) {
+    return this.http.post<any>(
+      `${this.apiUrl}/shortlist/add`,
+      { member_id: memberId },
+      { headers: this.authHeaders() }
+    );
+  }
+
+  removeShortlist(memberId: string) {
+    return this.http.post<any>(
+      `${this.apiUrl}/shortlist/remove`,
+      { member_id: memberId },
+      { headers: this.authHeaders() }
+    );
+  }
+
+  getShortlist() {
+    return this.http.get<any>(
+      `${this.apiUrl}/shortlist`,
+      { headers: this.authHeaders() }
+    ).pipe(map((response: any) => {
+      const profiles = response?.data?.profiles;
+      if (Array.isArray(profiles)) {
+        profiles.forEach((profile: any) => {
+          if (profile?.photoUrl) profile.photoUrl = this.toAbsolutePhotoUrl(profile.photoUrl);
+        });
+      }
+      return response;
+    }));
+  }
 
   // =========================================================
   // OLD PROFILE API
@@ -487,6 +590,17 @@ getProfileView(memberId: string) {
 
 
   // =========================================================
+  // ADMIN DASHBOARD
+  // =========================================================
+
+  getAdminDashboard() {
+    return this.http.get<any>(
+      `${this.apiUrl}/admin/dashboard`,
+      { headers: this.adminAuthHeaders() }
+    );
+  }
+
+  // =========================================================
   // ADMIN PROFILES
   // =========================================================
 
@@ -506,6 +620,38 @@ getProfileView(memberId: string) {
       {
         headers: this.adminAuthHeaders()
       }
+    );
+  }
+
+  // =========================================================
+  // ADMIN PROFILE DETAILS / EDIT
+  // =========================================================
+
+  getAdminProfile(memberId: string) {
+    return this.http.get<any>(
+      `${this.apiUrl}/admin/profiles/${encodeURIComponent(memberId)}`,
+      { headers: this.adminAuthHeaders() }
+    ).pipe(
+      map((response: any) => {
+        const profile = response?.data?.profile;
+        if (profile) {
+          if (Array.isArray(profile.photos)) {
+            profile.photos = profile.photos.map((photo: string) => this.toAbsolutePhotoUrl(photo));
+          }
+          if (profile.primaryPhoto) {
+            profile.primaryPhoto = this.toAbsolutePhotoUrl(profile.primaryPhoto);
+          }
+        }
+        return response;
+      })
+    );
+  }
+
+  updateAdminProfile(memberId: string, data: Record<string, unknown>) {
+    return this.http.put<any>(
+      `${this.apiUrl}/admin/profiles/${encodeURIComponent(memberId)}`,
+      data,
+      { headers: this.adminAuthHeaders() }
     );
   }
 
@@ -553,6 +699,7 @@ getProfileView(memberId: string) {
       }
     );
   }
+  
 
 
   startAdminVerification(verificationId: number | null, paymentId: number) {
@@ -598,102 +745,4 @@ getProfileCompletionStatus() {
 
 }
 
-  // =========================================================
-  // ADMIN DASHBOARD STATS
-  // =========================================================
-
-  getAdminDashboardStats() {
-    return this.http.get<any>(
-      `${this.apiUrl}/admin/dashboard-stats`,
-      {
-        headers: this.adminAuthHeaders()
-      }
-    );
-  }
-
-
-  // =========================================================
-  // INTERESTS
-  // =========================================================
-
-  sendInterest(memberId: string) {
-    return this.http.post<any>(
-      `${this.apiUrl}/interests/send`,
-      { member_id: memberId },
-      {
-        headers: this.authHeaders()
-      }
-    );
-  }
-
-  getReceivedInterests() {
-    return this.http.get<any>(
-      `${this.apiUrl}/interests/received`,
-      {
-        headers: this.authHeaders()
-      }
-    );
-  }
-
-  getSentInterests() {
-    return this.http.get<any>(
-      `${this.apiUrl}/interests/sent`,
-      {
-        headers: this.authHeaders()
-      }
-    );
-  }
-
-  respondInterest(interestId: string, action: 'accept' | 'decline') {
-    return this.http.post<any>(
-      `${this.apiUrl}/interests/respond`,
-      { interest_id: interestId, action },
-      {
-        headers: this.authHeaders()
-      }
-    );
-  }
-
-  cancelInterest(interestId: string) {
-    return this.http.post<any>(
-      `${this.apiUrl}/interests/cancel`,
-      { interest_id: interestId },
-      {
-        headers: this.authHeaders()
-      }
-    );
-  }
-
-  // =========================================================
-  // SHORTLIST
-  // =========================================================
-
-  getShortlist() {
-    return this.http.get<any>(
-      `${this.apiUrl}/shortlist`,
-      {
-        headers: this.authHeaders()
-      }
-    );
-  }
-
-  addShortlist(memberId: string) {
-    return this.http.post<any>(
-      `${this.apiUrl}/shortlist/add`,
-      { member_id: memberId },
-      {
-        headers: this.authHeaders()
-      }
-    );
-  }
-
-  removeShortlist(memberId: string) {
-    return this.http.post<any>(
-      `${this.apiUrl}/shortlist/remove`,
-      { member_id: memberId },
-      {
-        headers: this.authHeaders()
-      }
-    );
-  }
 }

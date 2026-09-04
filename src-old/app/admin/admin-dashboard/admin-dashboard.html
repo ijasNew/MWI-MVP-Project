@@ -1,0 +1,374 @@
+<app-admin-menu></app-admin-menu>
+<div class="admin-dashboard">
+
+  <!-- HEADER -->
+
+  <header class="dashboard-header">
+
+    <div>
+
+      <span class="page-label">
+        ADMIN PANEL
+      </span>
+
+      <h1>
+        Dashboard
+      </h1>
+
+      <p>
+        Welcome back, {{ adminName }}.
+        Here's an overview of your matchmaking platform.
+      </p>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="logout-button"
+      (click)="logout()"
+    >
+      <i class="fa-solid fa-right-from-bracket"></i>
+      Logout
+    </button>
+
+  </header>
+
+
+  <!-- STATS -->
+
+  @if (loading) {
+    <p style="padding: 12px 0;">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Loading dashboard...
+    </p>
+  }
+
+  @if (errorMessage) {
+    <p style="padding: 12px 0; color: #b3261e;">
+      {{ errorMessage }}
+    </p>
+  }
+
+  <section class="stats-grid">
+
+    @for (card of stats; track card.title) {
+
+      <button
+        type="button"
+        class="stat-card"
+        (click)="openStat(card)"
+      >
+
+        <div class="stat-top">
+
+          <div class="stat-icon">
+
+            <i [class]="card.icon"></i>
+
+          </div>
+
+          <i class="fa-solid fa-arrow-up-right-from-square stat-arrow"></i>
+
+        </div>
+
+
+        <div class="stat-content">
+
+          <span>
+            {{ card.title }}
+          </span>
+
+          <strong>
+            {{ card.value | number }}
+          </strong>
+
+          <small>
+            {{ card.subtitle }}
+          </small>
+
+        </div>
+
+      </button>
+
+    }
+
+  </section>
+
+
+  <!-- QUICK ACTIONS -->
+
+  <section class="section-block">
+
+    <div class="section-heading">
+
+      <div>
+
+        <span class="section-label">
+          QUICK ACTIONS
+        </span>
+
+        <h2>
+          Manage Profiles
+        </h2>
+
+      </div>
+
+    </div>
+
+
+    <div class="quick-actions">
+
+      <button
+        type="button"
+        (click)="openProfiles()"
+      >
+
+        <i class="fa-solid fa-users"></i>
+
+        <span>
+          Registered Profiles
+        </span>
+
+        <small>
+          View and manage profiles
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        (click)="openPlans()"
+      >
+
+        <i class="fa-solid fa-arrow-up-right-dots"></i>
+
+        <span>
+          Plan Upgrades
+        </span>
+
+        <small>
+          Manage user plans
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        (click)="openVerification()"
+      >
+
+        <i class="fa-solid fa-house-circle-check"></i>
+
+        <span>
+          Home Verification
+        </span>
+
+        <small>
+          Review pending requests
+        </small>
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- LOWER GRID -->
+
+  <section class="content-grid">
+
+
+    <!-- RECENT PROFILES -->
+
+    <div class="content-card">
+
+      <div class="card-heading">
+
+        <div>
+
+          <span class="section-label">
+            RECENT
+          </span>
+
+          <h2>
+            New Profiles
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          (click)="openProfiles()"
+        >
+          View all
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+      </div>
+
+
+      <div class="profile-list">
+
+        @for (
+          profile of recentProfiles;
+          track profile.id
+        ) {
+
+          <div class="profile-row">
+
+            <div class="avatar">
+              {{ profile.name.charAt(0) }}
+            </div>
+
+
+            <div class="profile-main">
+
+              <strong>
+                {{ profile.name }}
+              </strong>
+
+              <span>
+                {{ profile.id }}
+                ·
+                {{ profile.place }}
+              </span>
+
+            </div>
+
+
+            <div class="profile-meta">
+
+              <span
+                class="status"
+                [class]="getStatusClass(profile.status)"
+              >
+                {{ profile.status }}
+              </span>
+
+              <small>
+                {{ profile.registeredDate }}
+              </small>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="row-view"
+              (click)="viewProfile(profile.id)"
+            >
+              <i class="fa-regular fa-eye"></i>
+            </button>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+
+    <!-- VERIFICATION -->
+
+    <div class="content-card">
+
+      <div class="card-heading">
+
+        <div>
+
+          <span class="section-label">
+            ACTION REQUIRED
+          </span>
+
+          <h2>
+            Home Verification
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          (click)="openVerification()"
+        >
+          View all
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+      </div>
+
+
+      <div class="verification-list">
+
+        @for (
+          request of verificationRequests;
+          track request.id
+        ) {
+
+          <div class="verification-row">
+
+            <div class="verification-icon">
+
+              <i class="fa-solid fa-house"></i>
+
+            </div>
+
+
+            <div class="verification-main">
+
+              <strong>
+                {{ request.name }}
+              </strong>
+
+              <span>
+                {{ request.id }}
+                ·
+                {{ request.place }}
+              </span>
+
+            </div>
+
+
+            <div class="verification-action">
+
+              <small>
+                {{ request.requestedDate }}
+              </small>
+
+              <button
+                type="button"
+                (click)="startVerification(request.id)"
+              >
+                Verify
+              </button>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER INFO -->
+
+  <div class="dashboard-note">
+
+    <i class="fa-solid fa-circle-info"></i>
+
+    <span>
+      Dashboard figures are live, pulled directly from the database.
+    </span>
+
+  </div>
+
+</div>

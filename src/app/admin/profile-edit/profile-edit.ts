@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminMenu } from '../admin-menu/admin-menu';
+import { ApiService } from '../../services/api';
 
 interface EditableProfile {
   id: string;
@@ -69,7 +70,8 @@ export class ProfileEdit implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
@@ -134,86 +136,62 @@ export class ProfileEdit implements OnInit {
   }
 
   private loadProfile(): void {
+    if (!this.memberId) return;
 
-    /*
-     * TEMPORARY ADMIN DATA
-     *
-     * Backend/API integration will replace this later.
-     */
-
-    this.profile = {
-
-      id: this.memberId || 'F1024',
-
-      fullName: 'Ayesha Fathima',
-      gender: 'Female',
-      age: 28,
-      maritalStatus: 'Never Married',
-      height: "5'4\"",
-
-      place: 'Kozhikode',
-      district: 'Kozhikode',
-      state: 'Kerala',
-      pincode: '673001',
-
-      religion: 'Islam',
-      community: 'Sunni',
-
-      highestEducation: "Master's Degree",
-      specialization: 'Computer Science',
-      jobTitle: 'Software Engineer',
-      jobSector: 'IT',
-
-      companyName: 'ABC Technologies',
-      workLocation: 'Kozhikode, Kerala',
-      annualIncome: '₹6,00,000',
-
-      weight: '55 kg',
-      bodyType: 'Average',
-      complexion: 'Wheatish',
-      physicalStatus: 'Normal',
-
-      fatherName: 'Abdul Rahman',
-      motherName: 'Fathima',
-      brothers: 1,
-      sisters: 1,
-      familyStatus: 'Middle Class',
-      homeType: 'Own House',
-
-      secondaryMobile: '+91 90000 00000',
-      whatsappNumber: '+91 97469 00055',
-      email: 'ayesha@example.com',
-
-      expectations:
-        'Looking for a suitable, educated and family-oriented partner.',
-
-      plan: 'Free',
-      verificationStatus: 'Verified'
-
-    };
-
+    this.apiService.getAdminProfile(this.memberId).subscribe({
+      next: (response: any) => {
+        const p = response?.data?.profile;
+        if (!p) return;
+        this.profile = {
+          id: p.id ?? this.memberId,
+          fullName: p.fullName ?? p.name ?? '', gender: p.gender ?? '', age: p.age ?? null,
+          maritalStatus: p.maritalStatus ?? '', height: p.height ? String(p.height) : '',
+          place: p.place ?? '', district: p.district ?? '', state: p.state ?? '', pincode: p.pincode ?? '',
+          religion: p.religion ?? '', community: p.community ?? '', highestEducation: p.highestEducation ?? p.education ?? '',
+          specialization: p.specialization ?? '', jobTitle: p.jobTitle ?? '', jobSector: p.jobSector ?? '',
+          companyName: p.companyName ?? p.company ?? '', workLocation: p.workLocation ?? '', annualIncome: p.annualIncome ?? '',
+          weight: p.weight ? String(p.weight) : '', bodyType: p.bodyType ?? '', complexion: p.complexion ?? '', physicalStatus: p.physicalStatus ?? '',
+          fatherName: p.fatherName ?? '', motherName: p.motherName ?? '', brothers: p.brothers ?? null, sisters: p.sisters ?? null,
+          familyStatus: p.familyStatus ?? '', homeType: p.homeType ?? '', secondaryMobile: p.secondaryMobile ?? '',
+          whatsappNumber: p.whatsappNumber ?? '', email: p.email ?? '', expectations: p.expectations ?? '',
+          plan: p.plan === 'Basic' ? 'Basic' : 'Free', verificationStatus: p.verificationStatus ?? 'Not Verified'
+        };
+      },
+      error: (error: any) => { alert(error?.error?.message || 'Unable to load profile.'); }
+    });
   }
 
   saveProfile(): void {
+    if (!this.memberId || this.isSaving) return;
 
     this.saveMessage = '';
     this.isSaving = true;
 
-    /*
-     * TEMPORARY UI SAVE
-     *
-     * Real API update will be connected later.
-     */
+    const payload: Record<string, unknown> = {
+      fullName: this.profile.fullName.trim(),
+      gender: this.profile.gender,
+      maritalStatus: this.profile.maritalStatus,
+      height: this.profile.height ? Number(this.profile.height) : null,
+      place: this.profile.place.trim(), district: this.profile.district.trim(), state: this.profile.state.trim(), pincode: this.profile.pincode.trim(),
+      religion: this.profile.religion, community: this.profile.community, highestEducation: this.profile.highestEducation,
+      specialization: this.profile.specialization, jobTitle: this.profile.jobTitle, jobSector: this.profile.jobSector,
+      companyName: this.profile.companyName, workLocation: this.profile.workLocation, annualIncome: this.profile.annualIncome,
+      weight: this.profile.weight ? Number(this.profile.weight) : null, bodyType: this.profile.bodyType, complexion: this.profile.complexion,
+      physicalStatus: this.profile.physicalStatus, fatherName: this.profile.fatherName, motherName: this.profile.motherName,
+      brothers: this.profile.brothers, sisters: this.profile.sisters, familyStatus: this.profile.familyStatus, homeType: this.profile.homeType,
+      secondaryMobile: this.profile.secondaryMobile, whatsappNumber: this.profile.whatsappNumber, email: this.profile.email, expectations: this.profile.expectations
+    };
 
-    setTimeout(() => {
-
-      this.isSaving = false;
-
-      this.saveMessage =
-        'Profile changes saved successfully.';
-
-    }, 500);
-
+    this.apiService.updateAdminProfile(this.memberId, payload).subscribe({
+      next: (response: any) => {
+        this.isSaving = false;
+        this.saveMessage = response?.message || 'Profile updated successfully.';
+      },
+      error: (error: any) => {
+        this.isSaving = false;
+        this.saveMessage = error?.error?.message || 'Unable to update profile.';
+      }
+    });
   }
 
   cancel(): void {
