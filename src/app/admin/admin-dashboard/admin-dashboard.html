@@ -37,6 +37,19 @@
 
   <!-- STATS -->
 
+  @if (loading) {
+    <p style="padding: 12px 0;">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      Loading dashboard...
+    </p>
+  }
+
+  @if (errorMessage) {
+    <p style="padding: 12px 0; color: #b3261e;">
+      {{ errorMessage }}
+    </p>
+  }
+
   <section class="stats-grid">
 
     @for (card of stats; track card.title) {
@@ -353,8 +366,7 @@
     <i class="fa-solid fa-circle-info"></i>
 
     <span>
-      Dashboard figures are currently sample data.
-      They will be connected to the backend database during API integration.
+      Dashboard figures are live, pulled directly from the database.
     </span>
 
   </div>

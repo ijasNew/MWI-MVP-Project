@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AdminMenu } from '../admin-menu/admin-menu';
 import { AuthService } from '../../services/auth';
+import { ApiService } from '../../services/api';
 
 interface StatCard {
   title: string;
@@ -38,141 +39,152 @@ interface VerificationRequest {
   styleUrl: './admin-dashboard.css'
 })
 
-export class AdminDashboard {
+export class AdminDashboard implements OnInit {
 
   adminName = 'Admin';
 
-  stats: StatCard[] = [
+  loading = true;
+  errorMessage = '';
 
-    {
-      title: 'Total Profiles',
-      value: 1500,
-      subtitle: 'Registered profiles',
-      icon: 'fa-solid fa-users',
-      route: '/admin/profiles'
-    },
+  stats: StatCard[] = [];
 
-    {
-      title: 'Paid Users',
-      value: 86,
-      subtitle: 'Active paid users',
-      icon: 'fa-solid fa-credit-card',
-      route: '/admin/plans'
-    },
+  recentProfiles: RecentProfile[] = [];
 
-    {
-      title: 'Home Verified',
-      value: 42,
-      subtitle: 'Verified profiles',
-      icon: 'fa-solid fa-house-circle-check',
-      route: '/admin/verification'
-    },
-
-    {
-      title: 'Pending Verification',
-      value: 18,
-      subtitle: 'Need verification',
-      icon: 'fa-solid fa-house',
-      route: '/admin/verification'
-    },
-
-    {
-      title: 'Free Users',
-      value: 1414,
-      subtitle: 'Free plan users',
-      icon: 'fa-solid fa-user',
-      route: '/admin/plans'
-    },
-
-    {
-      title: 'Other',
-      value: 26,
-      subtitle: 'Incomplete / other',
-      icon: 'fa-solid fa-layer-group',
-      route: '/admin/profiles'
-    }
-
-  ];
-
-
-  recentProfiles: RecentProfile[] = [
-
-    {
-      id: 'F1032',
-      name: 'Rasiya Fathima',
-      gender: 'Female',
-      place: 'Malappuram',
-      registeredDate: '27 Aug 2026',
-      status: 'New',
-      plan: 'Free'
-    },
-
-    {
-      id: 'M1031',
-      name: 'Faris Rahman',
-      gender: 'Male',
-      place: 'Kondotty',
-      registeredDate: '26 Aug 2026',
-      status: 'Pending',
-      plan: 'Free'
-    },
-
-    {
-      id: 'F1028',
-      name: 'Raniya Fathima',
-      gender: 'Female',
-      place: 'Kannur',
-      registeredDate: '25 Aug 2026',
-      status: 'Verified',
-      plan: 'Basic'
-    },
-
-    {
-      id: 'M1025',
-      name: 'Mohammed Shamil',
-      gender: 'Male',
-      place: 'Perinthalmanna',
-      registeredDate: '26 Aug 2026',
-      status: 'Pending',
-      plan: 'Free'
-    }
-
-  ];
-
-
-  verificationRequests: VerificationRequest[] = [
-
-    {
-      id: 'F1024',
-      name: 'Ayesha Fathima',
-      place: 'Kozhikode',
-      requestedDate: '26 Aug 2026',
-      status: 'Pending'
-    },
-
-    {
-      id: 'M1025',
-      name: 'Mohammed Shamil',
-      place: 'Perinthalmanna',
-      requestedDate: '26 Aug 2026',
-      status: 'Pending'
-    },
-
-    {
-      id: 'F1028',
-      name: 'Raniya Fathima',
-      place: 'Kannur',
-      requestedDate: '25 Aug 2026',
-      status: 'Pending'
-    }
-
-  ];
+  verificationRequests: VerificationRequest[] = [];
 
 
   constructor(
     private router: Router,
-     private authService: AuthService
+    private authService: AuthService,
+    private apiService: ApiService,
+    private cdr: ChangeDetectorRef
   ) {}
+
+
+  ngOnInit(): void {
+
+    const admin = this.authService.getCurrentAdmin();
+
+    if (admin?.admin_role) {
+      this.adminName = admin.admin_role;
+    }
+
+    this.loadDashboardStats();
+
+  }
+
+
+  // =====================================================
+  // LOAD DASHBOARD STATS
+  // =====================================================
+
+  loadDashboardStats(): void {
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.apiService.getAdminDashboardStats().subscribe({
+
+      next: (response: any) => {
+
+        if (!response?.success) {
+
+          this.errorMessage =
+            response?.message ||
+            'Unable to load dashboard stats.';
+
+          this.loading = false;
+
+          this.cdr.detectChanges();
+
+          return;
+        }
+
+        const data = response.data ?? {};
+
+        const s = data.stats ?? {};
+
+        this.stats = [
+
+          {
+            title: 'Total Profiles',
+            value: s.totalProfiles ?? 0,
+            subtitle: 'Registered profiles',
+            icon: 'fa-solid fa-users',
+            route: '/admin/profiles'
+          },
+
+          {
+            title: 'Paid Users',
+            value: s.paidUsers ?? 0,
+            subtitle: 'Active paid users',
+            icon: 'fa-solid fa-credit-card',
+            route: '/admin/plans'
+          },
+
+          {
+            title: 'Home Verified',
+            value: s.homeVerified ?? 0,
+            subtitle: 'Verified profiles',
+            icon: 'fa-solid fa-house-circle-check',
+            route: '/admin/verification'
+          },
+
+          {
+            title: 'Pending Verification',
+            value: s.pendingVerification ?? 0,
+            subtitle: 'Need verification',
+            icon: 'fa-solid fa-house',
+            route: '/admin/verification'
+          },
+
+          {
+            title: 'Free Users',
+            value: s.freeUsers ?? 0,
+            subtitle: 'Free plan users',
+            icon: 'fa-solid fa-user',
+            route: '/admin/plans'
+          },
+
+          {
+            title: 'Other',
+            value: s.other ?? 0,
+            subtitle: 'Rejected / blocked',
+            icon: 'fa-solid fa-layer-group',
+            route: '/admin/profiles'
+          }
+
+        ];
+
+        this.recentProfiles = Array.isArray(data.recentProfiles)
+          ? data.recentProfiles
+          : [];
+
+        this.verificationRequests = Array.isArray(data.verificationRequests)
+          ? data.verificationRequests
+          : [];
+
+        this.loading = false;
+
+        this.cdr.detectChanges();
+
+      },
+
+      error: (error) => {
+
+        this.errorMessage =
+          error?.error?.message ||
+          'Something went wrong while loading the dashboard.';
+
+        this.loading = false;
+
+        this.cdr.detectChanges();
+
+      }
+
+    });
+
+  }
 
 
   openStat(card: StatCard): void {

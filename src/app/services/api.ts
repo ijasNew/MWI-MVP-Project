@@ -599,6 +599,20 @@ getProfileCompletionStatus() {
 }
 
   // =========================================================
+  // ADMIN DASHBOARD STATS
+  // =========================================================
+
+  getAdminDashboardStats() {
+    return this.http.get<any>(
+      `${this.apiUrl}/admin/dashboard-stats`,
+      {
+        headers: this.adminAuthHeaders()
+      }
+    );
+  }
+
+
+  // =========================================================
   // INTERESTS
   // =========================================================
 
@@ -682,5 +696,4 @@ getProfileCompletionStatus() {
       }
     );
   }
-
 }
