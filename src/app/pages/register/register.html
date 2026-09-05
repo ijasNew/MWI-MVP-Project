@@ -1812,7 +1812,7 @@
 
 
             @if (
-            preferredSects.length > 0
+            preferredSects.length === 1
             ) {
 
             <label>
@@ -1881,6 +1881,7 @@
             <!-- SUNNI GROUP -->
 
             @if (
+            preferredSects.length === 1 &&
             preferredSects.includes('Sunni')
             ) {
 
@@ -1913,6 +1914,7 @@
             <!-- SALAFI GROUP -->
 
             @if (
+                preferredSects.length === 1 &&
             preferredSects.includes('Salafi')
             ) {
 
@@ -1969,8 +1971,7 @@
 
             </div>
 
-
-            @if (preferredCastes.length > 0) {
+            @if (preferredCastes.length === 1) {
 
             <label>
                 Preferred Sub-caste

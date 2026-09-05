@@ -3472,7 +3472,6 @@ export class Register implements AfterViewChecked {
     }
 
   }
-
   togglePreferredSect(
     sect: string
   ): void {
@@ -3488,7 +3487,7 @@ export class Register implements AfterViewChecked {
           item => item !== sect
         );
 
-      // Parent removed → clear child selections
+      // Parent removed → clear child
       if (sect === 'Sunni') {
         this.preferredSunniGroups = [];
       }
@@ -3500,9 +3499,16 @@ export class Register implements AfterViewChecked {
     } else {
 
       this.preferredSects.push(sect);
+    }
 
+    // Multiple sects → no sub-sect
+    if (this.preferredSects.length > 1) {
+      this.preferredSunniGroups = [];
+      this.preferredSalafiGroups = [];
     }
   }
+
+
 
   togglePreferredSunniGroup(
     group: string
@@ -3550,42 +3556,47 @@ export class Register implements AfterViewChecked {
 
     }
   }
+
   togglePreferredCaste(
-    caste: string
-  ): void {
+  caste: string
+): void {
 
-    if (!this.hinduCastes.includes(caste)) {
-      return;
-    }
-
-    if (this.preferredCastes.includes(caste)) {
-
-      this.preferredCastes =
-        this.preferredCastes.filter(
-          item => item !== caste
-        );
-
-      // Remove child selections belonging
-      // to this caste
-
-      const allowedForRemaining =
-        this.preferredCastes.flatMap(
-          item =>
-            this.getHinduSubCastesForCaste(item)
-        );
-
-      this.preferredSubCastes =
-        this.preferredSubCastes.filter(
-          sub =>
-            allowedForRemaining.includes(sub)
-        );
-
-    } else {
-
-      this.preferredCastes.push(caste);
-
-    }
+  if (!this.hinduCastes.includes(caste)) {
+    return;
   }
+
+  if (this.preferredCastes.includes(caste)) {
+
+    this.preferredCastes =
+      this.preferredCastes.filter(
+        item => item !== caste
+      );
+
+    // Remove child selections belonging
+    // to remaining castes
+    const allowedForRemaining =
+      this.preferredCastes.flatMap(
+        item =>
+          this.getHinduSubCastesForCaste(item)
+      );
+
+    this.preferredSubCastes =
+      this.preferredSubCastes.filter(
+        sub =>
+          allowedForRemaining.includes(sub)
+      );
+
+  } else {
+
+    this.preferredCastes.push(caste);
+  }
+
+  // Multiple castes → no sub-caste
+  if (this.preferredCastes.length > 1) {
+    this.preferredSubCastes = [];
+  }
+}
+
   togglePreferredSubCaste(
     subCaste: string
   ): void {
@@ -3668,46 +3679,52 @@ export class Register implements AfterViewChecked {
 
     return map[caste] || [];
   }
+ 
   togglePreferredDenomination(
-    denomination: string
-  ): void {
+  denomination: string
+): void {
 
-    if (
-      !this.christianDenominations.includes(
-        denomination
-      )
-    ) {
-      return;
-    }
+  if (
+    !this.christianDenominations.includes(
+      denomination
+    )
+  ) {
+    return;
+  }
 
-    if (
-      this.preferredSects.includes(denomination)
-    ) {
+  if (
+    this.preferredSects.includes(denomination)
+  ) {
 
-      this.preferredSects =
-        this.preferredSects.filter(
-          item => item !== denomination
-        );
-
-      const allowed =
-        this.preferredSects.flatMap(
-          item =>
-            this.christianOptions[item] || []
-        );
-
-      this.preferredSubCastes =
-        this.preferredSubCastes.filter(
-          item => allowed.includes(item)
-        );
-
-    } else {
-
-      this.preferredSects.push(
-        denomination
+    this.preferredSects =
+      this.preferredSects.filter(
+        item => item !== denomination
       );
 
-    }
+    const allowed =
+      this.preferredSects.flatMap(
+        item =>
+          this.christianOptions[item] || []
+      );
+
+    this.preferredSubCastes =
+      this.preferredSubCastes.filter(
+        item => allowed.includes(item)
+      );
+
+  } else {
+
+    this.preferredSects.push(
+      denomination
+    );
   }
+
+  // Multiple denominations → no sub-denomination
+  if (this.preferredSects.length > 1) {
+    this.preferredSubCastes = [];
+  }
+}
+
   togglePreferredSubDenomination(
     subDenomination: string
   ): void {
