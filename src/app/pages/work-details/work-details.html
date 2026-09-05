@@ -141,16 +141,16 @@
 
     <div class="form-group">
 
-      <label>
-        Work Location
-        <span class="optional">
-          Optional
-        </span>
-      </label>
+     <label>
+  Work Location
+  <span class="required">
+    Required
+  </span>
+</label>
 
       <select [(ngModel)]="workLocationType" (ngModelChange)="
           onWorkLocationTypeChange()
-        ">
+        " >
 
         <option value="">
           Select work location

@@ -85,7 +85,11 @@ export class UserMenu implements OnInit {
                 profile.fullName || 'User',
 
               memberId:
-                profile.memberId || ''
+                profile.memberId || '',
+                 photos:
+    Array.isArray(profile.photos)
+      ? profile.photos
+      : []
             };
 
             console.log(
@@ -208,6 +212,13 @@ export class UserMenu implements OnInit {
 
         break;
 
+        case 'matching-profiles':
+
+        this.router.navigate([
+          '/matching-profiles'
+        ]);
+
+        break;
 
       case 'interests':
 

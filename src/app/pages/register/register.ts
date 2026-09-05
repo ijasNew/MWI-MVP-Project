@@ -465,6 +465,28 @@ export class Register implements AfterViewChecked {
     'Other'
   ];
 
+  // Preference-only options. Actual profile options above remain unchanged.
+  preferredMuslimSectOptions = [
+    'Sunni', 'Salafi', 'Jamat Islami', 'Hanafi', 'Shafi', 'Any'
+  ];
+
+  preferredSunniGroupOptions = [
+    'AP-Sunni', 'EK-Sunni', 'Sunni', 'Any'
+  ];
+
+  preferredSalafiGroupOptions = [
+    'KNM (Mainstream)', 'KNM Markazu Dawa', 'Wisdom',
+    'Salafi Independent', 'Other Salafi / Mujahid', 'Any'
+  ];
+
+  preferredHinduCasteOptions = [
+    'Thiyya / Ezhava', 'Namboothiri', 'Nair', 'Viswakarma', 'SC', 'ST', 'Any'
+  ];
+
+  preferredChristianDenominationOptions = [
+    'Catholic', 'Orthodox', 'Protestant', 'Pentecostal', 'Any'
+  ];
+
   christianOptions: Record<string, string[]> = {
     Catholic: [
       'Syro-Malabar Catholic',
@@ -1193,7 +1215,10 @@ export class Register implements AfterViewChecked {
           )
             ? [...draft.preferences.preferredCareerSectors]
             : [];
-
+        console.log(
+          '🔥 PREFERRED LOCATIONS SENT:',
+          this.preferredLocations
+        );
         this.preferredLocations =
           Array.isArray(
             draft.preferences.preferredLocations
@@ -1443,17 +1468,10 @@ export class Register implements AfterViewChecked {
 
         if (response.success === true) {
 
-          // Save token for the upcoming authenticated profile APIs.
-          if (response.data?.token) {
-            localStorage.setItem(
-              'mwi_token',
-              response.data.token
-            );
+          // Save authenticated user session and token.
+          if (response.data?.token && response.data?.user) {
+            this.authService.loginUser(response);
           }
-          if (response.data?.user) {
-            this.authService.loginUser(response.data.user);
-          }
-
 
           // Store the member ID returned by backend.
           this.memberId =
@@ -3329,6 +3347,7 @@ export class Register implements AfterViewChecked {
 
   showPreferredLocationSuggestions = false;
 
+
   get filteredPreferredLocations(): string[] {
 
     const search =
@@ -3336,19 +3355,25 @@ export class Register implements AfterViewChecked {
         .trim()
         .toLowerCase();
 
+    const locations = [
+      'All Kerala',
+      ...this.districts
+    ];
+
     if (!search) {
-      return this.districts.filter(
-        district =>
-          !this.preferredLocations.includes(district)
+      return locations.filter(
+        location =>
+          !this.preferredLocations.includes(location)
       );
     }
 
-    return this.districts.filter(
-      district =>
-        district.toLowerCase().includes(search) &&
-        !this.preferredLocations.includes(district)
+    return locations.filter(
+      location =>
+        location.toLowerCase().includes(search) &&
+        !this.preferredLocations.includes(location)
     );
   }
+
 
   selectPreferredLocation(
     district: string
@@ -3369,6 +3394,7 @@ export class Register implements AfterViewChecked {
     this.cdr.detectChanges();
   }
 
+
   removePreferredLocation(
     location: string
   ): void {
@@ -3382,21 +3408,15 @@ export class Register implements AfterViewChecked {
   getPreferredCommunityOptions(): string[] {
 
     if (this.religion === 'Muslim') {
-
-      return this.muslimSects;
-
+      return this.preferredMuslimSectOptions;
     }
 
     if (this.religion === 'Hindu') {
-
-      return this.hinduCastes;
-
+      return this.preferredHinduCasteOptions;
     }
 
     if (this.religion === 'Christian') {
-
-      return this.christianDenominations;
-
+      return this.preferredChristianDenominationOptions;
     }
 
     return [];
@@ -3405,229 +3425,174 @@ export class Register implements AfterViewChecked {
 
     if (
       this.religion !== 'Hindu' ||
-      this.preferredCastes.length === 0
+      this.preferredCastes.length !== 1 ||
+      this.preferredCastes[0] === 'Any'
     ) {
-
       return [];
-
     }
 
-    const subCastes = new Set<string>();
+    const subCastes =
+      this.getHinduSubCastesForCaste(
+        this.preferredCastes[0]
+      );
 
-    for (
-      const caste of this.preferredCastes
-    ) {
-
-      if (caste === 'Nair') {
-
-        this.nairSubCastes.forEach(
-          item => subCastes.add(item)
-        );
-
-      }
-
-      if (caste === 'Viswakarma') {
-
-        this.viswakarmaSubCastes.forEach(
-          item => subCastes.add(item)
-        );
-
-      }
-
-      if (caste === 'SC') {
-
-        this.scSubCastes.forEach(
-          item => subCastes.add(item)
-        );
-
-      }
-
-      if (caste === 'ST') {
-
-        this.stSubCastes.forEach(
-          item => subCastes.add(item)
-        );
-
-      }
-
-    }
-
-    return Array.from(subCastes);
+    return subCastes.length > 0
+      ? ['Any', ...subCastes]
+      : [];
   }
   togglePreferredCommunity(
     value: string
   ): void {
 
-    const index =
-      this.preferredSects.indexOf(value);
-
-    if (index >= 0) {
-
-      this.preferredSects.splice(index, 1);
-
-    } else {
-
-      this.preferredSects.push(value);
-
-    }
-
+    // Keep the existing generic entry point; Muslim uses the same
+    // preferred-sect selection logic.
+    this.togglePreferredSect(value);
   }
+
   togglePreferredSect(
     sect: string
   ): void {
 
-    if (!this.muslimSects.includes(sect)) {
+    if (!this.preferredMuslimSectOptions.includes(sect)) {
       return;
     }
 
-    if (this.preferredSects.includes(sect)) {
-
+    if (sect === 'Any') {
       this.preferredSects =
-        this.preferredSects.filter(
-          item => item !== sect
-        );
+        this.preferredSects.includes('Any') ? [] : ['Any'];
+      this.preferredSunniGroups = [];
+      this.preferredSalafiGroups = [];
+      return;
+    }
 
-      // Parent removed → clear child
-      if (sect === 'Sunni') {
-        this.preferredSunniGroups = [];
-      }
+    this.preferredSects =
+      this.preferredSects.filter(item => item !== 'Any');
 
-      if (sect === 'Salafi') {
-        this.preferredSalafiGroups = [];
-      }
+    if (this.preferredSects.includes(sect)) {
+      this.preferredSects =
+        this.preferredSects.filter(item => item !== sect);
 
+      if (sect === 'Sunni') this.preferredSunniGroups = [];
+      if (sect === 'Salafi') this.preferredSalafiGroups = [];
     } else {
-
       this.preferredSects.push(sect);
     }
 
-    // Multiple sects → no sub-sect
     if (this.preferredSects.length > 1) {
       this.preferredSunniGroups = [];
       this.preferredSalafiGroups = [];
     }
   }
 
-
-
   togglePreferredSunniGroup(
     group: string
   ): void {
 
-    if (!this.sunniGroups.includes(group)) {
+    if (!this.preferredSunniGroupOptions.includes(group)) return;
+
+    if (group === 'Any') {
+      this.preferredSunniGroups =
+        this.preferredSunniGroups.includes('Any') ? [] : ['Any'];
       return;
     }
 
-    if (
-      this.preferredSunniGroups.includes(group)
-    ) {
+    this.preferredSunniGroups =
+      this.preferredSunniGroups.filter(item => item !== 'Any');
 
+    if (this.preferredSunniGroups.includes(group)) {
       this.preferredSunniGroups =
-        this.preferredSunniGroups.filter(
-          item => item !== group
-        );
-
+        this.preferredSunniGroups.filter(item => item !== group);
     } else {
-
       this.preferredSunniGroups.push(group);
-
     }
   }
+
   togglePreferredSalafiGroup(
     group: string
   ): void {
 
-    if (!this.salafiGroups.includes(group)) {
+    if (!this.preferredSalafiGroupOptions.includes(group)) return;
+
+    if (group === 'Any') {
+      this.preferredSalafiGroups =
+        this.preferredSalafiGroups.includes('Any') ? [] : ['Any'];
       return;
     }
 
-    if (
-      this.preferredSalafiGroups.includes(group)
-    ) {
+    this.preferredSalafiGroups =
+      this.preferredSalafiGroups.filter(item => item !== 'Any');
 
+    if (this.preferredSalafiGroups.includes(group)) {
       this.preferredSalafiGroups =
-        this.preferredSalafiGroups.filter(
-          item => item !== group
-        );
-
+        this.preferredSalafiGroups.filter(item => item !== group);
     } else {
-
       this.preferredSalafiGroups.push(group);
-
     }
   }
 
   togglePreferredCaste(
-  caste: string
-): void {
+    caste: string
+  ): void {
 
-  if (!this.hinduCastes.includes(caste)) {
-    return;
-  }
+    if (!this.preferredHinduCasteOptions.includes(caste)) return;
 
-  if (this.preferredCastes.includes(caste)) {
+    if (caste === 'Any') {
+      this.preferredCastes =
+        this.preferredCastes.includes('Any') ? [] : ['Any'];
+      this.preferredSubCastes = [];
+      return;
+    }
 
     this.preferredCastes =
-      this.preferredCastes.filter(
-        item => item !== caste
-      );
+      this.preferredCastes.filter(item => item !== 'Any');
 
-    // Remove child selections belonging
-    // to remaining castes
-    const allowedForRemaining =
-      this.preferredCastes.flatMap(
-        item =>
+    if (this.preferredCastes.includes(caste)) {
+      this.preferredCastes =
+        this.preferredCastes.filter(item => item !== caste);
+
+      const allowedForRemaining =
+        this.preferredCastes.flatMap(item =>
           this.getHinduSubCastesForCaste(item)
-      );
+        );
 
-    this.preferredSubCastes =
-      this.preferredSubCastes.filter(
-        sub =>
-          allowedForRemaining.includes(sub)
-      );
+      this.preferredSubCastes =
+        this.preferredSubCastes.filter(sub =>
+          sub === 'Any' || allowedForRemaining.includes(sub)
+        );
+    } else {
+      this.preferredCastes.push(caste);
+    }
 
-  } else {
-
-    this.preferredCastes.push(caste);
+    if (this.preferredCastes.length > 1) {
+      this.preferredSubCastes = [];
+    }
   }
-
-  // Multiple castes → no sub-caste
-  if (this.preferredCastes.length > 1) {
-    this.preferredSubCastes = [];
-  }
-}
 
   togglePreferredSubCaste(
     subCaste: string
   ): void {
 
-    const allowedSubCastes =
-      this.preferredCastes.flatMap(
-        caste =>
-          this.getHinduSubCastesForCaste(caste)
-      );
+    const allowedSubCastes = this.getPreferredSubCastes();
 
-    if (!allowedSubCastes.includes(subCaste)) {
+    if (!allowedSubCastes.includes(subCaste)) return;
+
+    if (subCaste === 'Any') {
+      this.preferredSubCastes =
+        this.preferredSubCastes.includes('Any') ? [] : ['Any'];
       return;
     }
 
-    if (
-      this.preferredSubCastes.includes(subCaste)
-    ) {
+    this.preferredSubCastes =
+      this.preferredSubCastes.filter(item => item !== 'Any');
 
+    if (this.preferredSubCastes.includes(subCaste)) {
       this.preferredSubCastes =
-        this.preferredSubCastes.filter(
-          item => item !== subCaste
-        );
-
+        this.preferredSubCastes.filter(item => item !== subCaste);
     } else {
-
-      this.preferredSubCastes.push(
-        subCaste
-      );
-
+      this.preferredSubCastes.push(subCaste);
     }
   }
+
   getHinduSubCastesForCaste(
     caste: string
   ): string[] {
@@ -3679,88 +3644,85 @@ export class Register implements AfterViewChecked {
 
     return map[caste] || [];
   }
- 
   togglePreferredDenomination(
-  denomination: string
-): void {
+    denomination: string
+  ): void {
 
-  if (
-    !this.christianDenominations.includes(
-      denomination
-    )
-  ) {
-    return;
-  }
+    if (!this.preferredChristianDenominationOptions.includes(denomination)) {
+      return;
+    }
 
-  if (
-    this.preferredSects.includes(denomination)
-  ) {
+    if (denomination === 'Any') {
+      this.preferredSects =
+        this.preferredSects.includes('Any') ? [] : ['Any'];
+      this.preferredSubCastes = [];
+      return;
+    }
 
     this.preferredSects =
-      this.preferredSects.filter(
-        item => item !== denomination
+      this.preferredSects.filter(item => item !== 'Any');
+
+    if (this.preferredSects.includes(denomination)) {
+      this.preferredSects =
+        this.preferredSects.filter(item => item !== denomination);
+
+      const allowed = this.preferredSects.flatMap(
+        item => this.christianOptions[item] || []
       );
 
-    const allowed =
-      this.preferredSects.flatMap(
-        item =>
-          this.christianOptions[item] || []
-      );
+      this.preferredSubCastes =
+        this.preferredSubCastes.filter(
+          item => item === 'Any' || allowed.includes(item)
+        );
+    } else {
+      this.preferredSects.push(denomination);
+    }
 
-    this.preferredSubCastes =
-      this.preferredSubCastes.filter(
-        item => allowed.includes(item)
-      );
-
-  } else {
-
-    this.preferredSects.push(
-      denomination
-    );
+    if (this.preferredSects.length > 1) {
+      this.preferredSubCastes = [];
+    }
   }
-
-  // Multiple denominations → no sub-denomination
-  if (this.preferredSects.length > 1) {
-    this.preferredSubCastes = [];
-  }
-}
 
   togglePreferredSubDenomination(
     subDenomination: string
   ): void {
 
-    const allowed =
-      this.preferredSects.flatMap(
-        denomination =>
-          this.christianOptions[
-          denomination
-          ] || []
-      );
+    const allowed = this.getPreferredChristianSubDenominations();
 
-    if (!allowed.includes(subDenomination)) {
+    if (!allowed.includes(subDenomination)) return;
+
+    if (subDenomination === 'Any') {
+      this.preferredSubCastes =
+        this.preferredSubCastes.includes('Any') ? [] : ['Any'];
       return;
     }
 
-    if (
-      this.preferredSubCastes.includes(
-        subDenomination
-      )
-    ) {
+    this.preferredSubCastes =
+      this.preferredSubCastes.filter(item => item !== 'Any');
 
+    if (this.preferredSubCastes.includes(subDenomination)) {
       this.preferredSubCastes =
-        this.preferredSubCastes.filter(
-          item =>
-            item !== subDenomination
-        );
-
+        this.preferredSubCastes.filter(item => item !== subDenomination);
     } else {
-
-      this.preferredSubCastes.push(
-        subDenomination
-      );
-
+      this.preferredSubCastes.push(subDenomination);
     }
   }
+
+  getPreferredChristianSubDenominations(): string[] {
+
+    if (
+      this.preferredSects.length !== 1 ||
+      this.preferredSects[0] === 'Any'
+    ) {
+      return [];
+    }
+
+    const options =
+      this.christianOptions[this.preferredSects[0]] || [];
+
+    return options.length > 0 ? ['Any', ...options] : [];
+  }
+
   togglePreferredEducation(
     education: string
   ): void {
@@ -4190,7 +4152,7 @@ export class Register implements AfterViewChecked {
       const invalidPreferredSect =
         this.preferredSects.some(
           sect =>
-            !this.muslimSects.includes(sect)
+            !this.preferredMuslimSectOptions.includes(sect)
         );
 
       if (invalidPreferredSect) {
@@ -4213,7 +4175,7 @@ export class Register implements AfterViewChecked {
         const invalidSunniGroup =
           this.preferredSunniGroups.some(
             group =>
-              !this.sunniGroups.includes(group)
+              !this.preferredSunniGroupOptions.includes(group)
           );
 
         if (invalidSunniGroup) {
@@ -4237,7 +4199,7 @@ export class Register implements AfterViewChecked {
         const invalidSalafiGroup =
           this.preferredSalafiGroups.some(
             group =>
-              !this.salafiGroups.includes(group)
+              !this.preferredSalafiGroupOptions.includes(group)
           );
 
         if (invalidSalafiGroup) {
@@ -4261,7 +4223,7 @@ export class Register implements AfterViewChecked {
       const invalidPreferredCaste =
         this.preferredCastes.some(
           caste =>
-            !this.hinduCastes.includes(caste)
+            !this.preferredHinduCasteOptions.includes(caste)
         );
 
       if (invalidPreferredCaste) {
@@ -4291,7 +4253,7 @@ export class Register implements AfterViewChecked {
                   caste
                 );
 
-              return allowedSubCastes.includes(
+              return subCaste === 'Any' || allowedSubCastes.includes(
                 subCaste
               );
 
@@ -4321,7 +4283,7 @@ export class Register implements AfterViewChecked {
       const invalidDenomination =
         this.preferredSects.some(
           denomination =>
-            !this.christianDenominations.includes(
+            !this.preferredChristianDenominationOptions.includes(
               denomination
             )
         );
@@ -4353,7 +4315,7 @@ export class Register implements AfterViewChecked {
                 denomination
                 ] || [];
 
-              return allowed.includes(
+              return subDenomination === 'Any' || allowed.includes(
                 subDenomination
               );
 
@@ -4448,6 +4410,7 @@ export class Register implements AfterViewChecked {
     const invalidLocation =
       this.preferredLocations.some(
         location =>
+          location !== 'All Kerala' &&
           !this.districts.includes(location)
       );
 
@@ -4509,6 +4472,9 @@ export class Register implements AfterViewChecked {
 
           return;
         }
+
+
+
 
         // Preferences saved to DB — persist locally too, then finalize
         this.savePreferencesDraft();

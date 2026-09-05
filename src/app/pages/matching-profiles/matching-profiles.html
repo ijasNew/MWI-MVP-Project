@@ -271,7 +271,99 @@
 
 
 
+@if (isHomeVerificationPopupVisible) {
 
+  <div
+    class="verification-popup-overlay"
+    (click)="closeHomeVerificationPopup()"
+  >
+
+    <div
+      class="verification-popup"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- CLOSE -->
+      <button
+        type="button"
+        class="verification-popup-close"
+        (click)="closeHomeVerificationPopup()"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+
+      <!-- ICON -->
+      <div class="verification-popup-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+
+
+      <!-- LABEL -->
+      <span class="verification-popup-label">
+        VERIFIED ACCESS
+      </span>
+
+
+      <!-- TITLE -->
+      <h2>
+        Home Verification Required
+      </h2>
+
+
+      <!-- MESSAGE -->
+      <p>
+        You are not verified yet.
+      </p>
+
+      <p>
+        Complete your Home Verification to unlock
+        full access to verified matchmaking.
+      </p>
+
+
+      <!-- BENEFITS -->
+      <div class="verification-benefits">
+
+        <div>
+          <i class="fa-solid fa-check"></i>
+          <span>Send Interest</span>
+        </div>
+
+        <div>
+          <i class="fa-solid fa-check"></i>
+          <span>View full profile details</span>
+        </div>
+
+        <div>
+          <i class="fa-solid fa-check"></i>
+          <span>Unlimited contacts on acceptance</span>
+        </div>
+
+        <div>
+          <i class="fa-solid fa-check"></i>
+          <span>1 Year Validity</span>
+        </div>
+
+      </div>
+
+
+      <!-- ACTION -->
+      <button
+        type="button"
+        class="verification-popup-btn"
+        (click)="openHomeVerification()"
+      >
+        Complete Home Verification
+
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+    </div>
+
+  </div>
+
+}
 
 
   </main>

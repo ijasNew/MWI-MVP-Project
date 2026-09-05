@@ -93,6 +93,18 @@
     </button>
 
 
+    <!-- Matching Profile -->
+
+     <button type="button" class="menu-item" [class.active]="activeMenu === 'matching-profiles'" (click)="selectMenu('matching-profiles')">
+
+      <i class="fa-solid fa-user-group"></i>
+
+      <span>
+        My Match
+      </span>
+
+    </button>
+
     <!-- INTERESTS -->
 
     <button type="button" class="menu-item" [class.active]="activeMenu === 'interests'"

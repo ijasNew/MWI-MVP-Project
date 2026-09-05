@@ -311,6 +311,12 @@
       transform .25s ease;
 
     width: 260px;
+
+     height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scrollbar-width: thin;
   }
 
 

@@ -5,9 +5,10 @@ import { Router } from '@angular/router';
 import { UserMenu } from '../../components/user-menu/user-menu';
 import { AuthService } from '../../services/auth';
 import { InterestService } from '../../services/interest';
-import { ApiService } from '../../services/api'; 
+import { ApiService } from '../../services/api';
 import { ChangeDetectorRef } from '@angular/core';
-
+import { ProfileCompletionPopupService }
+  from '../../services/profile-completion-popup';
 
 export interface MatchingProfile {
   memberId: string;
@@ -46,23 +47,25 @@ export class MatchingProfiles {
   interestActionLoadingIds = new Set<string>();
 
   // Shortlist state
-shortlistedIds = new Set<string>();
-shortlistLoadingIds = new Set<string>();
+  shortlistedIds = new Set<string>();
+  shortlistLoadingIds = new Set<string>();
 
   loading = true;
 
   errorMessage = '';
-// HOME VERIFICATION
-isHomeVerified = false;
-isVerificationLoading = true;
-
+  // HOME VERIFICATION
+  isHomeVerified = false;
+  isVerificationLoading = true;
+  isHomeVerificationPopupVisible = false;
   constructor(
     private router: Router,
     private authService: AuthService,
     private interestService: InterestService,
     private apiService: ApiService,
-     private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private profileCompletionPopupService:
+      ProfileCompletionPopupService
+  ) { }
 
 
   // =====================================================
@@ -72,110 +75,317 @@ isVerificationLoading = true;
   ngOnInit(): void {
 
     this.loadMatchingProfiles();
-     this.loadShortlist();
-     this.loadVerificationStatus();
+    this.loadShortlist();
+    this.loadVerificationStatus();
 
   }
-  // =====================================================
-// HOME VERIFICATION STATUS
-// =====================================================
+  private sendInterestRequest(
+    senderMemberId: string,
+    memberId: string
+  ): void {
 
-private loadVerificationStatus(): void {
+    this.interestActionLoadingIds.add(memberId);
 
-  this.isVerificationLoading = true;
+    this.interestStates.set(
+      memberId,
+      'sending'
+    );
 
-  this.apiService.getVerificationStatus().subscribe({
+    this.cdr.detectChanges();
 
-    next: (response: any) => {
+    const request =
+      this.interestService.sendInterest(
+        senderMemberId,
+        memberId
+      );
 
-      if (response?.success) {
+    if (!request) {
 
-        this.isHomeVerified =
+      this.interestActionLoadingIds.delete(
+        memberId
+      );
+
+      this.interestStates.delete(
+        memberId
+      );
+
+      alert(
+        'Unable to send interest.'
+      );
+
+      this.cdr.detectChanges();
+
+      return;
+    }
+
+    request.subscribe({
+
+      next: (_response: any) => {
+
+        this.interestActionLoadingIds.delete(
+          memberId
+        );
+
+        this.interestStates.set(
+          memberId,
+          'outgoing_pending'
+        );
+
+        this.cdr.detectChanges();
+      },
+
+      error: (error: any) => {
+
+        this.interestActionLoadingIds.delete(
+          memberId
+        );
+
+        this.interestStates.delete(
+          memberId
+        );
+
+        alert(
+          error?.error?.message ||
+          'Unable to send interest.'
+        );
+
+        this.cdr.detectChanges();
+      }
+
+    });
+  }
+
+  private checkProfileCompletionBeforeInterest(
+  senderMemberId: string,
+  memberId: string
+): void {
+
+  this.apiService
+    .getProfileCompletionStatus()
+    .subscribe({
+
+      next: (response: any) => {
+
+        const profileComplete =
+          response?.data?.profile_complete === true;
+
+        // =====================================================
+        // PROFILE INCOMPLETE
+        // =====================================================
+        if (!profileComplete) {
+
+          const requiredPercentage =
+            Number(
+              response?.data?.required_percentage ?? 0
+            );
+
+          // Existing Profile Completion Popup
+          this.profileCompletionPopupService.open(
+            requiredPercentage
+          );
+
+          return;
+        }
+
+        // =====================================================
+        // PROFILE COMPLETE
+        // NOW CHECK HOME VERIFICATION
+        // =====================================================
+
+        this.checkHomeVerificationBeforeInterest(
+          senderMemberId,
+          memberId
+        );
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'Profile completion check failed:',
+          error
+        );
+
+      }
+
+    });
+}
+  private checkHomeVerificationBeforeInterest(
+  senderMemberId: string,
+  memberId: string
+): void {
+
+  this.apiService
+    .getVerificationStatus()
+    .subscribe({
+
+      next: (response: any) => {
+
+        const homeVerified =
           response?.data?.verification_completed === true ||
           Number(
             response?.data?.profile?.home_verified
           ) === 1;
 
-      } else {
+        // =====================================================
+        // NOT VERIFIED
+        // =====================================================
+        if (!homeVerified) {
+
+          this.isHomeVerificationPopupVisible =
+            true;
+
+          this.cdr.detectChanges();
+
+          return;
+        }
+
+        // =====================================================
+        // VERIFIED
+        // =====================================================
+
+        this.isHomeVerified = true;
+
+        this.sendInterestRequest(
+          senderMemberId,
+          memberId
+        );
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'Home verification check failed:',
+          error
+        );
+
+        // Fail closed
+        this.isHomeVerified = false;
+
+        this.isHomeVerificationPopupVisible =
+          true;
+
+        this.cdr.detectChanges();
+      }
+
+    });
+}
+ 
+closeHomeVerificationPopup(): void {
+
+  this.isHomeVerificationPopupVisible =
+    false;
+
+  this.cdr.detectChanges();
+}
+openHomeVerification(): void {
+
+  this.isHomeVerificationPopupVisible =
+    false;
+
+  this.router.navigate([
+    '/upgrade-profile'
+  ]);
+}
+  // =====================================================
+  // HOME VERIFICATION STATUS
+  // =====================================================
+
+  private loadVerificationStatus(): void {
+
+    this.isVerificationLoading = true;
+
+    this.apiService.getVerificationStatus().subscribe({
+
+      next: (response: any) => {
+
+        if (response?.success) {
+
+          this.isHomeVerified =
+            response?.data?.verification_completed === true ||
+            Number(
+              response?.data?.profile?.home_verified
+            ) === 1;
+
+        } else {
+
+          this.isHomeVerified = false;
+
+        }
+
+        this.isVerificationLoading = false;
+
+        this.cdr.detectChanges();
+
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'VERIFICATION STATUS ERROR:',
+          error
+        );
+
+        // Fail closed:
+        // If verification status cannot be confirmed,
+        // photos remain blurred.
 
         this.isHomeVerified = false;
 
+        this.isVerificationLoading = false;
+
+        this.cdr.detectChanges();
+
       }
 
-      this.isVerificationLoading = false;
+    });
 
-      this.cdr.detectChanges();
-
-    },
-
-    error: (error: any) => {
-
-      console.error(
-        'VERIFICATION STATUS ERROR:',
-        error
-      );
-
-      // Fail closed:
-      // If verification status cannot be confirmed,
-      // photos remain blurred.
-
-      this.isHomeVerified = false;
-
-      this.isVerificationLoading = false;
-
-      this.cdr.detectChanges();
-
-    }
-
-  });
-
-}
+  }
   private loadShortlist(): void {
 
-  this.apiService.getShortlist().subscribe({
+    this.apiService.getShortlist().subscribe({
 
-    next: (response: any) => {
+      next: (response: any) => {
 
-      const profiles =
-        response?.data?.profiles ??
-        response?.profiles ??
-        [];
+        const profiles =
+          response?.data?.profiles ??
+          response?.profiles ??
+          [];
 
-      if (!Array.isArray(profiles)) {
-        return;
-      }
-
-      this.shortlistedIds.clear();
-
-      for (const profile of profiles) {
-
-        const memberId = String(
-          profile?.memberId ??
-          profile?.member_id ??
-          ''
-        ).trim();
-
-        if (memberId) {
-          this.shortlistedIds.add(memberId);
+        if (!Array.isArray(profiles)) {
+          return;
         }
+
+        this.shortlistedIds.clear();
+
+        for (const profile of profiles) {
+
+          const memberId = String(
+            profile?.memberId ??
+            profile?.member_id ??
+            ''
+          ).trim();
+
+          if (memberId) {
+            this.shortlistedIds.add(memberId);
+          }
+        }
+
+        this.cdr.detectChanges();
+
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'SHORTLIST API ERROR:',
+          error
+        );
+
       }
 
-      this.cdr.detectChanges();
+    });
 
-    },
-
-    error: (error: any) => {
-
-      console.error(
-        'SHORTLIST API ERROR:',
-        error
-      );
-
-    }
-
-  });
-
-}
+  }
 
   // =====================================================
   // LOAD MATCHING PROFILES
@@ -580,7 +790,6 @@ private loadVerificationStatus(): void {
   // =====================================================
   // SEND INTEREST
   // =====================================================
-
   sendInterest(
     event: Event,
     memberId: string
@@ -623,7 +832,9 @@ private loadVerificationStatus(): void {
     }
 
     if (senderMemberId === memberId) {
-      alert('You cannot send interest to your own profile.');
+      alert(
+        'You cannot send interest to your own profile.'
+      );
       return;
     }
 
@@ -633,52 +844,16 @@ private loadVerificationStatus(): void {
       return;
     }
 
-    this.interestActionLoadingIds.add(memberId);
-    this.interestStates.set(memberId, 'sending');
-    this.cdr.detectChanges();
-
-    const request =
-      this.interestService.sendInterest(
-        senderMemberId,
-        memberId
-      );
-
-    if (!request) {
-      this.interestActionLoadingIds.delete(memberId);
-      this.interestStates.delete(memberId);
-      alert('Unable to send interest.');
-      this.cdr.detectChanges();
-      return;
-    }
-
-    request.subscribe({
-      next: (_response: any) => {
-
-        this.interestActionLoadingIds.delete(memberId);
-        this.interestStates.set(
-          memberId,
-          'outgoing_pending'
-        );
-
-        this.cdr.detectChanges();
-      },
-
-      error: (error: any) => {
-
-        this.interestActionLoadingIds.delete(memberId);
-        this.interestStates.delete(memberId);
-
-        alert(
-          error?.error?.message ||
-          'Unable to send interest.'
-        );
-
-        this.cdr.detectChanges();
-      }
-    });
-
+    // =========================================================
+    // PROFILE COMPLETION CHECK
+    // =========================================================
+    this.checkProfileCompletionBeforeInterest(
+      senderMemberId,
+      memberId
+    );
   }
- 
+
+
   respondToInterest(
     event: Event,
     memberId: string,
@@ -782,118 +957,118 @@ private loadVerificationStatus(): void {
 
   isShortlisted(memberId: string): boolean {
 
-  return this.shortlistedIds.has(
-    memberId
-  );
+    return this.shortlistedIds.has(
+      memberId
+    );
 
-}
+  }
 
-isShortlistLoading(memberId: string): boolean {
+  isShortlistLoading(memberId: string): boolean {
 
-  return this.shortlistLoadingIds.has(
-    memberId
-  );
+    return this.shortlistLoadingIds.has(
+      memberId
+    );
 
-}
+  }
 
 
   toggleShortlist(
-  event: Event,
-  memberId: string
-): void {
+    event: Event,
+    memberId: string
+  ): void {
 
-  event.stopPropagation();
+    event.stopPropagation();
 
-  if (!memberId) {
-    return;
-  }
+    if (!memberId) {
+      return;
+    }
 
-  const currentUser =
-    this.authService.getCurrentUser();
+    const currentUser =
+      this.authService.getCurrentUser();
 
-  if (!currentUser) {
+    if (!currentUser) {
 
-    this.router.navigate([
-      '/login'
-    ]);
+      this.router.navigate([
+        '/login'
+      ]);
 
-    return;
-  }
+      return;
+    }
 
-  const senderMemberId =
-    currentUser.member_id;
+    const senderMemberId =
+      currentUser.member_id;
 
-  if (!senderMemberId) {
-    return;
-  }
+    if (!senderMemberId) {
+      return;
+    }
 
-  if (senderMemberId === memberId) {
-    return;
-  }
+    if (senderMemberId === memberId) {
+      return;
+    }
 
-  if (
-    this.shortlistLoadingIds.has(memberId)
-  ) {
-    return;
-  }
+    if (
+      this.shortlistLoadingIds.has(memberId)
+    ) {
+      return;
+    }
 
-  const isCurrentlyShortlisted =
-    this.shortlistedIds.has(memberId);
+    const isCurrentlyShortlisted =
+      this.shortlistedIds.has(memberId);
 
-  this.shortlistLoadingIds.add(memberId);
+    this.shortlistLoadingIds.add(memberId);
 
-  this.cdr.detectChanges();
+    this.cdr.detectChanges();
 
-  const request =
-    isCurrentlyShortlisted
-      ? this.apiService.removeShortlist(memberId)
-      : this.apiService.addShortlist(memberId);
+    const request =
+      isCurrentlyShortlisted
+        ? this.apiService.removeShortlist(memberId)
+        : this.apiService.addShortlist(memberId);
 
-  request.subscribe({
+    request.subscribe({
 
-    next: (_response: any) => {
+      next: (_response: any) => {
 
-      this.shortlistLoadingIds.delete(
-        memberId
-      );
-
-      if (isCurrentlyShortlisted) {
-
-        // Remove from shortlist
-        this.shortlistedIds.delete(
+        this.shortlistLoadingIds.delete(
           memberId
         );
 
-      } else {
+        if (isCurrentlyShortlisted) {
 
-        // Add to shortlist
-        this.shortlistedIds.add(
+          // Remove from shortlist
+          this.shortlistedIds.delete(
+            memberId
+          );
+
+        } else {
+
+          // Add to shortlist
+          this.shortlistedIds.add(
+            memberId
+          );
+
+        }
+
+        this.cdr.detectChanges();
+
+      },
+
+      error: (error: any) => {
+
+        this.shortlistLoadingIds.delete(
           memberId
         );
+
+        console.error(
+          'SHORTLIST ACTION ERROR:',
+          error
+        );
+
+        this.cdr.detectChanges();
 
       }
 
-      this.cdr.detectChanges();
+    });
 
-    },
+  }
 
-    error: (error: any) => {
-
-      this.shortlistLoadingIds.delete(
-        memberId
-      );
-
-      console.error(
-        'SHORTLIST ACTION ERROR:',
-        error
-      );
-
-      this.cdr.detectChanges();
-
-    }
-
-  });
-
-}
-   
 }

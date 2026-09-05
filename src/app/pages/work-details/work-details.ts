@@ -246,126 +246,114 @@ export class WorkDetails implements OnInit {
   // WORK LOCATION VALIDATION
   // =========================
 
-  isWorkLocationInvalid(): boolean {
+ isWorkLocationInvalid(): boolean {
 
-    // Work location is optional
-    if (!this.workLocationType) {
-      return false;
-    }
+  // Work location is REQUIRED
+  if (!this.workLocationType) {
+    return true;
+  }
 
+  // Validate location type
+  const validType =
+    this.workLocationTypes.some(
+      item =>
+        item.value === this.workLocationType
+    );
 
-    // Validate location type
-    const validType =
-      this.workLocationTypes.some(
-        item =>
-          item.value === this.workLocationType
-      );
+  if (!validType) {
+    return true;
+  }
 
-    if (!validType) {
+  // =========================
+  // INDIA
+  // =========================
+
+  if (
+    this.workLocationType ===
+      'india_same_state' ||
+    this.workLocationType ===
+      'india_other_state'
+  ) {
+
+    // State required
+    if (!this.workState) {
       return true;
     }
 
-
-    // =========================
-    // INDIA
-    // =========================
-
+    // Valid state required
     if (
-      this.workLocationType ===
-        'india_same_state' ||
-      this.workLocationType ===
-        'india_other_state'
+      !this.indianStates.includes(
+        this.workState
+      )
     ) {
-
-      if (!this.workState) {
-        return true;
-      }
-
-
-      if (
-        !this.indianStates.includes(
-          this.workState
-        )
-      ) {
-        return true;
-      }
-
-
-      // Same state must match
-      // registered profile state
-
-      if (
-        this.workLocationType ===
-          'india_same_state' &&
-        this.workState !==
-          this.registeredState
-      ) {
-        return true;
-      }
-
-
-      if (
-        !this.workDistrict.trim()
-      ) {
-        return true;
-      }
-
-
-      if (
-        this.isTextFieldInvalid(
-          this.workDistrict,
-          100
-        )
-      ) {
-        return true;
-      }
+      return true;
     }
 
-
-    // =========================
-    // OUTSIDE INDIA
-    // =========================
-
+    // Same state must match
+    // registered profile state
     if (
       this.workLocationType ===
-      'outside_india'
+        'india_same_state' &&
+      this.workState !==
+        this.registeredState
     ) {
-
-      if (!this.workCountry) {
-        return true;
-      }
-
-
-      if (
-        !this.countries.includes(
-          this.workCountry
-        )
-      ) {
-        return true;
-      }
-
-
-      if (
-        !this.workCity.trim()
-      ) {
-        return true;
-      }
-
-
-      if (
-        this.isTextFieldInvalid(
-          this.workCity,
-          100
-        )
-      ) {
-        return true;
-      }
+      return true;
     }
 
+    // District / City required
+    if (!this.workDistrict.trim()) {
+      return true;
+    }
 
-    return false;
+    if (
+      this.isTextFieldInvalid(
+        this.workDistrict,
+        100
+      )
+    ) {
+      return true;
+    }
   }
 
+  // =========================
+  // OUTSIDE INDIA
+  // =========================
+
+  if (
+    this.workLocationType ===
+    'outside_india'
+  ) {
+
+    // Country required
+    if (!this.workCountry) {
+      return true;
+    }
+
+    if (
+      !this.countries.includes(
+        this.workCountry
+      )
+    ) {
+      return true;
+    }
+
+    // City required
+    if (!this.workCity.trim()) {
+      return true;
+    }
+
+    if (
+      this.isTextFieldInvalid(
+        this.workCity,
+        100
+      )
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
   // =========================
   // INCOME VALIDATION
@@ -532,8 +520,7 @@ export class WorkDetails implements OnInit {
         );
       },
 
-      error: (error: any) => {
-
+      error: (error: any) => { 
         console.error(
           'Unable to update work details:',
           error

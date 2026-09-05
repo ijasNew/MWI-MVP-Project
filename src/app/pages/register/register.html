@@ -1790,7 +1790,7 @@
             <div class="multi-choice">
 
                 @for (
-                denomination of christianDenominations;
+                denomination of preferredChristianDenominationOptions;
                 track denomination
                 ) {
 
@@ -1822,17 +1822,7 @@
             <div class="multi-choice">
 
                 @for (
-                sub of preferredSects
-                .flatMap(
-                denomination =>
-                christianOptions[
-                denomination
-                ] || []
-                )
-                .filter(
-                (value, index, array) =>
-                array.indexOf(value) === index
-                );
+                sub of getPreferredChristianSubDenominations();
                 track sub
                 ) {
 
@@ -1861,7 +1851,7 @@
             <div class="multi-choice">
 
                 @for (
-                sect of muslimSects;
+                sect of preferredMuslimSectOptions;
                 track sect
                 ) {
 
@@ -1892,7 +1882,7 @@
             <div class="multi-choice">
 
                 @for (
-                group of sunniGroups;
+                group of preferredSunniGroupOptions;
                 track group
                 ) {
 
@@ -1925,7 +1915,7 @@
             <div class="multi-choice">
 
                 @for (
-                group of salafiGroups;
+                group of preferredSalafiGroupOptions;
                 track group
                 ) {
 
@@ -1955,7 +1945,7 @@
             <div class="multi-choice">
 
                 @for (
-                caste of hinduCastes;
+                caste of preferredHinduCasteOptions;
                 track caste
                 ) {
 
@@ -1980,15 +1970,7 @@
             <div class="multi-choice">
 
                 @for (
-                subCaste of preferredCastes
-                .flatMap(
-                caste =>
-                getHinduSubCastesForCaste(caste)
-                )
-                .filter(
-                (value, index, array) =>
-                array.indexOf(value) === index
-                );
+                subCaste of getPreferredSubCastes();
                 track subCaste
                 ) {
 
