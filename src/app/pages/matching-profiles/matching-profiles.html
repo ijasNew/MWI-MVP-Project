@@ -84,8 +84,7 @@
         <!-- PHOTO -->
         <div class="profile-photo">
 
-          <img *ngIf="profile.photoUrl" [src]="profile.photoUrl" [alt]="profile.name" class="profile-image" [class.blurred-photo]="!isHomeVerified"/>
-
+          <img *ngIf="profile.photoUrl" [src]="profile.photoUrl" [alt]="profile.name" class="profile-image" />
           <div class="photo-placeholder" *ngIf="!profile.photoUrl">
             <i class="fa-solid fa-user"></i>
           </div>

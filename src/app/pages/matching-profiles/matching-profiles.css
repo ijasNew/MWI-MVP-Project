@@ -131,7 +131,7 @@
 }
 
 .profile-image.blurred-photo {
-  filter: blur(12px);
+  filter: blur(1px);
   transform: scale(1.05);
 }
 
